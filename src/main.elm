@@ -3,9 +3,9 @@ module Main exposing (main)
 import Browser
 import Browser.Events
 import Debug
-import Html exposing (Html, Attribute, div, span, text)
+import Html exposing (Html, Attribute, div, h3, p, button, span, text) -- text is already imported
 import Html.Attributes exposing (class, style, id)
-import Html.Events exposing (keyCode, onClick, on, onMouseEnter, onMouseLeave)
+import Html.Events exposing (keyCode, onClick, on, onMouseEnter, onMouseLeave, stopPropagationOn)
 import Json.Decode as Decode
 import Task exposing (Task, succeed, perform)
 
@@ -18,6 +18,8 @@ type alias Model =
     , hoveredHexId : Maybe String
     , focusedHexId : Maybe String
     , config : Config
+    , isModalVisible : Bool
+    , modalMessage : String
     }
 
 
@@ -131,6 +133,8 @@ initialModel =
     , hoveredHexId = Nothing
     , focusedHexId = Nothing
     , config = initialConfig
+    , isModalVisible = False
+    , modalMessage = ""
     }
 
 
@@ -145,9 +149,9 @@ type Msg
     | FocusHex String
     | KeyPressed Int
     | SubmitAttempt
+    | CloseModal
 
 
--- Helper function to parse hex ID "hex-R-C" into (R, C)
 parseHexId : String -> Maybe ( Int, Int )
 parseHexId idStr =
     case String.split "-" idStr of
@@ -163,7 +167,6 @@ parseHexId idStr =
             Nothing
 
 
--- Helper function to find the ID of the next hex in the same row
 findNextHexIdInRow : Model -> String -> Maybe String
 findNextHexIdInRow model currentHexId =
     case parseHexId currentHexId of
@@ -171,15 +174,11 @@ findNextHexIdInRow model currentHexId =
             Nothing
 
         Just ( r, c ) ->
-            -- Check if row index r is valid
             if r < 0 || r >= List.length model.grid then
                 Nothing
-
             else
-                -- Safely get the current row
                 case List.drop r model.grid |> List.head of
                     Nothing ->
-                        -- This case should ideally not be reached if r is validated
                         Nothing
 
                     Just targetRow ->
@@ -191,10 +190,8 @@ findNextHexIdInRow model currentHexId =
                                 c + 1
                         in
                         if nextC < numColsInRow then
-                            -- If next column is within bounds, construct its ID
                             Just ("hex-" ++ String.fromInt r ++ "-" ++ String.fromInt nextC)
                         else
-                            -- Reached the end of the row
                             Nothing
 
 
@@ -212,7 +209,6 @@ update msg model =
                 newHoveredId =
                     if model.hoveredHexId == Just hexId then
                         Nothing
-
                     else
                         model.hoveredHexId
             in
@@ -225,89 +221,84 @@ update msg model =
             let
                 enterCode = 13
                 backspaceCode = 8
-                isLetter = code >= 65 && code <= 90 -- A-Z
-                isNumber = code >= 48 && code <= 57 -- 0-9
+                isLetter = code >= 65 && code <= 90
+                isNumber = code >= 48 && code <= 57
                 isAlphanumeric = isLetter || isNumber
             in
             if code == enterCode then
-                -- If Enter is pressed, send a SubmitAttempt message
                 ( model, Task.perform (\_ -> SubmitAttempt) (Task.succeed ()) )
 
             else
-                -- Handle other key presses only if a hex is focused
                 case model.focusedHexId of
                     Nothing ->
                         ( model, Cmd.none )
 
-                    Just focusedId -> -- focusedId here is a String
+                    Just focusedId ->
                         if code == backspaceCode then
                             let
                                 newGrid =
                                     updateHexInGrid focusedId (\hex -> { hex | letter = Nothing, state = Empty }) model.grid
                             in
-                            -- Focus remains on the current hex after backspace
                             ( { model | grid = newGrid }, Cmd.none )
 
                         else if isAlphanumeric then
                             let
                                 charValue =
                                     Char.fromCode code
-
                                 updatedGrid =
                                     updateHexInGrid focusedId (\hex -> { hex | letter = Just charValue, state = Empty }) model.grid
-                                
-                                -- Determine the new value for model.focusedHexId
-                                -- This needs to be of type Maybe String
                                 newModelFocusedHexId : Maybe String
                                 newModelFocusedHexId =
                                     case findNextHexIdInRow model focusedId of
                                         Just nextActualHexId ->
-                                            -- If a next hex is found, focus it.
                                             Just nextActualHexId
-
                                         Nothing ->
-                                            -- If no next hex (end of row), keep focus on the current hex.
-                                            -- focusedId is String, so wrap it in Just.
                                             Just focusedId
                             in
                             ( { model | grid = updatedGrid, focusedHexId = newModelFocusedHexId }, Cmd.none )
-                        
+
                         else
-                            -- Other keys do nothing
                             ( model, Cmd.none )
 
         SubmitAttempt ->
-            -- This is the placeholder submit function
             let
-                _ = Debug.log "--- Submit Attempt Triggered ---"
-                
-                logMessage =
+                ( newModalUserMessage, logForConsole ) =
                     case model.focusedHexId of
                         Nothing ->
-                            "SubmitAttempt: No hex focused. Cannot determine row to submit."
+                            ( "No hex focused. Cannot determine row to submit."
+                            , "SubmitAttempt: No hex focused. Cannot determine row to submit."
+                            )
 
                         Just focusedId ->
                             case parseHexId focusedId of
                                 Nothing ->
-                                    "SubmitAttempt: Error parsing focused hex ID (" ++ focusedId ++ ")."
+                                    ( "Error processing your submission. Invalid hex ID."
+                                    , "SubmitAttempt: Error parsing focused hex ID (" ++ focusedId ++ ")."
+                                    )
 
                                 Just ( rowIndex, _ ) ->
-                                    -- Try to get the data for the focused row
                                     case List.drop rowIndex model.grid |> List.head of
                                         Nothing ->
-                                            "SubmitAttempt: Row " ++ String.fromInt rowIndex ++ " not found in grid."
-                                        
+                                            ( "Error processing your submission. Row not found."
+                                            , "SubmitAttempt: Row " ++ String.fromInt rowIndex ++ " not found in grid."
+                                            )
+
                                         Just rowData ->
                                             let
                                                 lettersInRow =
                                                     rowData
-                                                        |> List.map (\hex -> Maybe.withDefault '_' hex.letter) -- Use '_' for empty
+                                                        |> List.map (\hex -> Maybe.withDefault '_' hex.letter)
                                                         |> String.fromList
                                             in
-                                            "SubmitAttempt: Content of row " ++ String.fromInt rowIndex ++ " is: [" ++ lettersInRow ++ "]"
-                _ = Debug.log logMessage
+                                            ( "Submission for row " ++ String.fromInt rowIndex ++ ": [" ++ lettersInRow ++ "]"
+                                            , "SubmitAttempt: Content of row " ++ String.fromInt rowIndex ++ " is: [" ++ lettersInRow ++ "]"
+                                            )
+                _ = Debug.log logForConsole
             in
-            ( model, Cmd.none )
+            ( { model | isModalVisible = True, modalMessage = newModalUserMessage }, Cmd.none )
+
+        CloseModal ->
+            ( { model | isModalVisible = False, modalMessage = "" }, Cmd.none )
 
 
 updateHexInGrid : String -> (HexagonData -> HexagonData) -> List (List HexagonData) -> List (List HexagonData)
@@ -318,7 +309,6 @@ updateHexInGrid targetId updateFn grid =
                 (\hex ->
                     if hex.id == targetId then
                         updateFn hex
-
                     else
                         hex
                 )
@@ -339,6 +329,52 @@ subscriptions model =
 
 -- VIEW
 
+viewModal : Model -> Html Msg
+viewModal model =
+    if model.isModalVisible then
+        div -- Backdrop
+            [ style "position" "fixed"
+            , style "top" "0"
+            , style "left" "0"
+            , style "width" "100%"
+            , style "height" "100%"
+            , style "background-color" "rgba(0, 0, 0, 0.6)"
+            , style "display" "flex"
+            , style "justify-content" "center"
+            , style "align-items" "center"
+            , style "z-index" "1000"
+            , onClick CloseModal -- Click backdrop to close
+            ]
+            [ div -- Modal content box
+                [ style "background-color" "#fff"
+                , style "padding" "25px 35px"
+                , style "border-radius" "10px"
+                , style "box-shadow" "0 5px 15px rgba(0,0,0,0.3)"
+                , style "min-width" "320px"
+                , style "max-width" "90%"
+                , style "text-align" "center"
+                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
+                ]
+                [ h3 [ style "margin-top" "0", style "color" "#333" ] [ text "Submission Attempt" ]
+                , p [ style "color" "#555", style "font-size" "16px", style "line-height" "1.5" ] [ text model.modalMessage ]
+                , button
+                    [ onClick CloseModal
+                    , style "padding" "12px 24px"
+                    , style "margin-top" "25px"
+                    , style "cursor" "pointer"
+                    , style "background-color" model.config.colorFillCorrect
+                    , style "color" model.config.colorTextFilled
+                    , style "border" "none"
+                    , style "border-radius" "5px"
+                    , style "font-size" "16px"
+                    , style "font-weight" "bold"
+                    ]
+                    [ text "OK" ]
+                ]
+            ]
+    else
+        Html.text "" -- Corrected: Use Html.text "" for no visual output
+
 
 view : Model -> Html Msg
 view model =
@@ -353,6 +389,7 @@ view model =
         , style "min-height" "100vh"
         ]
         [ viewHoneycombGrid model
+        , viewModal model
         ]
 
 

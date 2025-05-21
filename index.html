@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Elm Application</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="elm-app"></div>
+    <script src=" main.js"></script>
+    <script>
+      // Initialize the Elm application
+      var app = Elm.Main.init({
+        node: document.getElementById('elm-app')
+        // You can add flags here if your Elm app needs them
+        // flags: { ... }
+      });
+      
+      // Set up any JavaScript interop (ports) here
+      // Example:
+      // app.ports.sendToJs.subscribe(function(data) {
+      //   console.log('From Elm:', data);
+      // });
+      // 
+      // document.addEventListener('someEvent', function(e) {
+      //   app.ports.receiveInElm.send(e.detail);
+      // });
+    </script>
+  </body>
+</html>
