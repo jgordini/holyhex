@@ -1,13 +1,14 @@
-module Main exposing (main)
+port module Main exposing (main, Model, Difficulty(..), PuzzleResult(..), Msg(..), initialModel, update, stringToDifficulty, difficultyToString, calculatePotentialPayout)
 
 import Browser
 import Browser.Events
 import Debug
 import Html exposing (Html, Attribute, div, h3, p, button, span, text) -- text is already imported
 import Html.Attributes exposing (class, style, id)
-import Html.Events exposing (keyCode, onClick, on, onMouseEnter, onMouseLeave, stopPropagationOn)
+import Html.Events exposing (keyCode, onClick, on, onMouseEnter, onMouseLeave, stopPropagationOn, onInput)
 import Json.Decode as Decode
 import Task exposing (Task, succeed, perform)
+import Platform.Sub
 
 
 -- MODEL
@@ -20,7 +21,26 @@ type alias Model =
     , config : Config
     , isModalVisible : Bool
     , modalMessage : String
+    -- Betting related fields
+    , betAmount : Float
+    , betAmountString : String -- For handling input field
+    , difficulty : Difficulty
+    , difficultyString : String -- For handling input field
+    , walletAddress : Maybe String
+    , puzzleResult : Maybe PuzzleResult
+    , isBetModalVisible : Bool -- To control the visibility of the new bet modal
     }
+
+
+type Difficulty
+    = Easy
+    | Medium
+    | Hard
+
+
+type PuzzleResult
+    = Win Float
+    | Loss
 
 
 type alias HexagonData =
@@ -135,6 +155,14 @@ initialModel =
     , config = initialConfig
     , isModalVisible = False
     , modalMessage = ""
+    -- Initialize betting fields
+    , betAmount = 0.01 -- Default minimum bet
+    , betAmountString = "0.01"
+    , difficulty = Easy -- Default difficulty
+    , difficultyString = "Easy"
+    , walletAddress = Nothing
+    , puzzleResult = Nothing
+    , isBetModalVisible = False -- Bet modal is not visible initially
     }
 
 
@@ -150,6 +178,15 @@ type Msg
     | KeyPressed Int
     | SubmitAttempt
     | CloseModal
+    -- Betting related messages
+    | ConnectWallet
+    | ShowBetModal
+    | HideBetModal
+    | UpdateBetAmountString String
+    | UpdateDifficultyString String
+    | PlaceBet -- Takes amount and difficulty from the model
+    | BetResultReceived Bool Float -- Bool for success, Float for payout amount
+    | BetAgain
 
 
 parseHexId : String -> Maybe ( Int, Int )
@@ -193,6 +230,35 @@ findNextHexIdInRow model currentHexId =
                             Just ("hex-" ++ String.fromInt r ++ "-" ++ String.fromInt nextC)
                         else
                             Nothing
+
+
+difficultyToString : Difficulty -> String
+difficultyToString difficulty =
+    case difficulty of
+        Easy ->
+            "Easy"
+
+        Medium ->
+            "Medium"
+
+        Hard ->
+            "Hard"
+
+
+stringToDifficulty : String -> Difficulty
+stringToDifficulty str =
+    case String.toLower str of
+        "easy" ->
+            Easy
+
+        "medium" ->
+            Medium
+
+        "hard" ->
+            Hard
+
+        _ ->
+            Easy -- Default to Easy if parsing fails
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -298,7 +364,54 @@ update msg model =
             ( { model | isModalVisible = True, modalMessage = newModalUserMessage }, Cmd.none )
 
         CloseModal ->
-            ( { model | isModalVisible = False, modalMessage = "" }, Cmd.none )
+            ( { model | isModalVisible = False, modalMessage = "", puzzleResult = Nothing }, Cmd.none )
+
+        ConnectWallet ->
+            ( model, connectWallet () )
+
+        ShowBetModal ->
+            ( { model | isBetModalVisible = True, puzzleResult = Nothing }, Cmd.none )
+
+        HideBetModal ->
+            ( { model | isBetModalVisible = False }, Cmd.none )
+
+        UpdateBetAmountString amountStr ->
+            let
+                newAmount =
+                    String.toFloat amountStr |> Maybe.withDefault model.betAmount
+            in
+            ( { model | betAmountString = amountStr, betAmount = newAmount }, Cmd.none )
+
+        UpdateDifficultyString diffStr ->
+            ( { model | difficultyString = diffStr, difficulty = stringToDifficulty diffStr }, Cmd.none )
+
+        PlaceBet ->
+            ( { model | isBetModalVisible = False }
+            , placeBet { amount = model.betAmount, difficulty = difficultyToString model.difficulty }
+            )
+
+        BetResultReceived success payout ->
+            let
+                result =
+                    if success then
+                        Win payout
+
+                    else
+                        Loss
+
+                message =
+                    if success then
+                        "You won " ++ String.fromFloat payout ++ " ETH!"
+
+                    else
+                        "Puzzle incorrect. You lost " ++ String.fromFloat model.betAmount ++ " ETH."
+            in
+            ( { model | puzzleResult = Just result, isModalVisible = True, modalMessage = message }, Cmd.none )
+
+        BetAgain ->
+            ( { initialModel | walletAddress = model.walletAddress, config = model.config } -- Keep wallet address and config
+            , Cmd.none
+            )
 
 
 updateHexInGrid : String -> (HexagonData -> HexagonData) -> List (List HexagonData) -> List (List HexagonData)
@@ -323,15 +436,78 @@ updateHexInGrid targetId updateFn grid =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Browser.Events.onKeyDown (Decode.map KeyPressed (Decode.field "keyCode" Decode.int))
+    Platform.Sub.batch
+        [ Browser.Events.onKeyDown (Decode.map KeyPressed (Decode.field "keyCode" Decode.int))
+        , transactionResult (\txData -> BetResultReceived (parseTxSuccess txData) (parseTxPayout txData))
+        ]
+
+
+parseTxSuccess : String -> Bool
+parseTxSuccess txData =
+    String.contains "\"success\": true" txData
+
+
+parseTxPayout : String -> Float
+parseTxPayout txData =
+    if String.contains "\"success\": true" txData then
+        let
+            extract numStr = String.toFloat (String.trim numStr) |> Maybe.withDefault 0.0
+        in
+        case String.split ":" txData of
+             _::val::_ -> case String.split "}" val of
+                num::_ -> extract num
+                _ -> 0.01
+             _ -> 0.01
+    else
+        0.0
+
+
+-- PORTS
+
+
+port connectWallet : () -> Cmd msg
+port placeBet : { amount : Float, difficulty : String } -> Cmd msg
+port transactionResult : (String -> msg) -> Sub msg
 
 
 
 -- VIEW
 
+
 viewModal : Model -> Html Msg
 viewModal model =
     if model.isModalVisible then
+        let
+            titleText =
+                case model.puzzleResult of
+                    Just (Win _) ->
+                        "Bet Won!"
+
+                    Just Loss ->
+                        "Bet Lost"
+
+                    Nothing ->
+                        "Submission Attempt"
+
+            messageText =
+                model.modalMessage
+
+            buttonText =
+                case model.puzzleResult of
+                    Just _ ->
+                        "Bet Again"
+
+                    Nothing ->
+                        "OK"
+
+            buttonMsg =
+                case model.puzzleResult of
+                    Just _ ->
+                        BetAgain
+
+                    Nothing ->
+                        CloseModal
+        in
         div -- Backdrop
             [ style "position" "fixed"
             , style "top" "0"
@@ -343,7 +519,7 @@ viewModal model =
             , style "justify-content" "center"
             , style "align-items" "center"
             , style "z-index" "1000"
-            , onClick CloseModal -- Click backdrop to close
+            , onClick CloseModal
             ]
             [ div -- Modal content box
                 [ style "background-color" "#fff"
@@ -355,10 +531,10 @@ viewModal model =
                 , style "text-align" "center"
                 , stopPropagationOn "click" (Decode.succeed (NoOp, True))
                 ]
-                [ h3 [ style "margin-top" "0", style "color" "#333" ] [ text "Submission Attempt" ]
-                , p [ style "color" "#555", style "font-size" "16px", style "line-height" "1.5" ] [ text model.modalMessage ]
+                [ h3 [ style "margin-top" "0", style "color" "#333" ] [ text titleText ]
+                , p [ style "color" "#555", style "font-size" "16px", style "line-height" "1.5" ] [ text messageText ]
                 , button
-                    [ onClick CloseModal
+                    [ onClick buttonMsg
                     , style "padding" "12px 24px"
                     , style "margin-top" "25px"
                     , style "cursor" "pointer"
@@ -369,11 +545,134 @@ viewModal model =
                     , style "font-size" "16px"
                     , style "font-weight" "bold"
                     ]
-                    [ text "OK" ]
+                    [ text buttonText ]
                 ]
             ]
     else
-        Html.text "" -- Corrected: Use Html.text "" for no visual output
+        Html.text ""
+
+
+viewBetModal : Model -> Html Msg
+viewBetModal model =
+    if model.isBetModalVisible then
+        div -- Backdrop for bet modal
+            [ style "position" "fixed"
+            , style "top" "0"
+            , style "left" "0"
+            , style "width" "100%"
+            , style "height" "100%"
+            , style "background-color" "rgba(0, 0, 0, 0.7)"
+            , style "display" "flex"
+            , style "justify-content" "center"
+            , style "align-items" "center"
+            , style "z-index" "1001"
+            ]
+            [ div -- Bet Modal content box
+                [ style "background-color" "#fff"
+                , style "padding" "30px 40px"
+                , style "border-radius" "12px"
+                , style "box-shadow" "0 8px 20px rgba(0,0,0,0.35)"
+                , style "min-width" "350px"
+                , style "max-width" "90%"
+                , style "text-align" "left"
+                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
+                ]
+                [ h3 [ style "margin-top" "0", style "margin-bottom" "25px", style "color" "#333", style "text-align" "center" ] [ text "Place Your Bet" ]
+                , div [ style "margin-bottom" "20px" ]
+                    [ Html.label [ Html.Attributes.for "betAmountInput", style "display" "block", style "margin-bottom" "8px", style "font-weight" "bold", style "color" "#555" ] [ text "Bet Amount (ETH):" ]
+                    , Html.input
+                        [ id "betAmountInput"
+                        , Html.Attributes.type_ "number"
+                        , Html.Attributes.min "0.01"
+                        , Html.Attributes.max "1"
+                        , Html.Attributes.step "0.01"
+                        , Html.Attributes.value model.betAmountString
+                        , onInput UpdateBetAmountString
+                        , style "width" "calc(100% - 22px)"
+                        , style "padding" "10px"
+                        , style "border" "1px solid #ccc"
+                        , style "border-radius" "5px"
+                        , style "font-size" "16px"
+                        ]
+                        []
+                    ]
+                , div [ style "margin-bottom" "25px" ]
+                    [ Html.label [ Html.Attributes.for "difficultySelect", style "display" "block", style "margin-bottom" "8px", style "font-weight" "bold", style "color" "#555" ] [ text "Difficulty:" ]
+                    , Html.select
+                        [ id "difficultySelect"
+                        , onInput UpdateDifficultyString
+                        , Html.Attributes.value (difficultyToString model.difficulty)
+                        , style "width" "100%"
+                        , style "padding" "10px"
+                        , style "border" "1px solid #ccc"
+                        , style "border-radius" "5px"
+                        , style "font-size" "16px"
+                        , style "background-color" "white"
+                        ]
+                        [ Html.option [ Html.Attributes.value "Easy" ] [ text "Easy (1.5x)" ]
+                        , Html.option [ Html.Attributes.value "Medium" ] [ text "Medium (2x)" ]
+                        , Html.option [ Html.Attributes.value "Hard" ] [ text "Hard (3x)" ]
+                        ]
+                    ]
+                , div [ style "margin-bottom" "25px", style "font-size" "15px", style "color" "#444" ]
+                    [ text "Potential Payout: "
+                    , Html.b [] [ text (calculatePotentialPayout model ++ " ETH (after 5% fee)") ]
+                    ]
+                , div [ style "display" "flex", style "justify-content" "space-between" ]
+                    [ button
+                        [ onClick HideBetModal
+                        , style "padding" "12px 24px"
+                        , style "cursor" "pointer"
+                        , style "background-color" "#aaa"
+                        , style "color" "white"
+                        , style "border" "none"
+                        , style "border-radius" "5px"
+                        , style "font-size" "16px"
+                        ]
+                        [ text "Cancel" ]
+                    , button
+                        [ onClick PlaceBet
+                        , style "padding" "12px 24px"
+                        , style "cursor" "pointer"
+                        , style "background-color" model.config.colorFillCorrect
+                        , style "color" model.config.colorTextFilled
+                        , style "border" "none"
+                        , style "border-radius" "5px"
+                        , style "font-size" "16px"
+                        , style "font-weight" "bold"
+                        ]
+                        [ text "Confirm Bet & Start" ]
+                    ]
+                ]
+            ]
+    else
+        Html.text ""
+
+
+calculatePotentialPayout : Model -> String
+calculatePotentialPayout model =
+    let
+        multiplier =
+            case model.difficulty of
+                Easy ->
+                    1.5
+
+                Medium ->
+                    2.0
+
+                Hard ->
+                    3.0
+
+        rawPayout =
+            model.betAmount * multiplier
+
+        fee =
+            rawPayout * 0.05
+
+        finalPayout =
+            rawPayout - fee
+    in
+    String.fromFloat finalPayout
 
 
 view : Model -> Html Msg
@@ -382,14 +681,101 @@ view model =
         [ style "font-family" "Arial, sans-serif"
         , style "background-color" model.config.colorBgPage
         , style "display" "flex"
-        , style "justify-content" "center"
-        , style "align-items" "flex-start"
-        , style "padding" "30px 0"
+        , style "flex-direction" "column"
+        , style "align-items" "center"
+        , style "padding" "20px"
         , style "box-sizing" "border-box"
         , style "min-height" "100vh"
         ]
-        [ viewHoneycombGrid model
+        [ viewWalletControls model
+        , viewHoneycombGrid model
+        , viewRules
         , viewModal model
+        , viewBetModal model
+        ]
+
+
+viewWalletControls : Model -> Html Msg
+viewWalletControls model =
+    div
+        [ style "width" "100%"
+        , style "max-width" "600px"
+        , style "display" "flex"
+        , style "justify-content" (if model.walletAddress == Nothing then "flex-end" else "space-between")
+        , style "align-items" "center"
+        , style "padding" "10px 0"
+        , style "margin-bottom" "20px"
+        , style "box-sizing" "border-box"
+        ]
+        (let
+            connectButton =
+                if model.walletAddress == Nothing then
+                    button
+                        [ onClick ConnectWallet
+                        , style "padding" "10px 18px"
+                        , style "cursor" "pointer"
+                        , style "background-color" "#007bff"
+                        , style "color" "white"
+                        , style "border" "none"
+                        , style "border-radius" "5px"
+                        , style "font-size" "15px"
+                        ]
+                        [ text "Connect Wallet" ]
+
+                else
+                    span [ style "font-size" "14px", style "color" "#333" ] [ text ("Wallet: " ++ (Maybe.withDefault "N/A" model.walletAddress |> truncateWalletAddress)) ]
+
+            placeBetButton =
+                if model.walletAddress /= Nothing && not model.isBetModalVisible then
+                    [ button
+                        [ onClick ShowBetModal
+                        , style "padding" "10px 18px"
+                        , style "cursor" "pointer"
+                        , style "background-color" model.config.colorFillCorrect
+                        , style "color" model.config.colorTextFilled
+                        , style "border" "none"
+                        , style "border-radius" "5px"
+                        , style "font-size" "15px"
+                        , style "font-weight" "bold"
+                        ]
+                        [ text "Place Bet" ]
+                    ]
+
+                else
+                    []
+         in
+         [ connectButton ] ++ placeBetButton
+        )
+
+truncateWalletAddress : String -> String
+truncateWalletAddress addr =
+    if String.length addr > 10 then
+        String.slice 0 6 addr ++ "..." ++ String.slice (String.length addr - 4) (String.length addr) addr
+
+    else
+        addr
+
+
+viewRules : Html Msg
+viewRules =
+    div
+        [ style "max-width" "600px"
+        , style "margin-top" "30px"
+        , style "padding" "15px"
+        , style "border" "1px solid #eee"
+        , style "border-radius" "8px"
+        , style "background-color" "#f9f9f9"
+        ]
+        [ h3 [ style "margin-top" "0", style "color" "#333", style "font-size" "18px" ] [ text "Game Rules & Betting" ]
+        , p [ style "font-size" "14px", style "line-height" "1.6", style "color" "#555" ]
+            [ text "Place a bet on your ability to solve the puzzle! Connect your Ethereum wallet (Polygon network) to start." ]
+        , Html.ul [ style "font-size" "14px", style "line-height" "1.6", style "color" "#555", style "padding-left" "20px" ]
+            [ Html.li [] [ text "Select your bet amount (0.01 - 1 ETH) and difficulty." ]
+            , Html.li [] [ text "Difficulty Multipliers: Easy (1.5x), Medium (2x), Hard (3x)." ]
+            , Html.li [] [ text "A 5% platform fee applies to winnings." ]
+            , Html.li [] [ text "Solve the puzzle within 6 attempts to win." ]
+            , Html.li [] [ text "Puzzle words are selected provably fair using Chainlink VRF (details on-chain)." ]
+            ]
         ]
 
 
