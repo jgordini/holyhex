@@ -115,8 +115,6 @@ To run the HolyHex game locally, follow these steps:
      index.html
      ```
 
-     .
-
    - Using a Node.js HTTP server:
 
      ```bash
@@ -129,8 +127,6 @@ To run the HolyHex game locally, follow these steps:
      ```
      http://localhost:8080
      ```
-
-     .
 
 5. **Build the Game (Optional)**:
    To compile the Elm code into a production-ready JavaScript file:
