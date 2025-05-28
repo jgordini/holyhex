@@ -1620,7 +1620,7 @@ viewGameOverModal model =
                     [ text (Maybe.withDefault "UNKNOWN" model.currentWord) ]
                 , button
                     [ onClick StartNewGame
-                    , style "background-color" "#2196F3"
+                    , style "background-color" "#28a745"
                     , style "color" "white"
                     , style "border" "none"
                     , style "padding" "12px 24px"
