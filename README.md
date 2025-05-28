@@ -16,8 +16,6 @@ A web-based, interactive word puzzle game built with a unique hexagonal grid int
 
 - Dynamic Gameplay
 
-  :
-
   - Players guess 5-letter words in up to 6 rows.
   - Feedback is provided via colored hexagons:
     - **Green**: Correct letter in the correct position.
@@ -30,14 +28,10 @@ A web-based, interactive word puzzle game built with a unique hexagonal grid int
 
 - Word Validation
 
-  :
-
   - Uses a comprehensive database of valid guesses and target words.
   - Ensures guesses are valid 5-letter words.
 
 - Game Controls
-
-  :
 
   - Start a new game or request a hint with intuitive buttons.
   - Displays game messages for feedback (e.g., "Correct!", "Invalid word").
@@ -52,8 +46,6 @@ A web-based, interactive word puzzle game built with a unique hexagonal grid int
 
 - Dependencies
 
-  :
-
   - `elm/browser`: For browser interaction.
   - `elm/http`: For fetching word databases.
   - `elm/json`: For JSON decoding.
@@ -61,8 +53,6 @@ A web-based, interactive word puzzle game built with a unique hexagonal grid int
   - `NoRedInk/elm-json-decode-pipeline`: For streamlined JSON decoding.
 
 - Word Databases
-
-  :
 
   - `answerlist.json`: Contains 2,309 target words.
   - `validguess.json`: Contains valid guess words for input validation.
