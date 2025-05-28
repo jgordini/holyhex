@@ -17,7 +17,7 @@ import Http
 
 -- Simple fallback word list when external files fail to load
 fallbackTargetWords : List String
-fallbackTargetWords = 
+fallbackTargetWords =
     [ "speed", "house", "world", "music", "ocean", "beach", "plant", "water", "light", "sound" ]
 
 
@@ -110,10 +110,10 @@ validateWord validGuesses targetWords word =
         isValidLength = String.length cleanWord == 5
         isAllLetters = String.all Char.isAlpha cleanWord
         isInValidGuessesList = List.member cleanWord validGuesses
-        
+
         -- Check if word is in target words (answerlist.json)
         isInTargetWordsList = List.member cleanWord (List.map String.toLower targetWords)
-        
+
         -- Basic validation for reasonable English words
         passesBasicValidation = isValidLength && isAllLetters && not (isRepeatingPattern cleanWord) && not (isObviousNonsense cleanWord)
     in
@@ -149,11 +149,11 @@ isObviousNonsense word =
         chars = String.toList cleanWord
         vowels = ['a', 'e', 'i', 'o', 'u', 'y']  -- Include 'y' as it can act as a vowel
         consonants = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z']
-        
+
         -- Count vowels and consonants
         vowelCount = List.length (List.filter (\c -> List.member c vowels) chars)
         consonantCount = List.length (List.filter (\c -> List.member c consonants) chars)
-        
+
         -- Patterns that suggest nonsense
         hasNoVowels = vowelCount == 0
         allVowels = consonantCount == 0
@@ -169,7 +169,7 @@ hasConsecutiveConsonants word maxCount =
     let
         chars = String.toList word
         vowels = ['a', 'e', 'i', 'o', 'u', 'y']  -- Include 'y' as it can act as a vowel
-        
+
         checkConsecutive : List Char -> Int -> Int -> Bool
         checkConsecutive remainingChars currentCount maxAllowed =
             case remainingChars of
@@ -194,7 +194,7 @@ hasConsecutiveVowels word maxCount =
     let
         chars = String.toList word
         vowels = ['a', 'e', 'i', 'o', 'u', 'y']  -- Include 'y' as it can act as a vowel
-        
+
         checkConsecutive : List Char -> Int -> Int -> Bool
         checkConsecutive remainingChars currentCount maxAllowed =
             case remainingChars of
@@ -505,7 +505,7 @@ update msg model =
             case parseHexId hexId of
                 Nothing ->
                     ( model, Cmd.none )
-                
+
                 Just ( rowIndex, _ ) ->
                     if rowIndex /= model.currentActiveRow then
                         -- Only allow focusing on the current active row
@@ -533,7 +533,7 @@ update msg model =
                         case parseHexId focusedId of
                             Nothing ->
                                 ( model, Cmd.none )
-                            
+
                             Just ( r, c ) ->
                                 if r /= model.currentActiveRow then
                                     -- Only allow editing on the current active row
@@ -659,25 +659,25 @@ update msg model =
 
                                                     Just submittedWord ->
                                                         let
-                                                            targetWord = 
+                                                            targetWord =
                                                                 case model.currentWord of
                                                                     Just word -> word
                                                                     Nothing -> "speed" -- Default fallback word
-                                                            
+
                                                             -- Check the word and get hex states
                                                             hexStates = checkWordAgainstTarget submittedWord targetWord
                                                             updatedGrid = updateRowWithStates rowIndex hexStates model.grid
-                                                            
+
                                                             isCorrect = String.toLower submittedWord == String.toLower targetWord
-                                                            isValidWord = 
+                                                            isValidWord =
                                                                 case (model.validGuessesDB, model.targetWordsDB) of
-                                                                    (Just validDB, Just targetDB) -> 
+                                                                    (Just validDB, Just targetDB) ->
                                                                         validateWord validDB.validGuesses targetDB.targetWords submittedWord
-                                                                    (Just validDB, Nothing) -> 
+                                                                    (Just validDB, Nothing) ->
                                                                         validateWord validDB.validGuesses fallbackTargetWords submittedWord
-                                                                    (Nothing, Just targetDB) -> 
+                                                                    (Nothing, Just targetDB) ->
                                                                         validateWord [] targetDB.targetWords submittedWord
-                                                                    (Nothing, Nothing) -> 
+                                                                    (Nothing, Nothing) ->
                                                                         validateWord [] fallbackTargetWords submittedWord
                                                         in
                                                         if isCorrect then
@@ -730,7 +730,7 @@ update msg model =
                                                             , currentActiveRow = model.currentActiveRow -- Don't advance for invalid words
                                                             }
 
-                clearMessageCmd = 
+                clearMessageCmd =
                     if result.gameMessage /= Nothing then
                         if result.gameMessageType == "success" then
                             -- Show success modal instead of auto-clearing message
@@ -742,12 +742,12 @@ update msg model =
                         Task.perform (\_ -> ShowGameOverModal) (Process.sleep 1000)
                     else
                         Cmd.none
-                newFocusedHexId = 
+                newFocusedHexId =
                     case result.nextFocus of
                         Just nextHexId -> Just nextHexId
                         Nothing -> model.focusedHexId
             in
-            ( { model 
+            ( { model
                 | gameMessage = result.gameMessage
                 , gameMessageType = result.gameMessageType
                 , grid = result.grid
@@ -807,16 +807,16 @@ update msg model =
 
         BetAgain ->
             let
-                -- Generate a new word immediately to avoid race conditions  
+                -- Generate a new word immediately to avoid race conditions
                 wordGenerator = getRandomWordGenerator fallbackTargetWords
-                seedValue = 
+                seedValue =
                     case model.currentWord of
                         Just word -> String.length word * 11 + model.currentActiveRow * 17
                         Nothing -> 67
                 newWordSeed = Random.initialSeed seedValue
                 (maybeNewWord, _) = Random.step wordGenerator newWordSeed
             in
-            ( { initialModel 
+            ( { initialModel
               | walletAddress = model.walletAddress
               , config = model.config
               , currentWord = maybeNewWord -- Set the word immediately
@@ -836,15 +836,15 @@ update msg model =
                 -- Generate a new word immediately to avoid race conditions
                 wordGenerator = getRandomWordGenerator fallbackTargetWords
                 -- Use a semi-random seed based on current state to maintain some variety
-                seedValue = 
+                seedValue =
                     case model.currentWord of
                         Just word -> String.length word * 7 + model.currentActiveRow * 13
                         Nothing -> 42
                 newWordSeed = Random.initialSeed seedValue
                 (maybeNewWord, _) = Random.step wordGenerator newWordSeed
-                
-                modelWithClearedGrid = 
-                    { initialModel 
+
+                modelWithClearedGrid =
+                    { initialModel
                     | validGuessesDB = model.validGuessesDB
                     , targetWordsDB = model.targetWordsDB
                     , config = model.config
@@ -874,9 +874,9 @@ update msg model =
                 Ok validGuessesList ->
                     -- Create a new ValidGuessesDB using the loaded validGuesses list and fallback data for other fields
                     let
-                        updatedValidGuessesDB = 
+                        updatedValidGuessesDB =
                             { version = "2.0"
-                            , metadata = 
+                            , metadata =
                                 { totalValidGuesses = List.length validGuessesList
                                 , totalTargetWords = List.length fallbackTargetWords
                                 , lastUpdated = "2024-03-21"
@@ -886,7 +886,7 @@ update msg model =
                                 }
                             , validGuesses = validGuessesList
                             , targetWords = fallbackTargetWords
-                            , features = 
+                            , features =
                                 { hasVowels = True
                                 , allowsRepeatedLetters = True
                                 , caseSensitive = False
@@ -894,10 +894,10 @@ update msg model =
                             }
                     in
                     ( { model | validGuessesDB = Just updatedValidGuessesDB, loadingError = Nothing }, Cmd.none )
-                
+
                 Err error ->
                     let
-                        errorMessage = 
+                        errorMessage =
                             case error of
                                 Http.BadUrl url -> "Bad URL: " ++ url
                                 Http.Timeout -> "Request timeout"
@@ -1029,23 +1029,23 @@ getLetterStates : List (List HexagonData) -> Dict.Dict Char HexState
 getLetterStates grid =
     let
         allHexes = List.concat grid
-        hexesWithLetters = List.filterMap (\hex -> 
+        hexesWithLetters = List.filterMap (\hex ->
             case hex.letter of
                 Just char -> Just (Char.toLower char, hex.state)
                 Nothing -> Nothing
             ) allHexes
-        
+
         -- Group by letter and find the best state for each
         letterGroups = List.foldl (\(char, state) dict ->
             case Dict.get char dict of
                 Nothing -> Dict.insert char [state] dict
                 Just states -> Dict.insert char (state :: states) dict
             ) Dict.empty hexesWithLetters
-        
+
         -- Determine best state (Correct > Present > Absent > Empty)
         getBestState states =
             if List.member Correct states then Correct
-            else if List.member Present states then Present  
+            else if List.member Present states then Present
             else if List.member Absent states then Absent
             else Empty
     in
@@ -1059,7 +1059,7 @@ viewGameMessage model =
     case model.gameMessage of
         Nothing ->
             Html.text ""
-        
+
         Just message ->
             let
                 (bgColor, textColor, borderColor) =
@@ -1131,7 +1131,7 @@ viewGameControls model =
             , style "padding" "10px 18px"
             , style "cursor" "pointer"
             , style "background-color" "#28a745"
-            , style "color" "black"
+            , style "color" "white"
             , style "border" "none"
             , style "border-radius" "5px"
             , style "font-size" "15px"
@@ -1146,7 +1146,7 @@ viewGameControls model =
                         , style "padding" "10px 18px"
                         , style "cursor" "pointer"
                         , style "background-color" "#007bff"
-                        , style "color" "black"
+                        , style "color" "white"
                         , style "border" "none"
                         , style "border-radius" "5px"
                         , style "font-size" "15px"
@@ -1158,7 +1158,7 @@ viewGameControls model =
                         , style "padding" "10px 18px"
                         , style "cursor" "pointer"
                         , style "background-color" "#ffc107"
-                        , style "color" "black"
+                        , style "color" "white"
                         , style "border" "none"
                         , style "border-radius" "5px"
                         , style "font-size" "15px"
@@ -1250,13 +1250,13 @@ viewHexagon model hexData =
 
         isFocused =
             model.focusedHexId == Just hexData.id
-            
+
         -- Check if this hex is in a submitted row or not the active row
         isInSubmittedRow =
             case parseHexId hexData.id of
                 Just ( rowIndex, _ ) -> isRowSubmitted model rowIndex
                 Nothing -> False
-                
+
         isInActiveRow =
             case parseHexId hexData.id of
                 Just ( rowIndex, _ ) -> rowIndex == model.currentActiveRow
@@ -1421,9 +1421,9 @@ checkWordAgainstTarget guess target =
     let
         guessChars = String.toList (String.toLower guess)
         targetChars = String.toList (String.toLower target)
-        
+
         -- First pass: mark exact matches (green)
-        exactMatches = 
+        exactMatches =
             List.indexedMap (\i guessChar ->
                 case List.drop i targetChars |> List.head of
                     Just targetChar ->
@@ -1435,9 +1435,9 @@ checkWordAgainstTarget guess target =
                         Nothing
             ) guessChars
             |> List.filterMap identity
-        
+
         -- Get remaining target chars (excluding exact matches)
-        remainingTargetChars = 
+        remainingTargetChars =
             List.indexedMap (\i char ->
                 if List.member i exactMatches then
                     Nothing
@@ -1445,16 +1445,16 @@ checkWordAgainstTarget guess target =
                     Just char
             ) targetChars
             |> List.filterMap identity
-        
+
         -- Second pass: mark present letters (yellow) for non-exact matches
-        (finalStates, _) = 
+        (finalStates, _) =
             List.indexedMap (\i guessChar ->
                 if List.member i exactMatches then
                     (Correct, remainingTargetChars)
                 else
                     case List.filter (\c -> c == guessChar) remainingTargetChars of
                         [] -> (Absent, remainingTargetChars)
-                        _ :: rest -> 
+                        _ :: rest ->
                             let
                                 newRemaining = removeFirstOccurrence guessChar remainingTargetChars
                             in
@@ -1557,14 +1557,14 @@ keyboardDisplayAlphabetical letterStates =
         topRow = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
         middleRow = ['j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r']
         bottomRow = ['s', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-        
+
         renderKey char =
             let
                 state = Maybe.withDefault Empty (Dict.get char letterStates)
-                (bgColor, textColor) = 
+                (bgColor, textColor) =
                     case state of
                         Correct -> ("#6aaa64", "#ffffff")
-                        Present -> ("#c9b458", "#ffffff") 
+                        Present -> ("#c9b458", "#ffffff")
                         Absent -> ("#787c7e", "#ffffff")
                         Empty -> ("#d3d6da", "#1a1a1b")
             in
@@ -1584,9 +1584,9 @@ keyboardDisplayAlphabetical letterStates =
                 , style "text-transform" "uppercase"
                 ]
                 [ text (String.fromChar char) ]
-                
+
         renderRow chars =
-            div 
+            div
                 [ style "display" "flex"
                 , style "justify-content" "center"
                 , style "margin" "4px 0"
@@ -1595,7 +1595,7 @@ keyboardDisplayAlphabetical letterStates =
     in
     div [ style "margin-bottom" "20px" ]
         [ renderRow topRow
-        , renderRow middleRow  
+        , renderRow middleRow
         , renderRow bottomRow
         ]
 
@@ -1688,17 +1688,17 @@ legendDisplay =
 
 legendItem : String -> String -> Html Msg
 legendItem color label =
-    div 
+    div
         [ style "display" "flex"
         , style "align-items" "center"
         , style "gap" "5px"
         ]
-        [ div 
+        [ div
             [ style "width" "16px"
             , style "height" "16px"
             , style "background-color" color
             , style "border-radius" "2px"
-            ] 
+            ]
             []
         , text label
         ]

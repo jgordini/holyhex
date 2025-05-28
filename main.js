@@ -7204,7 +7204,6 @@ var $author$project$Main$isRowSubmitted = F2(
 	function (model, rowIndex) {
 		return A2($elm$core$List$member, rowIndex, model.submittedRows);
 	});
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$json$Json$Encode$float = _Json_wrap;
@@ -7658,8 +7657,8 @@ var $author$project$Main$update = F2(
 				}
 			case 'SubmitAttempt':
 				var result = function () {
-					var _v16 = model.focusedHexId;
-					if (_v16.$ === 'Nothing') {
+					var _v15 = model.focusedHexId;
+					if (_v15.$ === 'Nothing') {
 						return {
 							currentActiveRow: model.currentActiveRow,
 							gameMessage: $elm$core$Maybe$Just('No hex focused. Cannot determine row to submit.'),
@@ -7670,9 +7669,9 @@ var $author$project$Main$update = F2(
 							submittedRows: model.submittedRows
 						};
 					} else {
-						var focusedId = _v16.a;
-						var _v17 = $author$project$Main$parseHexId(focusedId);
-						if (_v17.$ === 'Nothing') {
+						var focusedId = _v15.a;
+						var _v16 = $author$project$Main$parseHexId(focusedId);
+						if (_v16.$ === 'Nothing') {
 							return {
 								currentActiveRow: model.currentActiveRow,
 								gameMessage: $elm$core$Maybe$Just('Error processing your submission. Invalid hex ID.'),
@@ -7683,8 +7682,8 @@ var $author$project$Main$update = F2(
 								submittedRows: model.submittedRows
 							};
 						} else {
-							var _v18 = _v17.a;
-							var rowIndex = _v18.a;
+							var _v17 = _v16.a;
+							var rowIndex = _v17.a;
 							if (!_Utils_eq(rowIndex, model.currentActiveRow)) {
 								return {
 									currentActiveRow: model.currentActiveRow,
@@ -7708,9 +7707,9 @@ var $author$project$Main$update = F2(
 										submittedRows: model.submittedRows
 									};
 								} else {
-									var _v19 = $elm$core$List$head(
+									var _v18 = $elm$core$List$head(
 										A2($elm$core$List$drop, rowIndex, model.grid));
-									if (_v19.$ === 'Nothing') {
+									if (_v18.$ === 'Nothing') {
 										return {
 											currentActiveRow: model.currentActiveRow,
 											gameMessage: $elm$core$Maybe$Just('Error processing your submission. Row not found.'),
@@ -7721,9 +7720,9 @@ var $author$project$Main$update = F2(
 											submittedRows: model.submittedRows
 										};
 									} else {
-										var rowData = _v19.a;
-										var _v20 = $author$project$Main$getWordFromRow(rowData);
-										if (_v20.$ === 'Nothing') {
+										var rowData = _v18.a;
+										var _v19 = $author$project$Main$getWordFromRow(rowData);
+										if (_v19.$ === 'Nothing') {
 											return {
 												currentActiveRow: model.currentActiveRow,
 												gameMessage: $elm$core$Maybe$Just('Please complete the word before submitting.'),
@@ -7734,36 +7733,36 @@ var $author$project$Main$update = F2(
 												submittedRows: model.submittedRows
 											};
 										} else {
-											var submittedWord = _v20.a;
+											var submittedWord = _v19.a;
 											var targetWord = function () {
-												var _v26 = model.currentWord;
-												if (_v26.$ === 'Just') {
-													var word = _v26.a;
+												var _v25 = model.currentWord;
+												if (_v25.$ === 'Just') {
+													var word = _v25.a;
 													return word;
 												} else {
 													return 'speed';
 												}
 											}();
 											var isValidWord = function () {
-												var _v21 = _Utils_Tuple2(model.validGuessesDB, model.targetWordsDB);
-												if (_v21.a.$ === 'Just') {
-													if (_v21.b.$ === 'Just') {
-														var validDB = _v21.a.a;
-														var targetDB = _v21.b.a;
+												var _v20 = _Utils_Tuple2(model.validGuessesDB, model.targetWordsDB);
+												if (_v20.a.$ === 'Just') {
+													if (_v20.b.$ === 'Just') {
+														var validDB = _v20.a.a;
+														var targetDB = _v20.b.a;
 														return A3($author$project$Main$validateWord, validDB.validGuesses, targetDB.targetWords, submittedWord);
 													} else {
-														var validDB = _v21.a.a;
-														var _v22 = _v21.b;
+														var validDB = _v20.a.a;
+														var _v21 = _v20.b;
 														return A3($author$project$Main$validateWord, validDB.validGuesses, $author$project$Main$fallbackTargetWords, submittedWord);
 													}
 												} else {
-													if (_v21.b.$ === 'Just') {
-														var _v23 = _v21.a;
-														var targetDB = _v21.b.a;
+													if (_v20.b.$ === 'Just') {
+														var _v22 = _v20.a;
+														var targetDB = _v20.b.a;
 														return A3($author$project$Main$validateWord, _List_Nil, targetDB.targetWords, submittedWord);
 													} else {
-														var _v24 = _v21.a;
-														var _v25 = _v21.b;
+														var _v23 = _v20.a;
+														var _v24 = _v20.b;
 														return A3($author$project$Main$validateWord, _List_Nil, $author$project$Main$fallbackTargetWords, submittedWord);
 													}
 												}
@@ -7828,9 +7827,9 @@ var $author$project$Main$update = F2(
 					}
 				}();
 				var newFocusedHexId = function () {
-					var _v15 = result.nextFocus;
-					if (_v15.$ === 'Just') {
-						var nextHexId = _v15.a;
+					var _v14 = result.nextFocus;
+					if (_v14.$ === 'Just') {
+						var nextHexId = _v14.a;
 						return $elm$core$Maybe$Just(nextHexId);
 					} else {
 						return model.focusedHexId;
@@ -7838,21 +7837,20 @@ var $author$project$Main$update = F2(
 				}();
 				var clearMessageCmd = (!_Utils_eq(result.gameMessage, $elm$core$Maybe$Nothing)) ? ((result.gameMessageType === 'success') ? A2(
 					$elm$core$Task$perform,
-					function (_v12) {
+					function (_v11) {
 						return $author$project$Main$ShowSuccessModal;
 					},
 					$elm$core$Process$sleep(1000)) : A2(
 					$elm$core$Task$perform,
-					function (_v13) {
+					function (_v12) {
 						return $author$project$Main$ClearGameMessage;
 					},
 					$elm$core$Process$sleep(3000))) : ((result.gameMessageType === 'gameover') ? A2(
 					$elm$core$Task$perform,
-					function (_v14) {
+					function (_v13) {
 						return $author$project$Main$ShowGameOverModal;
 					},
 					$elm$core$Process$sleep(1000)) : $elm$core$Platform$Cmd$none);
-				var _v11 = $elm$core$Debug$log(result.logMessage);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -7892,9 +7890,9 @@ var $author$project$Main$update = F2(
 						{betAmount: newAmount, betAmountString: amountStr}),
 					$elm$core$Platform$Cmd$none);
 			case 'PlaceBet':
-				var _v27 = $author$project$Main$selectNewWord(model);
-				var newModel = _v27.a;
-				var wordCmd = _v27.b;
+				var _v26 = $author$project$Main$selectNewWord(model);
+				var newModel = _v26.a;
+				var wordCmd = _v26.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						newModel,
@@ -7923,17 +7921,17 @@ var $author$project$Main$update = F2(
 			case 'BetAgain':
 				var wordGenerator = $author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords);
 				var seedValue = function () {
-					var _v29 = model.currentWord;
-					if (_v29.$ === 'Just') {
-						var word = _v29.a;
+					var _v28 = model.currentWord;
+					if (_v28.$ === 'Just') {
+						var word = _v28.a;
 						return ($elm$core$String$length(word) * 11) + (model.currentActiveRow * 17);
 					} else {
 						return 67;
 					}
 				}();
 				var newWordSeed = $elm$random$Random$initialSeed(seedValue);
-				var _v28 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
-				var maybeNewWord = _v28.a;
+				var _v27 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
+				var maybeNewWord = _v27.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						$author$project$Main$initialModel,
@@ -7963,17 +7961,17 @@ var $author$project$Main$update = F2(
 			case 'StartNewGame':
 				var wordGenerator = $author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords);
 				var seedValue = function () {
-					var _v32 = model.currentWord;
-					if (_v32.$ === 'Just') {
-						var word = _v32.a;
+					var _v31 = model.currentWord;
+					if (_v31.$ === 'Just') {
+						var word = _v31.a;
 						return ($elm$core$String$length(word) * 7) + (model.currentActiveRow * 13);
 					} else {
 						return 42;
 					}
 				}();
 				var newWordSeed = $elm$random$Random$initialSeed(seedValue);
-				var _v31 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
-				var maybeNewWord = _v31.a;
+				var _v30 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
+				var maybeNewWord = _v30.a;
 				var modelWithClearedGrid = _Utils_update(
 					$author$project$Main$initialModel,
 					{config: model.config, currentActiveRow: 0, currentWord: maybeNewWord, isGameOverModalVisible: false, isHintModalVisible: false, isLettersModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
@@ -8134,7 +8132,7 @@ var $author$project$Main$viewGameControls = function (model) {
 						A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 						A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 						A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-						A2($elm$html$Html$Attributes$style, 'color', 'black'),
+						A2($elm$html$Html$Attributes$style, 'color', 'white'),
 						A2($elm$html$Html$Attributes$style, 'border', 'none'),
 						A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8165,7 +8163,7 @@ var $author$project$Main$viewGameControls = function (model) {
 										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 										A2($elm$html$Html$Attributes$style, 'background-color', '#007bff'),
-										A2($elm$html$Html$Attributes$style, 'color', 'black'),
+										A2($elm$html$Html$Attributes$style, 'color', 'white'),
 										A2($elm$html$Html$Attributes$style, 'border', 'none'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8183,7 +8181,7 @@ var $author$project$Main$viewGameControls = function (model) {
 										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 										A2($elm$html$Html$Attributes$style, 'background-color', '#ffc107'),
-										A2($elm$html$Html$Attributes$style, 'color', 'black'),
+										A2($elm$html$Html$Attributes$style, 'color', 'white'),
 										A2($elm$html$Html$Attributes$style, 'border', 'none'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8204,7 +8202,7 @@ var $author$project$Main$viewGameControls = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Selecting puzzle word...')
+								$elm$html$Html$text('Loading puzzle...')
 							]));
 				}
 			}()
