@@ -2,14 +2,12 @@ port module Main exposing (main, Model, PuzzleResult(..), Msg(..), initialModel,
 
 import Browser
 import Browser.Events
-import Debug
 import Dict
-import Html exposing (Html, Attribute, div, h3, p, button, span, text) -- text is already imported
-import Html.Attributes exposing (class, style, id)
-import Html.Events exposing (keyCode, onClick, on, onMouseEnter, onMouseLeave, stopPropagationOn, onInput)
+import Html exposing (Html, div, h3, p, button, span, text)
+import Html.Attributes exposing (style)
+import Html.Events exposing (onClick, onMouseEnter, onMouseLeave, stopPropagationOn)
 import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline as Pipeline exposing (required, optional)
-import Task exposing (Task, succeed, perform)
+import Task
 import Platform.Sub
 import Random
 import Array
@@ -75,33 +73,6 @@ type alias TargetWordsMetadata =
 -- VALID GUESSES DATABASE DECODERS
 
 
-validGuessesDecoder : Decoder ValidGuessesDB
-validGuessesDecoder =
-    Decode.succeed ValidGuessesDB
-        |> Pipeline.required "version" Decode.string
-        |> Pipeline.required "metadata" metadataDecoder
-        |> Pipeline.required "validGuesses" (Decode.list Decode.string)
-        |> Pipeline.required "targetWords" (Decode.list Decode.string)
-        |> Pipeline.required "features" featuresDecoder
-
-
-metadataDecoder : Decoder ValidGuessesMetadata
-metadataDecoder =
-    Decode.succeed ValidGuessesMetadata
-        |> Pipeline.required "totalValidGuesses" Decode.int
-        |> Pipeline.required "totalTargetWords" Decode.int
-        |> Pipeline.required "lastUpdated" Decode.string
-        |> Pipeline.required "source" Decode.string
-        |> Pipeline.required "format" Decode.string
-        |> Pipeline.required "description" Decode.string
-
-
-featuresDecoder : Decoder SolutionsFeatures
-featuresDecoder =
-    Decode.succeed SolutionsFeatures
-        |> Pipeline.required "hasVowels" Decode.bool
-        |> Pipeline.required "allowsRepeatedLetters" Decode.bool
-        |> Pipeline.required "caseSensitive" Decode.bool
 
 
 -- Simple decoder for validguess.json file (only contains validGuesses list)
@@ -112,24 +83,6 @@ simpleValidGuessesDecoder =
 
 -- TARGET WORDS DATABASE DECODERS
 
-
-targetWordsDecoder : Decoder TargetWordsDB
-targetWordsDecoder =
-    Decode.succeed TargetWordsDB
-        |> Pipeline.required "version" Decode.string
-        |> Pipeline.required "metadata" targetWordsMetadataDecoder
-        |> Pipeline.required "targetWords" (Decode.list Decode.string)
-        |> Pipeline.required "features" featuresDecoder
-
-
-targetWordsMetadataDecoder : Decoder TargetWordsMetadata
-targetWordsMetadataDecoder =
-    Decode.succeed TargetWordsMetadata
-        |> Pipeline.required "totalTargetWords" Decode.int
-        |> Pipeline.required "lastUpdated" Decode.string
-        |> Pipeline.required "source" Decode.string
-        |> Pipeline.required "format" Decode.string
-        |> Pipeline.required "description" Decode.string
 
 
 -- VALID GUESSES DATABASE FUNCTIONS
@@ -146,10 +99,6 @@ getRandomWordGenerator targetWords =
     else
         Random.map (\index -> Array.get index wordArray) (Random.int 0 (Array.length wordArray - 1))
 
-
-getRandomWord : List String -> Maybe String
-getRandomWord targetWords =
-    List.head targetWords -- Fallback for when we can't use Random
 
 
 -- For validation, check if word exists in valid guesses list OR target words list
@@ -445,6 +394,7 @@ type Msg
     | BetAgain
     | RandomWordGenerated (Maybe String)
     | StartNewGame
+    | RefreshPage
     | ClearGameMessage
     | LoadValidGuesses
     | SimpleValidGuessesLoaded (Result Http.Error (List String))
@@ -780,8 +730,6 @@ update msg model =
                                                             , currentActiveRow = model.currentActiveRow -- Don't advance for invalid words
                                                             }
 
-                _ = Debug.log result.logMessage
-                
                 clearMessageCmd = 
                     if result.gameMessage /= Nothing then
                         if result.gameMessageType == "success" then
@@ -912,6 +860,9 @@ update msg model =
             in
             ( modelWithClearedGrid, Cmd.none ) -- No need for async command since word is set immediately
 
+        RefreshPage ->
+            ( model, refreshPage () )
+
         ClearGameMessage ->
             ( { model | gameMessage = Nothing, gameMessageType = "" }, Cmd.none )
 
@@ -1039,6 +990,7 @@ parseTxPayout txData =
 
 port connectWallet : () -> Cmd msg
 port placeBet : { amount : Float } -> Cmd msg
+port refreshPage : () -> Cmd msg
 port transactionResult : (String -> msg) -> Sub msg
 
 
@@ -1072,222 +1024,6 @@ calculatePotentialPayout model =
     String.fromFloat (toFloat (round (finalPayout * 100)) / 100)
 
 
--- Success modal for when puzzle is solved
-viewSuccessModal : Model -> Html Msg
-viewSuccessModal model =
-    if model.isModalVisible then
-        div -- Backdrop for success modal
-            [ style "position" "fixed"
-            , style "top" "0"
-            , style "left" "0"
-            , style "width" "100%"
-            , style "height" "100%"
-            , style "background-color" "rgba(0, 0, 0, 0.7)"
-            , style "display" "flex"
-            , style "justify-content" "center"
-            , style "align-items" "center"
-            , style "z-index" "1001"
-            ]
-            [ div -- Success Modal content box
-                [ style "background-color" "#fff"
-                , style "padding" "40px 50px"
-                , style "border-radius" "15px"
-                , style "box-shadow" "0 10px 25px rgba(0,0,0,0.4)"
-                , style "min-width" "400px"
-                , style "max-width" "90%"
-                , style "text-align" "center"
-                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
-                ]
-                (let
-                    targetWord = Maybe.withDefault "UNKNOWN" model.currentWord
-                    guessCount = model.currentActiveRow + 1  -- +1 because currentActiveRow is 0-indexed
-                    guessText = if guessCount == 1 then "guess" else "guesses"
-                in
-                [ div
-                    [ style "font-size" "32px"
-                    , style "margin-bottom" "10px"
-                    ]
-                    [ text "🎉 Congratulations! 🎉" ]
-                , div
-                    [ style "font-size" "20px"
-                    , style "font-weight" "bold"
-                    , style "color" "#28a745"
-                    , style "margin-bottom" "10px"
-                    ]
-                    [ text ("You solved the puzzle in " ++ String.fromInt guessCount ++ " " ++ guessText ++ "!") ]
-                , div
-                    [ style "font-size" "18px"
-                    , style "color" "#333"
-                    , style "margin-bottom" "20px"
-                    ]
-                    [ text ("The word was: " ++ String.toUpper targetWord) ]
-                , div
-                    [ style "display" "flex"
-                    , style "justify-content" "center"
-                    , style "gap" "15px"
-                    , style "margin-top" "30px"
-                    ]
-                    [ button
-                        [ onClick CloseModal
-                        , style "padding" "12px 24px"
-                        , style "cursor" "pointer"
-                        , style "background-color" "#6c757d"
-                        , style "color" "white"
-                        , style "border" "none"
-                        , style "border-radius" "8px"
-                        , style "font-size" "16px"
-                        , style "font-weight" "500"
-                        ]
-                        [ text "Close" ]
-                , button
-                        [ onClick StartNewGame
-                    , style "padding" "12px 24px"
-                    , style "cursor" "pointer"
-                        , style "background-color" "#28a745"
-                        , style "color" "white"
-                    , style "border" "none"
-                        , style "border-radius" "8px"
-                    , style "font-size" "16px"
-                    , style "font-weight" "bold"
-                    ]
-                        [ text "New Game" ]
-                ]
-                ])
-            ]
-    else
-        Html.text ""
-
-
--- Hint modal for showing the target word
-viewHintModal : Model -> Html Msg
-viewHintModal model =
-    if model.isHintModalVisible then
-        div -- Backdrop for hint modal
-            [ style "position" "fixed"
-            , style "top" "0"
-            , style "left" "0"
-            , style "width" "100%"
-            , style "height" "100%"
-            , style "background-color" "rgba(0, 0, 0, 0.7)"
-            , style "display" "flex"
-            , style "justify-content" "center"
-            , style "align-items" "center"
-            , style "z-index" "1001"
-            , onClick CloseHintModal
-            ]
-            [ div -- Hint Modal content box
-                [ style "background-color" "#fff"
-                , style "padding" "30px 40px"
-                , style "border-radius" "12px"
-                , style "box-shadow" "0 8px 20px rgba(0,0,0,0.3)"
-                , style "min-width" "300px"
-                , style "max-width" "90%"
-                , style "text-align" "center"
-                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
-                ]
-                [ div
-                    [ style "font-size" "18px"
-                    , style "font-weight" "bold"
-                    , style "color" "#333"
-                    , style "margin-bottom" "15px"
-                    ]
-                    [ text "💡 Hint" ]
-                , div
-                    [ style "font-size" "24px"
-                    , style "font-weight" "bold"
-                    , style "color" "#007bff"
-                    , style "margin-bottom" "20px"
-                    , style "font-family" "monospace"
-                    , style "letter-spacing" "2px"
-                    ]
-                    [ text ("Target: " ++ String.toUpper (Maybe.withDefault "UNKNOWN" model.currentWord)) ]
-                , button
-                    [ onClick CloseHintModal
-                    , style "padding" "10px 20px"
-                        , style "cursor" "pointer"
-                    , style "background-color" "#6c757d"
-                        , style "color" "white"
-                        , style "border" "none"
-                    , style "border-radius" "6px"
-                    , style "font-size" "14px"
-                    , style "font-weight" "500"
-                        ]
-                    [ text "Close" ]
-                ]
-            ]
-    else
-        Html.text ""
-
-
--- Game Over modal for when user fails to guess the word
-viewGameOverModal : Model -> Html Msg
-viewGameOverModal model =
-    if model.isGameOverModalVisible then
-        div -- Backdrop for game over modal
-            [ style "position" "fixed"
-            , style "top" "0"
-            , style "left" "0"
-            , style "width" "100%"
-            , style "height" "100%"
-            , style "background-color" "rgba(0, 0, 0, 0.8)"
-            , style "display" "flex"
-            , style "justify-content" "center"
-            , style "align-items" "center"
-            , style "z-index" "1000"
-            , onClick StartNewGame
-            ]
-            [ div
-                [ style "background-color" "#fff"
-                , style "padding" "30px"
-                , style "border-radius" "15px"
-                , style "box-shadow" "0 10px 25px rgba(0,0,0,0.4)"
-                , style "min-width" "400px"
-                , style "max-width" "90%"
-                , style "text-align" "center"
-                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
-                ]
-                [ div
-                    [ style "font-size" "24px"
-                    , style "font-weight" "bold"
-                    , style "color" "#d32f2f"
-                    , style "margin-bottom" "15px"
-                    ]
-                    [ text "😞 Game Over" ]
-                , div
-                    [ style "font-size" "16px"
-                    , style "color" "#666"
-                    , style "margin-bottom" "20px"
-                    ]
-                    [ text "Sorry, the word was:" ]
-                , div
-                    [ style "font-size" "32px"
-                    , style "font-weight" "bold"
-                    , style "color" "#2e7d32"
-                    , style "margin-bottom" "25px"
-                    , style "padding" "10px"
-                    , style "background-color" "#f5f5f5"
-                    , style "border-radius" "8px"
-                    , style "text-transform" "uppercase"
-                    ]
-                    [ text (Maybe.withDefault "UNKNOWN" model.currentWord) ]
-                , button
-                    [ onClick StartNewGame
-                    , style "background-color" "#28a745"
-                    , style "color" "white"
-                    , style "border" "none"
-                    , style "padding" "12px 24px"
-                    , style "border-radius" "8px"
-                    , style "cursor" "pointer"
-                    , style "font-size" "16px"
-                    , style "font-weight" "bold"
-                    ]
-                    [ text "New Game" ]
-                ]
-            ]
-    else
-        Html.text ""
-
-
 -- Function to get the best state for each letter from the grid
 getLetterStates : List (List HexagonData) -> Dict.Dict Char HexState
 getLetterStates grid =
@@ -1315,126 +1051,6 @@ getLetterStates grid =
     in
     Dict.map (\_ states -> getBestState states) letterGroups
 
-
--- Letters modal showing QWERTY keyboard with letter states
-viewLettersModal : Model -> Html Msg
-viewLettersModal model =
-    if model.isLettersModalVisible then
-        let
-            letterStates = getLetterStates model.grid
-            
-            -- QWERTY keyboard layout
-            topRow = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']
-            middleRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l']
-            bottomRow = ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-            
-            renderKey char =
-                let
-                    state = Maybe.withDefault Empty (Dict.get char letterStates)
-                    (bgColor, textColor) = 
-                        case state of
-                            Correct -> ("#6aaa64", "#ffffff")
-                            Present -> ("#c9b458", "#ffffff") 
-                            Absent -> ("#787c7e", "#ffffff")
-                            Empty -> ("#d3d6da", "#1a1a1b")
-                in
-                div
-                    [ style "display" "inline-block"
-                    , style "width" "40px"
-                    , style "height" "40px"
-                    , style "margin" "2px"
-                    , style "background-color" bgColor
-                    , style "color" textColor
-                    , style "border-radius" "4px"
-                    , style "display" "flex"
-                    , style "align-items" "center"
-                    , style "justify-content" "center"
-                    , style "font-weight" "bold"
-                    , style "font-size" "16px"
-                    , style "text-transform" "uppercase"
-                    ]
-                    [ text (String.fromChar char) ]
-                    
-            renderRow chars =
-                div 
-                    [ style "display" "flex"
-                    , style "justify-content" "center"
-                    , style "margin" "4px 0"
-                    ]
-                    (List.map renderKey chars)
-        in
-        div -- Backdrop for letters modal
-            [ style "position" "fixed"
-            , style "top" "0"
-            , style "left" "0"
-            , style "width" "100%"
-            , style "height" "100%"
-            , style "background-color" "rgba(0, 0, 0, 0.8)"
-            , style "display" "flex"
-            , style "justify-content" "center"
-            , style "align-items" "center"
-            , style "z-index" "1000"
-            , onClick CloseLettersModal
-            ]
-            [ div
-                [ style "background-color" "#fff"
-                , style "padding" "30px"
-                , style "border-radius" "12px"
-                , style "box-shadow" "0 8px 20px rgba(0,0,0,0.3)"
-                , style "min-width" "400px"
-                , style "max-width" "90%"
-                , style "text-align" "center"
-                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
-                ]
-                [ div
-                    [ style "font-size" "18px"
-                    , style "font-weight" "bold"
-                    , style "color" "#333"
-                    , style "margin-bottom" "20px"
-                    ]
-                    [ text "🔤 Letter Status" ]
-                , div
-                    [ style "margin-bottom" "20px"
-                    ]
-                    [ renderRow topRow
-                    , renderRow middleRow  
-                    , renderRow bottomRow
-                    ]
-                , div
-                    [ style "display" "flex"
-                    , style "justify-content" "center"
-                    , style "gap" "20px"
-                    , style "margin-bottom" "15px"
-                    , style "font-size" "12px"
-                    ]
-                    [ div [ style "display" "flex", style "align-items" "center", style "gap" "5px" ]
-                        [ div [ style "width" "16px", style "height" "16px", style "background-color" "#6aaa64", style "border-radius" "2px" ] []
-                        , text "Correct"
-                        ]
-                    , div [ style "display" "flex", style "align-items" "center", style "gap" "5px" ]
-                        [ div [ style "width" "16px", style "height" "16px", style "background-color" "#c9b458", style "border-radius" "2px" ] []
-                        , text "Wrong Position"
-                        ]
-                    , div [ style "display" "flex", style "align-items" "center", style "gap" "5px" ]
-                        [ div [ style "width" "16px", style "height" "16px", style "background-color" "#787c7e", style "border-radius" "2px" ] []
-                        , text "Not in Word"
-                        ]
-                    ]
-                , button
-                    [ onClick CloseLettersModal
-                    , style "background-color" "#6c757d"
-                    , style "color" "white"
-                    , style "border" "none"
-                    , style "padding" "8px 16px"
-                    , style "border-radius" "4px"
-                    , style "cursor" "pointer"
-                    , style "font-size" "14px"
-                    ]
-                    [ text "Close" ]
-                ]
-            ]
-    else
-        Html.text ""
 
 
 -- Add this function before the view function
@@ -1491,10 +1107,10 @@ view model =
         , viewHoneycombGrid model
         , viewRules
         , viewBetModal model
-        , viewSuccessModal model
-        , viewHintModal model
-        , viewGameOverModal model
-        , viewLettersModal model
+        , if model.isModalVisible then viewSuccessModalSimple model else Html.text ""
+        , if model.isHintModalVisible then viewHintModalSimple model else Html.text ""
+        , if model.isGameOverModalVisible then viewGameOverModalSimple model else Html.text ""
+        , if model.isLettersModalVisible then viewLettersModalSimple model else Html.text ""
         ]
 
 
@@ -1511,14 +1127,14 @@ viewGameControls model =
         , style "gap" "15px"
         ]
         [ button
-            [ onClick StartNewGame
-                        , style "padding" "10px 18px"
-                        , style "cursor" "pointer"
+            [ onClick RefreshPage
+            , style "padding" "10px 18px"
+            , style "cursor" "pointer"
             , style "background-color" "#28a745"
-                        , style "color" "white"
-                        , style "border" "none"
-                        , style "border-radius" "5px"
-                        , style "font-size" "15px"
+            , style "color" "black"
+            , style "border" "none"
+            , style "border-radius" "5px"
+            , style "font-size" "15px"
             , style "font-weight" "bold"
             ]
             [ text "New Game" ]
@@ -1530,7 +1146,7 @@ viewGameControls model =
                         , style "padding" "10px 18px"
                         , style "cursor" "pointer"
                         , style "background-color" "#007bff"
-                        , style "color" "white"
+                        , style "color" "black"
                         , style "border" "none"
                         , style "border-radius" "5px"
                         , style "font-size" "15px"
@@ -1542,7 +1158,7 @@ viewGameControls model =
                         , style "padding" "10px 18px"
                         , style "cursor" "pointer"
                         , style "background-color" "#ffc107"
-                        , style "color" "#212529"
+                        , style "color" "black"
                         , style "border" "none"
                         , style "border-radius" "5px"
                         , style "font-size" "15px"
@@ -1555,23 +1171,14 @@ viewGameControls model =
                     [ style "font-size" "14px"
                     , style "color" "#999"
                     ]
-                    [ text "Selecting puzzle word..." ]
-                    ]
+                    [ text "Loading puzzle..." ]
+        ]
 
 
 viewWalletControls : Model -> Html Msg
 viewWalletControls model =
     -- Hidden for now - wallet and betting functionality will be implemented later
     Html.text ""
-
-truncateWalletAddress : String -> String
-truncateWalletAddress addr =
-    if String.length addr > 10 then
-        String.slice 0 6 addr ++ "..." ++ String.slice (String.length addr - 4) (String.length addr) addr
-
-    else
-        addr
-
 
 viewRules : Html Msg
 viewRules =
@@ -1885,3 +1492,213 @@ updateRowWithStates rowIndex states grid =
         else
             row
     ) grid
+
+-- SIMPLE MODAL FUNCTIONS (avoiding import cycle)
+
+viewSuccessModalSimple : Model -> Html Msg
+viewSuccessModalSimple model =
+    modalBackdrop CloseModal
+        [ modalContent
+            [ div [ style "font-size" "32px", style "margin-bottom" "10px" ]
+                [ text "🎉 Congratulations! 🎉" ]
+            , div [ style "font-size" "20px", style "color" "#28a745", style "margin-bottom" "10px" ]
+                [ text ("You solved the puzzle!") ]
+            , div [ style "font-size" "32px", style "font-weight" "bold", style "color" "#2e7d32", style "margin-bottom" "25px" ]
+                [ text (Maybe.withDefault "UNKNOWN" model.currentWord) ]
+            , modalButtons
+                [ closeButton CloseModal
+                , newGameButton
+                ]
+            ]
+        ]
+
+viewHintModalSimple : Model -> Html Msg
+viewHintModalSimple model =
+    modalBackdrop CloseHintModal
+        [ modalContent
+            [ div [ style "font-size" "18px", style "font-weight" "bold", style "margin-bottom" "15px" ]
+                [ text "💡 Hint" ]
+            , div [ style "font-size" "24px", style "font-weight" "bold", style "color" "#007bff", style "margin-bottom" "20px" ]
+                [ text ("Target: " ++ String.toUpper (Maybe.withDefault "UNKNOWN" model.currentWord)) ]
+            , modalButtons [ closeButton CloseHintModal ]
+            ]
+        ]
+
+viewGameOverModalSimple : Model -> Html Msg
+viewGameOverModalSimple model =
+    modalBackdrop RefreshPage
+        [ modalContent
+            [ div [ style "font-size" "24px", style "font-weight" "bold", style "color" "#d32f2f", style "margin-bottom" "15px" ]
+                [ text "😞 Game Over" ]
+            , div [ style "font-size" "16px", style "color" "#666", style "margin-bottom" "20px" ]
+                [ text "Sorry, the word was:" ]
+            , div [ style "font-size" "32px", style "font-weight" "bold", style "color" "#2e7d32", style "margin-bottom" "25px" ]
+                [ text (Maybe.withDefault "UNKNOWN" model.currentWord) ]
+            , modalButtons [ newGameButton ]
+            ]
+        ]
+
+viewLettersModalSimple : Model -> Html Msg
+viewLettersModalSimple model =
+    modalBackdrop CloseLettersModal
+        [ modalContent
+            [ div [ style "font-size" "18px", style "font-weight" "bold", style "margin-bottom" "20px" ]
+                [ text "🔤 Letter Status" ]
+            , keyboardDisplayAlphabetical (getLetterStates model.grid)
+            , legendDisplay
+            , modalButtons [ closeButton CloseLettersModal ]
+            ]
+        ]
+
+-- Alphabetical keyboard display
+keyboardDisplayAlphabetical : Dict.Dict Char HexState -> Html Msg
+keyboardDisplayAlphabetical letterStates =
+    let
+        topRow = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+        middleRow = ['j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r']
+        bottomRow = ['s', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        
+        renderKey char =
+            let
+                state = Maybe.withDefault Empty (Dict.get char letterStates)
+                (bgColor, textColor) = 
+                    case state of
+                        Correct -> ("#6aaa64", "#ffffff")
+                        Present -> ("#c9b458", "#ffffff") 
+                        Absent -> ("#787c7e", "#ffffff")
+                        Empty -> ("#d3d6da", "#1a1a1b")
+            in
+            div
+                [ style "display" "inline-block"
+                , style "width" "40px"
+                , style "height" "40px"
+                , style "margin" "2px"
+                , style "background-color" bgColor
+                , style "color" textColor
+                , style "border-radius" "4px"
+                , style "display" "flex"
+                , style "align-items" "center"
+                , style "justify-content" "center"
+                , style "font-weight" "bold"
+                , style "font-size" "16px"
+                , style "text-transform" "uppercase"
+                ]
+                [ text (String.fromChar char) ]
+                
+        renderRow chars =
+            div 
+                [ style "display" "flex"
+                , style "justify-content" "center"
+                , style "margin" "4px 0"
+                ]
+                (List.map renderKey chars)
+    in
+    div [ style "margin-bottom" "20px" ]
+        [ renderRow topRow
+        , renderRow middleRow  
+        , renderRow bottomRow
+        ]
+
+
+-- Modal helper functions
+modalBackdrop : Msg -> List (Html Msg) -> Html Msg
+modalBackdrop closeMsg content =
+    div
+        [ style "position" "fixed"
+        , style "top" "0"
+        , style "left" "0"
+        , style "width" "100%"
+        , style "height" "100%"
+        , style "background-color" "rgba(0, 0, 0, 0.7)"
+        , style "display" "flex"
+        , style "justify-content" "center"
+        , style "align-items" "center"
+        , style "z-index" "1001"
+        , onClick closeMsg
+        ]
+        content
+
+modalContent : List (Html Msg) -> Html Msg
+modalContent content =
+    div
+        [ style "background-color" "#fff"
+        , style "padding" "40px 50px"
+        , style "border-radius" "15px"
+        , style "box-shadow" "0 10px 25px rgba(0,0,0,0.4)"
+        , style "min-width" "400px"
+        , style "max-width" "90%"
+        , style "text-align" "center"
+        , stopPropagationOn "click" (Decode.succeed (NoOp, True))
+        ]
+        content
+
+modalButtons : List (Html Msg) -> Html Msg
+modalButtons buttons =
+    div
+        [ style "display" "flex"
+        , style "justify-content" "center"
+        , style "gap" "15px"
+        , style "margin-top" "30px"
+        ]
+        buttons
+
+closeButton : Msg -> Html Msg
+closeButton msg =
+    button
+        [ onClick msg
+        , style "padding" "12px 24px"
+        , style "cursor" "pointer"
+        , style "background-color" "#6c757d"
+        , style "color" "white"
+        , style "border" "none"
+        , style "border-radius" "8px"
+        , style "font-size" "16px"
+        , style "font-weight" "500"
+        ]
+        [ text "Close" ]
+
+newGameButton : Html Msg
+newGameButton =
+    button
+        [ onClick RefreshPage
+        , style "padding" "12px 24px"
+        , style "cursor" "pointer"
+        , style "background-color" "#28a745"
+        , style "color" "black"
+        , style "border" "none"
+        , style "border-radius" "8px"
+        , style "font-size" "16px"
+        , style "font-weight" "bold"
+        ]
+        [ text "New Game" ]
+
+legendDisplay : Html Msg
+legendDisplay =
+    div
+        [ style "display" "flex"
+        , style "justify-content" "center"
+        , style "gap" "20px"
+        , style "margin-bottom" "15px"
+        , style "font-size" "12px"
+        ]
+        [ legendItem "#6aaa64" "Correct"
+        , legendItem "#c9b458" "Wrong Position"
+        , legendItem "#787c7e" "Not in Word"
+        ]
+
+legendItem : String -> String -> Html Msg
+legendItem color label =
+    div 
+        [ style "display" "flex"
+        , style "align-items" "center"
+        , style "gap" "5px"
+        ]
+        [ div 
+            [ style "width" "16px"
+            , style "height" "16px"
+            , style "background-color" color
+            , style "border-radius" "2px"
+            ] 
+            []
+        , text label
+        ]

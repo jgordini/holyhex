@@ -2,7 +2,7 @@ module MainTests exposing (..)
 
 import Expect
 import Test exposing (..)
-import Main exposing (Model, Msg(..), Difficulty(..), PuzzleResult(..), initialModel, update, stringToDifficulty, difficultyToString, calculatePotentialPayout) -- Add other necessary imports
+import Main exposing (Msg(..), Difficulty(..), PuzzleResult(..), initialModel, update, stringToDifficulty, difficultyToString, calculatePotentialPayout) -- Add other necessary imports
 
 
 suite : Test

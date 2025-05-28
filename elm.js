@@ -4708,7 +4708,6 @@ var $elm$core$Set$toList = function (_v0) {
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
-var $author$project$Main$Easy = {$: 'Easy'};
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -5419,64 +5418,6 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$document = _Browser_document;
-var $author$project$Main$embeddedTargetWordsDB = {
-	categories: {
-		actions: _List_fromArray(
-			['swing', 'shave', 'lunge', 'snout']),
-		common: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		nature: _List_fromArray(
-			['shore', 'mount', 'lemon', 'plume']),
-		technology: _List_fromArray(
-			['proxy', 'omega'])
-	},
-	difficulties: {
-		easy: {description: 'Common words with frequent letter patterns', multiplier: 1.5, wordCount: 923},
-		hard: {description: 'Rare words with uncommon letter combinations', multiplier: 3.0, wordCount: 578},
-		medium: {description: 'Words with moderate complexity and mixed letter patterns', multiplier: 2.0, wordCount: 808}
-	},
-	features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
-	metadata: {description: 'Target words database for Honeycomb Wordle puzzles', format: '5-letter-words', lastUpdated: '2024-03-21', source: 'answerlist.txt', totalTargetWords: 2309},
-	targetWords: {
-		easy: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		hard: _List_fromArray(
-			['borax', 'proxy', 'epoch', 'tryst', 'dwelt', 'staid', 'allot', 'omega', 'squab', 'lemon', 'plunk', 'foggy', 'attic', 'theta', 'snack', 'pleat', 'rugby', 'floss', 'lunge', 'glory']),
-		medium: _List_fromArray(
-			['caulk', 'gully', 'foyer', 'shard', 'being', 'colon', 'wrung', 'perky', 'mount', 'triad', 'swing', 'ferry', 'idyll', 'twixt', 'shave', 'whoop', 'foist', 'natal', 'shore', 'rhyme'])
-	},
-	version: '1.0'
-};
-var $author$project$Main$embeddedValidGuessesDB = {
-	categories: {
-		actions: _List_fromArray(
-			['swing', 'shave', 'lunge', 'snout']),
-		common: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		nature: _List_fromArray(
-			['shore', 'mount', 'lemon', 'plume']),
-		technology: _List_fromArray(
-			['proxy', 'omega'])
-	},
-	difficulties: {
-		easy: {description: 'Common words with frequent letter patterns', multiplier: 1.5},
-		hard: {description: 'Rare words with uncommon letter combinations', multiplier: 3.0},
-		medium: {description: 'Words with moderate complexity and mixed letter patterns', multiplier: 2.0}
-	},
-	features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
-	metadata: {description: 'Valid guess words database for Honeycomb Wordle', format: '5-letter-words', lastUpdated: '2024-03-21', source: 'words.txt', totalTargetWords: 2309, totalValidGuesses: 14854},
-	targetWords: {
-		easy: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		hard: _List_fromArray(
-			['borax', 'proxy', 'epoch', 'tryst', 'dwelt', 'staid', 'allot', 'omega', 'squab', 'lemon', 'plunk', 'foggy', 'attic', 'theta', 'snack', 'pleat', 'rugby', 'floss', 'lunge', 'glory']),
-		medium: _List_fromArray(
-			['caulk', 'gully', 'foyer', 'shard', 'being', 'colon', 'wrung', 'perky', 'mount', 'triad', 'swing', 'ferry', 'idyll', 'twixt', 'shave', 'whoop', 'foist', 'natal', 'shore', 'rhyme'])
-	},
-	validGuesses: _List_fromArray(
-		['about', 'above', 'abuse', 'actor', 'acute', 'admit', 'adopt', 'adult', 'after', 'again', 'agent', 'agree', 'ahead', 'alarm', 'album', 'alert', 'alien', 'align', 'alike', 'alive', 'allow', 'alone', 'along', 'alter', 'among', 'anger', 'angle', 'angry', 'apart', 'apple', 'apply', 'arena', 'argue', 'arise', 'array', 'aside', 'asset', 'avoid', 'awake', 'award', 'aware', 'badly', 'baker', 'bases', 'basic', 'beach', 'began', 'begin', 'being', 'below', 'bench', 'billy', 'birth', 'black', 'blame', 'blank', 'blast', 'blind', 'block', 'blood', 'board', 'boost', 'booth', 'bound', 'brain', 'brand', 'brass', 'brave', 'bread', 'break', 'breed', 'brief', 'bring', 'broad', 'broke', 'brown', 'build', 'built', 'buyer', 'cable', 'calif', 'carry', 'catch', 'cause', 'chain', 'chair', 'chaos', 'charm', 'chart', 'chase', 'cheap', 'check', 'chest', 'chief', 'child', 'china', 'chose', 'civil', 'claim', 'class', 'clean', 'clear', 'click', 'climb', 'clock', 'close', 'cloud', 'coach', 'coast', 'could', 'count', 'court', 'cover', 'craft', 'crash', 'crazy', 'cream', 'crime', 'cross', 'crowd', 'crown', 'crude', 'curve', 'cycle', 'daily', 'dance', 'dated', 'dealt', 'death', 'debut', 'delay', 'depth', 'doing', 'doubt', 'dozen', 'draft', 'drama', 'drank', 'dream', 'dress', 'drill', 'drink', 'drive', 'drove', 'dying', 'eager', 'early', 'earth', 'eight', 'elite', 'empty', 'enemy', 'enjoy', 'enter', 'entry', 'equal', 'error', 'event', 'every', 'exact', 'exist', 'extra', 'faith', 'false', 'fault', 'fiber', 'field', 'fifth', 'fifty', 'fight', 'final', 'first', 'fixed', 'flash', 'fleet', 'floor', 'fluid', 'focus', 'force', 'forth', 'forty', 'forum', 'found', 'frame', 'frank', 'fraud', 'fresh', 'front', 'fruit', 'fully', 'funny', 'giant', 'given', 'glass', 'globe', 'going', 'grace', 'grade', 'grand', 'grant', 'grass', 'grave', 'great', 'green', 'gross', 'group', 'grown', 'guard', 'guess', 'guest', 'guide', 'happy', 'harry', 'heart', 'heavy', 'hence', 'henry', 'horse', 'hotel', 'house', 'human', 'ideal', 'image', 'index', 'inner', 'input', 'issue', 'japan', 'jimmy', 'joint', 'jones', 'judge', 'known', 'label', 'large', 'laser', 'later', 'laugh', 'layer', 'learn', 'lease', 'least', 'leave', 'legal', 'level', 'lewis', 'light', 'limit', 'links', 'lives', 'local', 'loose', 'lower', 'lucky', 'lunch', 'lying', 'magic', 'major', 'maker', 'march', 'maria', 'match', 'maybe', 'mayor', 'meant', 'media', 'metal', 'might', 'minor', 'minus', 'mixed', 'model', 'money', 'month', 'moral', 'motor', 'mount', 'mouse', 'mouth', 'moved', 'movie', 'music', 'needs', 'never', 'newly', 'night', 'noise', 'north', 'noted', 'novel', 'nurse', 'occur', 'ocean', 'offer', 'often', 'order', 'other', 'ought', 'paint', 'panel', 'paper', 'party', 'peace', 'peter', 'phase', 'phone', 'photo', 'piano', 'piece', 'pilot', 'pitch', 'place', 'plain', 'plane', 'plant', 'plate', 'point', 'pound', 'power', 'press', 'price', 'pride', 'prime', 'print', 'prior', 'prize', 'proof', 'proud', 'prove', 'queen', 'quick', 'quiet', 'quite', 'radio', 'raise', 'range', 'rapid', 'ratio', 'reach', 'ready', 'realm', 'rebel', 'refer', 'relax', 'repay', 'reply', 'right', 'rigid', 'rival', 'river', 'robin', 'roger', 'roman', 'rough', 'round', 'route', 'royal', 'rural', 'scale', 'scene', 'scope', 'score', 'sense', 'serve', 'seven', 'shall', 'shape', 'share', 'sharp', 'sheet', 'shelf', 'shell', 'shift', 'shine', 'shirt', 'shock', 'shoot', 'short', 'shown', 'sides', 'sight', 'silly', 'since', 'sixth', 'sixty', 'sized', 'skill', 'sleep', 'slide', 'small', 'smart', 'smile', 'smith', 'smoke', 'snake', 'snow', 'solid', 'solve', 'sorry', 'sound', 'south', 'space', 'spare', 'speak', 'speed', 'spend', 'spent', 'split', 'spoke', 'sport', 'staff', 'stage', 'stake', 'stand', 'start', 'state', 'steam', 'steel', 'steep', 'steer', 'stick', 'still', 'stock', 'stone', 'stood', 'store', 'storm', 'story', 'strip', 'stuck', 'study', 'stuff', 'style', 'sugar', 'suite', 'super', 'sweet', 'table', 'taken', 'taste', 'taxes', 'teach', 'teeth', 'terry', 'texas', 'thank', 'theft', 'their', 'theme', 'there', 'these', 'thick', 'thing', 'think', 'third', 'those', 'three', 'threw', 'throw', 'thumb', 'tight', 'timer', 'tired', 'title', 'today', 'topic', 'total', 'touch', 'tough', 'tower', 'track', 'trade', 'train', 'treat', 'trend', 'trial', 'tribe', 'trick', 'tried', 'tries', 'truck', 'truly', 'trunk', 'trust', 'truth', 'twice', 'uncle', 'under', 'undue', 'union', 'unity', 'until', 'upper', 'upset', 'urban', 'usage', 'usual', 'valid', 'value', 'video', 'virus', 'visit', 'vital', 'vocal', 'voice', 'waste', 'watch', 'water', 'wheel', 'where', 'which', 'while', 'white', 'whole', 'whose', 'woman', 'women', 'world', 'worry', 'worse', 'worst', 'worth', 'would', 'write', 'wrong', 'wrote', 'young', 'youth']),
-	version: '2.0'
-};
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5559,26 +5500,26 @@ var $author$project$Main$initialModel = {
 	config: $author$project$Main$initialConfig,
 	currentActiveRow: 0,
 	currentWord: $elm$core$Maybe$Nothing,
-	difficulty: $author$project$Main$Easy,
-	difficultyString: 'Easy',
 	focusedHexId: $elm$core$Maybe$Just('hex-0-0'),
 	gameMessage: $elm$core$Maybe$Nothing,
 	gameMessageType: '',
 	grid: $author$project$Main$initialGrid,
 	hoveredHexId: $elm$core$Maybe$Nothing,
 	isBetModalVisible: false,
+	isGameOverModalVisible: false,
 	isHintModalVisible: false,
+	isLettersModalVisible: false,
 	isModalVisible: false,
 	loadingError: $elm$core$Maybe$Nothing,
 	modalMessage: '',
 	puzzleResult: $elm$core$Maybe$Nothing,
 	submittedRows: _List_Nil,
-	targetWordsDB: $elm$core$Maybe$Just($author$project$Main$embeddedTargetWordsDB),
-	validGuessesDB: $elm$core$Maybe$Just($author$project$Main$embeddedValidGuessesDB),
+	targetWordsDB: $elm$core$Maybe$Nothing,
+	validGuessesDB: $elm$core$Maybe$Nothing,
 	walletAddress: $elm$core$Maybe$Nothing
 };
-var $author$project$Main$ValidGuessesLoaded = function (a) {
-	return {$: 'ValidGuessesLoaded', a: a};
+var $author$project$Main$SimpleValidGuessesLoaded = function (a) {
+	return {$: 'SimpleValidGuessesLoaded', a: a};
 };
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
@@ -6367,175 +6308,23 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $author$project$Main$ValidGuessesDB = F7(
-	function (version, metadata, validGuesses, targetWords, difficulties, categories, features) {
-		return {categories: categories, difficulties: difficulties, features: features, metadata: metadata, targetWords: targetWords, validGuesses: validGuesses, version: version};
-	});
-var $author$project$Main$WordCategories = F4(
-	function (common, nature, actions, technology) {
-		return {actions: actions, common: common, nature: nature, technology: technology};
-	});
-var $elm$json$Json$Decode$list = _Json_decodeList;
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$field = _Json_decodeField;
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
-	function (key, valDecoder, decoder) {
-		return A2(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom,
-			A2($elm$json$Json$Decode$field, key, valDecoder),
-			decoder);
-	});
+var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Main$categoriesDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'technology',
-	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'actions',
-		$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'nature',
-			$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-				'common',
-				$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-				$elm$json$Json$Decode$succeed($author$project$Main$WordCategories)))));
-var $author$project$Main$DifficultyConfig = F3(
-	function (easy, medium, hard) {
-		return {easy: easy, hard: hard, medium: medium};
-	});
-var $author$project$Main$DifficultyLevel = F2(
-	function (multiplier, description) {
-		return {description: description, multiplier: multiplier};
-	});
-var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $author$project$Main$difficultyLevelDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'description',
-	$elm$json$Json$Decode$string,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'multiplier',
-		$elm$json$Json$Decode$float,
-		$elm$json$Json$Decode$succeed($author$project$Main$DifficultyLevel)));
-var $author$project$Main$difficultiesDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'hard',
-	$author$project$Main$difficultyLevelDecoder,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'medium',
-		$author$project$Main$difficultyLevelDecoder,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'easy',
-			$author$project$Main$difficultyLevelDecoder,
-			$elm$json$Json$Decode$succeed($author$project$Main$DifficultyConfig))));
-var $author$project$Main$SolutionsFeatures = F3(
-	function (hasVowels, allowsRepeatedLetters, caseSensitive) {
-		return {allowsRepeatedLetters: allowsRepeatedLetters, caseSensitive: caseSensitive, hasVowels: hasVowels};
-	});
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $author$project$Main$featuresDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'caseSensitive',
-	$elm$json$Json$Decode$bool,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'allowsRepeatedLetters',
-		$elm$json$Json$Decode$bool,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'hasVowels',
-			$elm$json$Json$Decode$bool,
-			$elm$json$Json$Decode$succeed($author$project$Main$SolutionsFeatures))));
-var $author$project$Main$ValidGuessesMetadata = F6(
-	function (totalValidGuesses, totalTargetWords, lastUpdated, source, format, description) {
-		return {description: description, format: format, lastUpdated: lastUpdated, source: source, totalTargetWords: totalTargetWords, totalValidGuesses: totalValidGuesses};
-	});
-var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $author$project$Main$metadataDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'description',
-	$elm$json$Json$Decode$string,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'format',
-		$elm$json$Json$Decode$string,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'source',
-			$elm$json$Json$Decode$string,
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-				'lastUpdated',
-				$elm$json$Json$Decode$string,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'totalTargetWords',
-					$elm$json$Json$Decode$int,
-					A3(
-						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-						'totalValidGuesses',
-						$elm$json$Json$Decode$int,
-						$elm$json$Json$Decode$succeed($author$project$Main$ValidGuessesMetadata)))))));
-var $author$project$Main$WordsByDifficulty = F3(
-	function (easy, medium, hard) {
-		return {easy: easy, hard: hard, medium: medium};
-	});
-var $author$project$Main$wordsByDifficultyDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'hard',
-	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'medium',
-		$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'easy',
-			$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-			$elm$json$Json$Decode$succeed($author$project$Main$WordsByDifficulty))));
-var $author$project$Main$validGuessesDecoder = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'features',
-	$author$project$Main$featuresDecoder,
-	A3(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-		'categories',
-		$author$project$Main$categoriesDecoder,
-		A3(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-			'difficulties',
-			$author$project$Main$difficultiesDecoder,
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-				'targetWords',
-				$author$project$Main$wordsByDifficultyDecoder,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'validGuesses',
-					$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-					A3(
-						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-						'metadata',
-						$author$project$Main$metadataDecoder,
-						A3(
-							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-							'version',
-							$elm$json$Json$Decode$string,
-							$elm$json$Json$Decode$succeed($author$project$Main$ValidGuessesDB))))))));
+var $author$project$Main$simpleValidGuessesDecoder = A2(
+	$elm$json$Json$Decode$field,
+	'validGuesses',
+	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
 var $author$project$Main$loadValidGuessesCmd = $elm$http$Http$get(
 	{
-		expect: A2($elm$http$Http$expectJson, $author$project$Main$ValidGuessesLoaded, $author$project$Main$validGuessesDecoder),
+		expect: A2($elm$http$Http$expectJson, $author$project$Main$SimpleValidGuessesLoaded, $author$project$Main$simpleValidGuessesDecoder),
 		url: 'validguess.json'
 	});
 var $author$project$Main$RandomWordGenerated = function (a) {
 	return {$: 'RandomWordGenerated', a: a};
 };
+var $author$project$Main$fallbackTargetWords = _List_fromArray(
+	['speed', 'house', 'world', 'music', 'ocean', 'beach', 'plant', 'water', 'light', 'sound']);
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -6771,35 +6560,22 @@ var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
 	return len;
 };
-var $author$project$Main$getRandomWordGenerator = F2(
-	function (targetWords, difficulty) {
-		var wordList = function () {
-			switch (difficulty.$) {
-				case 'Easy':
-					return targetWords.easy;
-				case 'Medium':
-					return targetWords.medium;
-				default:
-					return targetWords.hard;
-			}
-		}();
-		var wordArray = $elm$core$Array$fromList(wordList);
-		return $elm$core$Array$isEmpty(wordArray) ? $elm$random$Random$constant($elm$core$Maybe$Nothing) : A2(
-			$elm$random$Random$map,
-			function (index) {
-				return A2($elm$core$Array$get, index, wordArray);
-			},
-			A2(
-				$elm$random$Random$int,
-				0,
-				$elm$core$Array$length(wordArray) - 1));
-	});
-var $author$project$Main$selectNewWordCmd = function (difficulty) {
-	return A2(
-		$elm$random$Random$generate,
-		$author$project$Main$RandomWordGenerated,
-		A2($author$project$Main$getRandomWordGenerator, $author$project$Main$embeddedTargetWordsDB.targetWords, difficulty));
+var $author$project$Main$getRandomWordGenerator = function (targetWords) {
+	var wordArray = $elm$core$Array$fromList(targetWords);
+	return $elm$core$Array$isEmpty(wordArray) ? $elm$random$Random$constant($elm$core$Maybe$Nothing) : A2(
+		$elm$random$Random$map,
+		function (index) {
+			return A2($elm$core$Array$get, index, wordArray);
+		},
+		A2(
+			$elm$random$Random$int,
+			0,
+			$elm$core$Array$length(wordArray) - 1));
 };
+var $author$project$Main$selectNewWordCmd = A2(
+	$elm$random$Random$generate,
+	$author$project$Main$RandomWordGenerated,
+	$author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords));
 var $author$project$Main$BetResultReceived = F2(
 	function (a, b) {
 		return {$: 'BetResultReceived', a: a, b: b};
@@ -6808,6 +6584,7 @@ var $author$project$Main$KeyPressed = function (a) {
 	return {$: 'KeyPressed', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$browser$Browser$Events$Document = {$: 'Document'};
 var $elm$browser$Browser$Events$MySub = F3(
 	function (a, b, c) {
@@ -7140,6 +6917,7 @@ var $author$project$Main$subscriptions = function (model) {
 };
 var $author$project$Main$ClearGameMessage = {$: 'ClearGameMessage'};
 var $author$project$Main$Loss = {$: 'Loss'};
+var $author$project$Main$ShowGameOverModal = {$: 'ShowGameOverModal'};
 var $author$project$Main$ShowSuccessModal = {$: 'ShowSuccessModal'};
 var $author$project$Main$SubmitAttempt = {$: 'SubmitAttempt'};
 var $author$project$Main$Win = function (a) {
@@ -7309,22 +7087,29 @@ var $author$project$Main$checkWordAgainstTarget = F2(
 		var finalStates = _v0.a;
 		return $elm$core$List$reverse(finalStates);
 	});
+var $author$project$Main$clearRow = F2(
+	function (targetRowIndex, grid) {
+		return A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (rowIndex, row) {
+					return _Utils_eq(rowIndex, targetRowIndex) ? A2(
+						$elm$core$List$map,
+						function (hex) {
+							return _Utils_update(
+								hex,
+								{letter: $elm$core$Maybe$Nothing, state: $author$project$Main$Empty});
+						},
+						row) : row;
+				}),
+			grid);
+	});
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Main$connectWallet = _Platform_outgoingPort(
 	'connectWallet',
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
-var $author$project$Main$difficultyToString = function (difficulty) {
-	switch (difficulty.$) {
-		case 'Easy':
-			return 'Easy';
-		case 'Medium':
-			return 'Medium';
-		default:
-			return 'Hard';
-	}
-};
 var $author$project$Main$parseHexId = function (idStr) {
 	var _v0 = A2($elm$core$String$split, '-', idStr);
 	if ((((_v0.b && (_v0.a === 'hex')) && _v0.b.b) && _v0.b.b.b) && (!_v0.b.b.b.b)) {
@@ -7419,7 +7204,6 @@ var $author$project$Main$isRowSubmitted = F2(
 	function (model, rowIndex) {
 		return A2($elm$core$List$member, rowIndex, model.submittedRows);
 	});
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$json$Json$Encode$float = _Json_wrap;
@@ -7436,7 +7220,6 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Main$placeBet = _Platform_outgoingPort(
 	'placeBet',
 	function ($) {
@@ -7445,11 +7228,13 @@ var $author$project$Main$placeBet = _Platform_outgoingPort(
 				[
 					_Utils_Tuple2(
 					'amount',
-					$elm$json$Json$Encode$float($.amount)),
-					_Utils_Tuple2(
-					'difficulty',
-					$elm$json$Json$Encode$string($.difficulty))
+					$elm$json$Json$Encode$float($.amount))
 				]));
+	});
+var $author$project$Main$refreshPage = _Platform_outgoingPort(
+	'refreshPage',
+	function ($) {
+		return $elm$json$Json$Encode$null;
 	});
 var $author$project$Main$selectNewWord = function (model) {
 	var _v0 = model.targetWordsDB;
@@ -7463,27 +7248,10 @@ var $author$project$Main$selectNewWord = function (model) {
 			$elm$core$Platform$Cmd$none);
 	} else {
 		var db = _v0.a;
-		return _Utils_Tuple2(
-			model,
-			$author$project$Main$selectNewWordCmd(model.difficulty));
+		return _Utils_Tuple2(model, $author$project$Main$selectNewWordCmd);
 	}
 };
 var $elm$core$Process$sleep = _Process_sleep;
-var $author$project$Main$Hard = {$: 'Hard'};
-var $author$project$Main$Medium = {$: 'Medium'};
-var $author$project$Main$stringToDifficulty = function (str) {
-	var _v0 = $elm$core$String$toLower(str);
-	switch (_v0) {
-		case 'easy':
-			return $author$project$Main$Easy;
-		case 'medium':
-			return $author$project$Main$Medium;
-		case 'hard':
-			return $author$project$Main$Hard;
-		default:
-			return $author$project$Main$Easy;
-	}
-};
 var $author$project$Main$updateHexInGrid = F3(
 	function (targetId, updateFn, grid) {
 		return A2(
@@ -7530,6 +7298,157 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
+var $author$project$Main$hasConsecutiveConsonants = F2(
+	function (word, maxCount) {
+		var vowels = _List_fromArray(
+			[
+				_Utils_chr('a'),
+				_Utils_chr('e'),
+				_Utils_chr('i'),
+				_Utils_chr('o'),
+				_Utils_chr('u'),
+				_Utils_chr('y')
+			]);
+		var checkConsecutive = F3(
+			function (remainingChars, currentCount, maxAllowed) {
+				checkConsecutive:
+				while (true) {
+					if (!remainingChars.b) {
+						return _Utils_cmp(currentCount, maxAllowed) > -1;
+					} else {
+						var _char = remainingChars.a;
+						var rest = remainingChars.b;
+						if (A2($elm$core$List$member, _char, vowels)) {
+							var $temp$remainingChars = rest,
+								$temp$currentCount = 0,
+								$temp$maxAllowed = maxAllowed;
+							remainingChars = $temp$remainingChars;
+							currentCount = $temp$currentCount;
+							maxAllowed = $temp$maxAllowed;
+							continue checkConsecutive;
+						} else {
+							var newCount = currentCount + 1;
+							if (_Utils_cmp(newCount, maxAllowed) > -1) {
+								return true;
+							} else {
+								var $temp$remainingChars = rest,
+									$temp$currentCount = newCount,
+									$temp$maxAllowed = maxAllowed;
+								remainingChars = $temp$remainingChars;
+								currentCount = $temp$currentCount;
+								maxAllowed = $temp$maxAllowed;
+								continue checkConsecutive;
+							}
+						}
+					}
+				}
+			});
+		var chars = $elm$core$String$toList(word);
+		return A3(checkConsecutive, chars, 0, maxCount);
+	});
+var $author$project$Main$hasConsecutiveVowels = F2(
+	function (word, maxCount) {
+		var vowels = _List_fromArray(
+			[
+				_Utils_chr('a'),
+				_Utils_chr('e'),
+				_Utils_chr('i'),
+				_Utils_chr('o'),
+				_Utils_chr('u'),
+				_Utils_chr('y')
+			]);
+		var checkConsecutive = F3(
+			function (remainingChars, currentCount, maxAllowed) {
+				checkConsecutive:
+				while (true) {
+					if (!remainingChars.b) {
+						return _Utils_cmp(currentCount, maxAllowed) > -1;
+					} else {
+						var _char = remainingChars.a;
+						var rest = remainingChars.b;
+						if (A2($elm$core$List$member, _char, vowels)) {
+							var newCount = currentCount + 1;
+							if (_Utils_cmp(newCount, maxAllowed) > -1) {
+								return true;
+							} else {
+								var $temp$remainingChars = rest,
+									$temp$currentCount = newCount,
+									$temp$maxAllowed = maxAllowed;
+								remainingChars = $temp$remainingChars;
+								currentCount = $temp$currentCount;
+								maxAllowed = $temp$maxAllowed;
+								continue checkConsecutive;
+							}
+						} else {
+							var $temp$remainingChars = rest,
+								$temp$currentCount = 0,
+								$temp$maxAllowed = maxAllowed;
+							remainingChars = $temp$remainingChars;
+							currentCount = $temp$currentCount;
+							maxAllowed = $temp$maxAllowed;
+							continue checkConsecutive;
+						}
+					}
+				}
+			});
+		var chars = $elm$core$String$toList(word);
+		return A3(checkConsecutive, chars, 0, maxCount);
+	});
+var $author$project$Main$isObviousNonsense = function (word) {
+	var vowels = _List_fromArray(
+		[
+			_Utils_chr('a'),
+			_Utils_chr('e'),
+			_Utils_chr('i'),
+			_Utils_chr('o'),
+			_Utils_chr('u'),
+			_Utils_chr('y')
+		]);
+	var consonants = _List_fromArray(
+		[
+			_Utils_chr('b'),
+			_Utils_chr('c'),
+			_Utils_chr('d'),
+			_Utils_chr('f'),
+			_Utils_chr('g'),
+			_Utils_chr('h'),
+			_Utils_chr('j'),
+			_Utils_chr('k'),
+			_Utils_chr('l'),
+			_Utils_chr('m'),
+			_Utils_chr('n'),
+			_Utils_chr('p'),
+			_Utils_chr('q'),
+			_Utils_chr('r'),
+			_Utils_chr('s'),
+			_Utils_chr('t'),
+			_Utils_chr('v'),
+			_Utils_chr('w'),
+			_Utils_chr('x'),
+			_Utils_chr('z')
+		]);
+	var cleanWord = $elm$core$String$toLower(word);
+	var tooManyConsecutiveConsonants = A2($author$project$Main$hasConsecutiveConsonants, cleanWord, 4);
+	var tooManyConsecutiveVowels = A2($author$project$Main$hasConsecutiveVowels, cleanWord, 3);
+	var chars = $elm$core$String$toList(cleanWord);
+	var consonantCount = $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (c) {
+				return A2($elm$core$List$member, c, consonants);
+			},
+			chars));
+	var vowelCount = $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (c) {
+				return A2($elm$core$List$member, c, vowels);
+			},
+			chars));
+	var hasNoVowels = !vowelCount;
+	var allVowels = !consonantCount;
+	return hasNoVowels || (allVowels || (tooManyConsecutiveConsonants || tooManyConsecutiveVowels));
+};
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -7558,21 +7477,19 @@ var $author$project$Main$isRepeatingPattern = function (word) {
 			chars);
 	}
 };
-var $author$project$Main$validateWord = F4(
-	function (validGuesses, targetWords, word, difficulty) {
+var $author$project$Main$validateWord = F3(
+	function (validGuesses, targetWords, word) {
 		var cleanWord = $elm$core$String$toLower(
 			$elm$core$String$trim(word));
 		var isAllLetters = A2($elm$core$String$all, $elm$core$Char$isAlpha, cleanWord);
-		var isInValidGuessesList = A2($elm$core$List$member, cleanWord, validGuesses);
-		var isValidLength = $elm$core$String$length(cleanWord) === 5;
-		var allTargetWords = _Utils_ap(
-			targetWords.easy,
-			_Utils_ap(targetWords.medium, targetWords.hard));
 		var isInTargetWordsList = A2(
 			$elm$core$List$member,
 			cleanWord,
-			A2($elm$core$List$map, $elm$core$String$toLower, allTargetWords));
-		return $elm$core$List$isEmpty(validGuesses) ? (isValidLength && (isAllLetters && (!$author$project$Main$isRepeatingPattern(cleanWord)))) : ((isInValidGuessesList || isInTargetWordsList) ? true : false);
+			A2($elm$core$List$map, $elm$core$String$toLower, targetWords));
+		var isInValidGuessesList = A2($elm$core$List$member, cleanWord, validGuesses);
+		var isValidLength = $elm$core$String$length(cleanWord) === 5;
+		var passesBasicValidation = isValidLength && (isAllLetters && ((!$author$project$Main$isRepeatingPattern(cleanWord)) && (!$author$project$Main$isObviousNonsense(cleanWord))));
+		return (isInValidGuessesList || isInTargetWordsList) ? true : ($elm$core$List$isEmpty(validGuesses) ? passesBasicValidation : passesBasicValidation);
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -7823,15 +7740,7 @@ var $author$project$Main$update = F2(
 													var word = _v25.a;
 													return word;
 												} else {
-													var _v26 = model.difficulty;
-													switch (_v26.$) {
-														case 'Easy':
-															return 'speed';
-														case 'Medium':
-															return 'jetty';
-														default:
-															return 'wizzo';
-													}
+													return 'speed';
 												}
 											}();
 											var isValidWord = function () {
@@ -7840,21 +7749,21 @@ var $author$project$Main$update = F2(
 													if (_v20.b.$ === 'Just') {
 														var validDB = _v20.a.a;
 														var targetDB = _v20.b.a;
-														return A4($author$project$Main$validateWord, validDB.validGuesses, targetDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, validDB.validGuesses, targetDB.targetWords, submittedWord);
 													} else {
 														var validDB = _v20.a.a;
 														var _v21 = _v20.b;
-														return A4($author$project$Main$validateWord, validDB.validGuesses, $author$project$Main$embeddedTargetWordsDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, validDB.validGuesses, $author$project$Main$fallbackTargetWords, submittedWord);
 													}
 												} else {
 													if (_v20.b.$ === 'Just') {
 														var _v22 = _v20.a;
 														var targetDB = _v20.b.a;
-														return A4($author$project$Main$validateWord, _List_Nil, targetDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, _List_Nil, targetDB.targetWords, submittedWord);
 													} else {
 														var _v23 = _v20.a;
 														var _v24 = _v20.b;
-														return A4($author$project$Main$validateWord, _List_Nil, $author$project$Main$embeddedTargetWordsDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, _List_Nil, $author$project$Main$fallbackTargetWords, submittedWord);
 													}
 												}
 											}();
@@ -7878,25 +7787,34 @@ var $author$project$Main$update = F2(
 													var nextRow = model.currentActiveRow + 1;
 													var maxRows = $elm$core$List$length(model.grid);
 													var hasNextRow = _Utils_cmp(nextRow, maxRows) < 0;
-													return {
-														currentActiveRow: hasNextRow ? nextRow : model.currentActiveRow,
-														gameMessage: $elm$core$Maybe$Just(
-															hasNextRow ? 'Valid word, but not correct. Try again!' : 'Valid word, but not correct. No more rows available!'),
+													return hasNextRow ? {
+														currentActiveRow: nextRow,
+														gameMessage: $elm$core$Maybe$Just('Valid word, but not correct. Try again!'),
 														gameMessageType: 'info',
 														grid: updatedGrid,
 														logMessage: 'SubmitAttempt: Valid but incorrect word submitted',
-														nextFocus: hasNextRow ? $elm$core$Maybe$Just(
-															'hex-' + ($elm$core$String$fromInt(nextRow) + '-0')) : $elm$core$Maybe$Nothing,
+														nextFocus: $elm$core$Maybe$Just(
+															'hex-' + ($elm$core$String$fromInt(nextRow) + '-0')),
+														submittedRows: A2($elm$core$List$cons, rowIndex, model.submittedRows)
+													} : {
+														currentActiveRow: model.currentActiveRow,
+														gameMessage: $elm$core$Maybe$Nothing,
+														gameMessageType: 'gameover',
+														grid: updatedGrid,
+														logMessage: 'SubmitAttempt: Game over - no more rows available',
+														nextFocus: $elm$core$Maybe$Nothing,
 														submittedRows: A2($elm$core$List$cons, rowIndex, model.submittedRows)
 													};
 												} else {
+													var firstHexId = 'hex-' + ($elm$core$String$fromInt(model.currentActiveRow) + '-0');
+													var clearedGrid = A2($author$project$Main$clearRow, rowIndex, model.grid);
 													return {
 														currentActiveRow: model.currentActiveRow,
 														gameMessage: $elm$core$Maybe$Just('Invalid word. Try again!'),
 														gameMessageType: 'error',
-														grid: model.grid,
-														logMessage: 'SubmitAttempt: Invalid word submitted',
-														nextFocus: $elm$core$Maybe$Nothing,
+														grid: clearedGrid,
+														logMessage: 'SubmitAttempt: Invalid word submitted - row cleared',
+														nextFocus: $elm$core$Maybe$Just(firstHexId),
 														submittedRows: model.submittedRows
 													};
 												}
@@ -7919,16 +7837,20 @@ var $author$project$Main$update = F2(
 				}();
 				var clearMessageCmd = (!_Utils_eq(result.gameMessage, $elm$core$Maybe$Nothing)) ? ((result.gameMessageType === 'success') ? A2(
 					$elm$core$Task$perform,
-					function (_v12) {
+					function (_v11) {
 						return $author$project$Main$ShowSuccessModal;
 					},
 					$elm$core$Process$sleep(1000)) : A2(
 					$elm$core$Task$perform,
-					function (_v13) {
+					function (_v12) {
 						return $author$project$Main$ClearGameMessage;
 					},
-					$elm$core$Process$sleep(3000))) : $elm$core$Platform$Cmd$none;
-				var _v11 = $elm$core$Debug$log(result.logMessage);
+					$elm$core$Process$sleep(3000))) : ((result.gameMessageType === 'gameover') ? A2(
+					$elm$core$Task$perform,
+					function (_v13) {
+						return $author$project$Main$ShowGameOverModal;
+					},
+					$elm$core$Process$sleep(1000)) : $elm$core$Platform$Cmd$none);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -7967,20 +7889,10 @@ var $author$project$Main$update = F2(
 						model,
 						{betAmount: newAmount, betAmountString: amountStr}),
 					$elm$core$Platform$Cmd$none);
-			case 'UpdateDifficultyString':
-				var diffStr = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							difficulty: $author$project$Main$stringToDifficulty(diffStr),
-							difficultyString: diffStr
-						}),
-					$elm$core$Platform$Cmd$none);
 			case 'PlaceBet':
-				var _v27 = $author$project$Main$selectNewWord(model);
-				var newModel = _v27.a;
-				var wordCmd = _v27.b;
+				var _v26 = $author$project$Main$selectNewWord(model);
+				var newModel = _v26.a;
+				var wordCmd = _v26.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						newModel,
@@ -7989,10 +7901,7 @@ var $author$project$Main$update = F2(
 						_List_fromArray(
 							[
 								$author$project$Main$placeBet(
-								{
-									amount: model.betAmount,
-									difficulty: $author$project$Main$difficultyToString(model.difficulty)
-								}),
+								{amount: model.betAmount}),
 								wordCmd
 							])));
 			case 'BetResultReceived':
@@ -8010,11 +7919,24 @@ var $author$project$Main$update = F2(
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'BetAgain':
+				var wordGenerator = $author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords);
+				var seedValue = function () {
+					var _v28 = model.currentWord;
+					if (_v28.$ === 'Just') {
+						var word = _v28.a;
+						return ($elm$core$String$length(word) * 11) + (model.currentActiveRow * 17);
+					} else {
+						return 67;
+					}
+				}();
+				var newWordSeed = $elm$random$Random$initialSeed(seedValue);
+				var _v27 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
+				var maybeNewWord = _v27.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						$author$project$Main$initialModel,
-						{config: model.config, walletAddress: model.walletAddress}),
-					$author$project$Main$selectNewWordCmd(model.difficulty));
+						{config: model.config, currentWord: maybeNewWord, walletAddress: model.walletAddress}),
+					$elm$core$Platform$Cmd$none);
 			case 'RandomWordGenerated':
 				var word = msg.a;
 				if (word.$ === 'Just') {
@@ -8037,12 +7959,27 @@ var $author$project$Main$update = F2(
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'StartNewGame':
+				var wordGenerator = $author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords);
+				var seedValue = function () {
+					var _v31 = model.currentWord;
+					if (_v31.$ === 'Just') {
+						var word = _v31.a;
+						return ($elm$core$String$length(word) * 7) + (model.currentActiveRow * 13);
+					} else {
+						return 42;
+					}
+				}();
+				var newWordSeed = $elm$random$Random$initialSeed(seedValue);
+				var _v30 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
+				var maybeNewWord = _v30.a;
 				var modelWithClearedGrid = _Utils_update(
 					$author$project$Main$initialModel,
-					{config: model.config, currentActiveRow: 0, isHintModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
+					{config: model.config, currentActiveRow: 0, currentWord: maybeNewWord, isGameOverModalVisible: false, isHintModalVisible: false, isLettersModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
+				return _Utils_Tuple2(modelWithClearedGrid, $elm$core$Platform$Cmd$none);
+			case 'RefreshPage':
 				return _Utils_Tuple2(
-					modelWithClearedGrid,
-					$author$project$Main$selectNewWordCmd(modelWithClearedGrid.difficulty));
+					model,
+					$author$project$Main$refreshPage(_Utils_Tuple0));
 			case 'ClearGameMessage':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8051,16 +7988,30 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'LoadValidGuesses':
 				return _Utils_Tuple2(model, $author$project$Main$loadValidGuessesCmd);
-			case 'ValidGuessesLoaded':
+			case 'SimpleValidGuessesLoaded':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
-					var validGuessesDB = result.a;
+					var validGuessesList = result.a;
+					var updatedValidGuessesDB = {
+						features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
+						metadata: {
+							description: 'Valid guess words database for Honeycomb Wordle',
+							format: '5-letter-words',
+							lastUpdated: '2024-03-21',
+							source: 'validguess.json',
+							totalTargetWords: $elm$core$List$length($author$project$Main$fallbackTargetWords),
+							totalValidGuesses: $elm$core$List$length(validGuessesList)
+						},
+						targetWords: $author$project$Main$fallbackTargetWords,
+						validGuesses: validGuessesList,
+						version: '2.0'
+					};
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
 								loadingError: $elm$core$Maybe$Nothing,
-								validGuessesDB: $elm$core$Maybe$Just(validGuessesDB)
+								validGuessesDB: $elm$core$Maybe$Just(updatedValidGuessesDB)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -8086,7 +8037,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								loadingError: $elm$core$Maybe$Just('Failed to load valid guesses: ' + errorMessage)
+								loadingError: $elm$core$Maybe$Just('Failed to load external valid guesses, using embedded list: ' + errorMessage)
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -8096,17 +8047,35 @@ var $author$project$Main$update = F2(
 						model,
 						{gameMessage: $elm$core$Maybe$Nothing, isModalVisible: true}),
 					$elm$core$Platform$Cmd$none);
+			case 'ShowGameOverModal':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gameMessage: $elm$core$Maybe$Nothing, isGameOverModalVisible: true}),
+					$elm$core$Platform$Cmd$none);
 			case 'ShowHintModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{isHintModalVisible: true}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'CloseHintModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{isHintModalVisible: false}),
+					$elm$core$Platform$Cmd$none);
+			case 'ShowLettersModal':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{isLettersModalVisible: true}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{isLettersModalVisible: false}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -8118,8 +8087,9 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$viewBetModal = function (model) {
 	return $elm$html$Html$text('');
 };
+var $author$project$Main$RefreshPage = {$: 'RefreshPage'};
 var $author$project$Main$ShowHintModal = {$: 'ShowHintModal'};
-var $author$project$Main$StartNewGame = {$: 'StartNewGame'};
+var $author$project$Main$ShowLettersModal = {$: 'ShowLettersModal'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -8158,11 +8128,11 @@ var $author$project$Main$viewGameControls = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$StartNewGame),
+						$elm$html$Html$Events$onClick($author$project$Main$RefreshPage),
 						A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 						A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 						A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-						A2($elm$html$Html$Attributes$style, 'color', 'white'),
+						A2($elm$html$Html$Attributes$style, 'color', 'black'),
 						A2($elm$html$Html$Attributes$style, 'border', 'none'),
 						A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8177,22 +8147,50 @@ var $author$project$Main$viewGameControls = function (model) {
 				if (_v0.$ === 'Just') {
 					var word = _v0.a;
 					return A2(
-						$elm$html$Html$button,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$ShowHintModal),
-								A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
-								A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-								A2($elm$html$Html$Attributes$style, 'background-color', '#007bff'),
-								A2($elm$html$Html$Attributes$style, 'color', 'white'),
-								A2($elm$html$Html$Attributes$style, 'border', 'none'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
-								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2($elm$html$Html$Attributes$style, 'gap', '10px')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Hint')
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$ShowHintModal),
+										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
+										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+										A2($elm$html$Html$Attributes$style, 'background-color', '#007bff'),
+										A2($elm$html$Html$Attributes$style, 'color', 'black'),
+										A2($elm$html$Html$Attributes$style, 'border', 'none'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
+										A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Hint')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$ShowLettersModal),
+										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
+										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+										A2($elm$html$Html$Attributes$style, 'background-color', '#ffc107'),
+										A2($elm$html$Html$Attributes$style, 'color', 'black'),
+										A2($elm$html$Html$Attributes$style, 'border', 'none'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
+										A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Letters')
+									]))
 							]));
 				} else {
 					return A2(
@@ -8204,7 +8202,7 @@ var $author$project$Main$viewGameControls = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Selecting puzzle word...')
+								$elm$html$Html$text('Loading puzzle...')
 							]));
 				}
 			}()
@@ -8254,7 +8252,38 @@ var $author$project$Main$viewGameMessage = function (model) {
 				]));
 	}
 };
-var $author$project$Main$CloseHintModal = {$: 'CloseHintModal'};
+var $author$project$Main$modalBackdrop = F2(
+	function (closeMsg, content) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+					A2($elm$html$Html$Attributes$style, 'top', '0'),
+					A2($elm$html$Html$Attributes$style, 'left', '0'),
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '100%'),
+					A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.7)'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'z-index', '1001'),
+					$elm$html$Html$Events$onClick(closeMsg)
+				]),
+			content);
+	});
+var $author$project$Main$modalButtons = function (buttons) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+				A2($elm$html$Html$Attributes$style, 'gap', '15px'),
+				A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
+			]),
+		buttons);
+};
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 'MayStopPropagation', a: a};
@@ -8266,43 +8295,127 @@ var $elm$html$Html$Events$stopPropagationOn = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var $elm$core$String$toUpper = _String_toUpper;
-var $author$project$Main$viewHintModal = function (model) {
-	return model.isHintModalVisible ? A2(
+var $author$project$Main$modalContent = function (content) {
+	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-				A2($elm$html$Html$Attributes$style, 'top', '0'),
-				A2($elm$html$Html$Attributes$style, 'left', '0'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.7)'),
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-				A2($elm$html$Html$Attributes$style, 'z-index', '1001'),
-				$elm$html$Html$Events$onClick($author$project$Main$CloseHintModal)
+				A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
+				A2($elm$html$Html$Attributes$style, 'padding', '40px 50px'),
+				A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
+				A2($elm$html$Html$Attributes$style, 'box-shadow', '0 10px 25px rgba(0,0,0,0.4)'),
+				A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
+				A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
+				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+				A2(
+				$elm$html$Html$Events$stopPropagationOn,
+				'click',
+				$elm$json$Json$Decode$succeed(
+					_Utils_Tuple2($author$project$Main$NoOp, true)))
+			]),
+		content);
+};
+var $author$project$Main$newGameButton = A2(
+	$elm$html$Html$button,
+	_List_fromArray(
+		[
+			$elm$html$Html$Events$onClick($author$project$Main$RefreshPage),
+			A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
+			A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+			A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
+			A2($elm$html$Html$Attributes$style, 'color', 'black'),
+			A2($elm$html$Html$Attributes$style, 'border', 'none'),
+			A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+		]),
+	_List_fromArray(
+		[
+			$elm$html$Html$text('New Game')
+		]));
+var $author$project$Main$viewGameOverModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$RefreshPage,
+		_List_fromArray(
+			[
+				$author$project$Main$modalContent(
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'color', '#d32f2f'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('😞 Game Over')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+								A2($elm$html$Html$Attributes$style, 'color', '#666'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Sorry, the word was:')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'color', '#2e7d32'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '25px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord))
+							])),
+						$author$project$Main$modalButtons(
+						_List_fromArray(
+							[$author$project$Main$newGameButton]))
+					]))
+			]));
+};
+var $author$project$Main$CloseHintModal = {$: 'CloseHintModal'};
+var $author$project$Main$closeButton = function (msg) {
+	return A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(msg),
+				A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
+				A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+				A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
+				A2($elm$html$Html$Attributes$style, 'color', 'white'),
+				A2($elm$html$Html$Attributes$style, 'border', 'none'),
+				A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+				A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+				A2($elm$html$Html$Attributes$style, 'font-weight', '500')
 			]),
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
-						A2($elm$html$Html$Attributes$style, 'padding', '30px 40px'),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '12px'),
-						A2($elm$html$Html$Attributes$style, 'box-shadow', '0 8px 20px rgba(0,0,0,0.3)'),
-						A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
-						A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-						A2(
-						$elm$html$Html$Events$stopPropagationOn,
-						'click',
-						$elm$json$Json$Decode$succeed(
-							_Utils_Tuple2($author$project$Main$NoOp, true)))
-					]),
+				$elm$html$Html$text('Close')
+			]));
+};
+var $elm$core$String$toUpper = _String_toUpper;
+var $author$project$Main$viewHintModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$CloseHintModal,
+		_List_fromArray(
+			[
+				$author$project$Main$modalContent(
 				_List_fromArray(
 					[
 						A2(
@@ -8311,7 +8424,6 @@ var $author$project$Main$viewHintModal = function (model) {
 							[
 								A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
 								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-								A2($elm$html$Html$Attributes$style, 'color', '#333'),
 								A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
 							]),
 						_List_fromArray(
@@ -8325,9 +8437,7 @@ var $author$project$Main$viewHintModal = function (model) {
 								A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
 								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 								A2($elm$html$Html$Attributes$style, 'color', '#007bff'),
-								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px'),
-								A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-								A2($elm$html$Html$Attributes$style, 'letter-spacing', '2px')
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
 							]),
 						_List_fromArray(
 							[
@@ -8335,26 +8445,13 @@ var $author$project$Main$viewHintModal = function (model) {
 								'Target: ' + $elm$core$String$toUpper(
 									A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord)))
 							])),
-						A2(
-						$elm$html$Html$button,
+						$author$project$Main$modalButtons(
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$CloseHintModal),
-								A2($elm$html$Html$Attributes$style, 'padding', '10px 20px'),
-								A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-								A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
-								A2($elm$html$Html$Attributes$style, 'color', 'white'),
-								A2($elm$html$Html$Attributes$style, 'border', 'none'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '6px'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '14px'),
-								A2($elm$html$Html$Attributes$style, 'font-weight', '500')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Close')
+								$author$project$Main$closeButton($author$project$Main$CloseHintModal)
 							]))
 					]))
-			])) : $elm$html$Html$text('');
+			]));
 };
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $author$project$Main$FocusHex = function (a) {
@@ -8583,6 +8680,267 @@ var $author$project$Main$viewHoneycombGrid = function (model) {
 			$author$project$Main$viewHoneycombRow(model),
 			model.grid));
 };
+var $author$project$Main$CloseLettersModal = {$: 'CloseLettersModal'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$Dict$map = F2(
+	function (func, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		} else {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				A2(func, key, value),
+				A2($elm$core$Dict$map, func, left),
+				A2($elm$core$Dict$map, func, right));
+		}
+	});
+var $elm$core$Char$toLower = _Char_toLower;
+var $author$project$Main$getLetterStates = function (grid) {
+	var getBestState = function (states) {
+		return A2($elm$core$List$member, $author$project$Main$Correct, states) ? $author$project$Main$Correct : (A2($elm$core$List$member, $author$project$Main$Present, states) ? $author$project$Main$Present : (A2($elm$core$List$member, $author$project$Main$Absent, states) ? $author$project$Main$Absent : $author$project$Main$Empty));
+	};
+	var allHexes = $elm$core$List$concat(grid);
+	var hexesWithLetters = A2(
+		$elm$core$List$filterMap,
+		function (hex) {
+			var _v3 = hex.letter;
+			if (_v3.$ === 'Just') {
+				var _char = _v3.a;
+				return $elm$core$Maybe$Just(
+					_Utils_Tuple2(
+						$elm$core$Char$toLower(_char),
+						hex.state));
+			} else {
+				return $elm$core$Maybe$Nothing;
+			}
+		},
+		allHexes);
+	var letterGroups = A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v1, dict) {
+				var _char = _v1.a;
+				var state = _v1.b;
+				var _v2 = A2($elm$core$Dict$get, _char, dict);
+				if (_v2.$ === 'Nothing') {
+					return A3(
+						$elm$core$Dict$insert,
+						_char,
+						_List_fromArray(
+							[state]),
+						dict);
+				} else {
+					var states = _v2.a;
+					return A3(
+						$elm$core$Dict$insert,
+						_char,
+						A2($elm$core$List$cons, state, states),
+						dict);
+				}
+			}),
+		$elm$core$Dict$empty,
+		hexesWithLetters);
+	return A2(
+		$elm$core$Dict$map,
+		F2(
+			function (_v0, states) {
+				return getBestState(states);
+			}),
+		letterGroups);
+};
+var $author$project$Main$keyboardDisplayAlphabetical = function (letterStates) {
+	var topRow = _List_fromArray(
+		[
+			_Utils_chr('a'),
+			_Utils_chr('b'),
+			_Utils_chr('c'),
+			_Utils_chr('d'),
+			_Utils_chr('e'),
+			_Utils_chr('f'),
+			_Utils_chr('g'),
+			_Utils_chr('h'),
+			_Utils_chr('i')
+		]);
+	var renderKey = function (_char) {
+		var state = A2(
+			$elm$core$Maybe$withDefault,
+			$author$project$Main$Empty,
+			A2($elm$core$Dict$get, _char, letterStates));
+		var _v0 = function () {
+			switch (state.$) {
+				case 'Correct':
+					return _Utils_Tuple2('#6aaa64', '#ffffff');
+				case 'Present':
+					return _Utils_Tuple2('#c9b458', '#ffffff');
+				case 'Absent':
+					return _Utils_Tuple2('#787c7e', '#ffffff');
+				default:
+					return _Utils_Tuple2('#d3d6da', '#1a1a1b');
+			}
+		}();
+		var bgColor = _v0.a;
+		var textColor = _v0.b;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'display', 'inline-block'),
+					A2($elm$html$Html$Attributes$style, 'width', '40px'),
+					A2($elm$html$Html$Attributes$style, 'height', '40px'),
+					A2($elm$html$Html$Attributes$style, 'margin', '2px'),
+					A2($elm$html$Html$Attributes$style, 'background-color', bgColor),
+					A2($elm$html$Html$Attributes$style, 'color', textColor),
+					A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+					A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+					A2($elm$html$Html$Attributes$style, 'text-transform', 'uppercase')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(
+					$elm$core$String$fromChar(_char))
+				]));
+	};
+	var renderRow = function (chars) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'margin', '4px 0')
+				]),
+			A2($elm$core$List$map, renderKey, chars));
+	};
+	var middleRow = _List_fromArray(
+		[
+			_Utils_chr('j'),
+			_Utils_chr('k'),
+			_Utils_chr('l'),
+			_Utils_chr('m'),
+			_Utils_chr('n'),
+			_Utils_chr('o'),
+			_Utils_chr('p'),
+			_Utils_chr('q'),
+			_Utils_chr('r')
+		]);
+	var bottomRow = _List_fromArray(
+		[
+			_Utils_chr('s'),
+			_Utils_chr('t'),
+			_Utils_chr('u'),
+			_Utils_chr('v'),
+			_Utils_chr('w'),
+			_Utils_chr('x'),
+			_Utils_chr('y'),
+			_Utils_chr('z')
+		]);
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+			]),
+		_List_fromArray(
+			[
+				renderRow(topRow),
+				renderRow(middleRow),
+				renderRow(bottomRow)
+			]));
+};
+var $author$project$Main$legendItem = F2(
+	function (color, label) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'gap', '5px')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'width', '16px'),
+							A2($elm$html$Html$Attributes$style, 'height', '16px'),
+							A2($elm$html$Html$Attributes$style, 'background-color', color),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
+						]),
+					_List_Nil),
+					$elm$html$Html$text(label)
+				]));
+	});
+var $author$project$Main$legendDisplay = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+			A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+			A2($elm$html$Html$Attributes$style, 'gap', '20px'),
+			A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '12px')
+		]),
+	_List_fromArray(
+		[
+			A2($author$project$Main$legendItem, '#6aaa64', 'Correct'),
+			A2($author$project$Main$legendItem, '#c9b458', 'Wrong Position'),
+			A2($author$project$Main$legendItem, '#787c7e', 'Not in Word')
+		]));
+var $author$project$Main$viewLettersModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$CloseLettersModal,
+		_List_fromArray(
+			[
+				$author$project$Main$modalContent(
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('🔤 Letter Status')
+							])),
+						$author$project$Main$keyboardDisplayAlphabetical(
+						$author$project$Main$getLetterStates(model.grid)),
+						$author$project$Main$legendDisplay,
+						$author$project$Main$modalButtons(
+						_List_fromArray(
+							[
+								$author$project$Main$closeButton($author$project$Main$CloseLettersModal)
+							]))
+					]))
+			]));
+};
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$p = _VirtualDom_node('p');
@@ -8680,136 +9038,60 @@ var $author$project$Main$viewRules = A2(
 				]))
 		]));
 var $author$project$Main$CloseModal = {$: 'CloseModal'};
-var $author$project$Main$viewSuccessModal = function (model) {
-	return model.isModalVisible ? A2(
-		$elm$html$Html$div,
+var $author$project$Main$viewSuccessModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$CloseModal,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-				A2($elm$html$Html$Attributes$style, 'top', '0'),
-				A2($elm$html$Html$Attributes$style, 'left', '0'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.7)'),
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-				A2($elm$html$Html$Attributes$style, 'z-index', '1001')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$div,
+				$author$project$Main$modalContent(
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
-						A2($elm$html$Html$Attributes$style, 'padding', '40px 50px'),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
-						A2($elm$html$Html$Attributes$style, 'box-shadow', '0 10px 25px rgba(0,0,0,0.4)'),
-						A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
-						A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 						A2(
-						$elm$html$Html$Events$stopPropagationOn,
-						'click',
-						$elm$json$Json$Decode$succeed(
-							_Utils_Tuple2($author$project$Main$NoOp, true)))
-					]),
-				function () {
-					var targetWord = A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord);
-					var guessCount = model.currentActiveRow + 1;
-					var guessText = (guessCount === 1) ? 'guess' : 'guesses';
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('🎉 Congratulations! 🎉')
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
-									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-									A2($elm$html$Html$Attributes$style, 'color', '#28a745'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(
-									'You solved the puzzle in ' + ($elm$core$String$fromInt(guessCount) + (' ' + (guessText + '!'))))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
-									A2($elm$html$Html$Attributes$style, 'color', '#333'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(
-									'The word was: ' + $elm$core$String$toUpper(targetWord))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-									A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-									A2($elm$html$Html$Attributes$style, 'gap', '15px'),
-									A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick($author$project$Main$CloseModal),
-											A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
-											A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-											A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
-											A2($elm$html$Html$Attributes$style, 'color', 'white'),
-											A2($elm$html$Html$Attributes$style, 'border', 'none'),
-											A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-											A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-											A2($elm$html$Html$Attributes$style, 'font-weight', '500')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Close')
-										])),
-									A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick($author$project$Main$StartNewGame),
-											A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
-											A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-											A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-											A2($elm$html$Html$Attributes$style, 'color', 'white'),
-											A2($elm$html$Html$Attributes$style, 'border', 'none'),
-											A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-											A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-											A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('New Game')
-										]))
-								]))
-						]);
-				}())
-			])) : $elm$html$Html$text('');
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('🎉 Congratulations! 🎉')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+								A2($elm$html$Html$Attributes$style, 'color', '#28a745'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('You solved the puzzle!')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'color', '#2e7d32'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '25px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord))
+							])),
+						$author$project$Main$modalButtons(
+						_List_fromArray(
+							[
+								$author$project$Main$closeButton($author$project$Main$CloseModal),
+								$author$project$Main$newGameButton
+							]))
+					]))
+			]));
 };
 var $author$project$Main$viewWalletControls = function (model) {
 	return $elm$html$Html$text('');
@@ -8836,8 +9118,10 @@ var $author$project$Main$view = function (model) {
 				$author$project$Main$viewHoneycombGrid(model),
 				$author$project$Main$viewRules,
 				$author$project$Main$viewBetModal(model),
-				$author$project$Main$viewSuccessModal(model),
-				$author$project$Main$viewHintModal(model)
+				model.isModalVisible ? $author$project$Main$viewSuccessModalSimple(model) : $elm$html$Html$text(''),
+				model.isHintModalVisible ? $author$project$Main$viewHintModalSimple(model) : $elm$html$Html$text(''),
+				model.isGameOverModalVisible ? $author$project$Main$viewGameOverModalSimple(model) : $elm$html$Html$text(''),
+				model.isLettersModalVisible ? $author$project$Main$viewLettersModalSimple(model) : $elm$html$Html$text('')
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$document(
@@ -8847,10 +9131,7 @@ var $author$project$Main$main = $elm$browser$Browser$document(
 				$author$project$Main$initialModel,
 				$elm$core$Platform$Cmd$batch(
 					_List_fromArray(
-						[
-							$author$project$Main$selectNewWordCmd($author$project$Main$Easy),
-							$author$project$Main$loadValidGuessesCmd
-						])));
+						[$author$project$Main$selectNewWordCmd, $author$project$Main$loadValidGuessesCmd])));
 		},
 		subscriptions: $author$project$Main$subscriptions,
 		update: $author$project$Main$update,

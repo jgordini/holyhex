@@ -7232,6 +7232,11 @@ var $author$project$Main$placeBet = _Platform_outgoingPort(
 					$elm$json$Json$Encode$float($.amount))
 				]));
 	});
+var $author$project$Main$refreshPage = _Platform_outgoingPort(
+	'refreshPage',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Main$selectNewWord = function (model) {
 	var _v0 = model.targetWordsDB;
 	if (_v0.$ === 'Nothing') {
@@ -7973,6 +7978,10 @@ var $author$project$Main$update = F2(
 					$author$project$Main$initialModel,
 					{config: model.config, currentActiveRow: 0, currentWord: maybeNewWord, isGameOverModalVisible: false, isHintModalVisible: false, isLettersModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
 				return _Utils_Tuple2(modelWithClearedGrid, $elm$core$Platform$Cmd$none);
+			case 'RefreshPage':
+				return _Utils_Tuple2(
+					model,
+					$author$project$Main$refreshPage(_Utils_Tuple0));
 			case 'ClearGameMessage':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8080,9 +8089,9 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$viewBetModal = function (model) {
 	return $elm$html$Html$text('');
 };
+var $author$project$Main$RefreshPage = {$: 'RefreshPage'};
 var $author$project$Main$ShowHintModal = {$: 'ShowHintModal'};
 var $author$project$Main$ShowLettersModal = {$: 'ShowLettersModal'};
-var $author$project$Main$StartNewGame = {$: 'StartNewGame'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -8121,11 +8130,11 @@ var $author$project$Main$viewGameControls = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$StartNewGame),
+						$elm$html$Html$Events$onClick($author$project$Main$RefreshPage),
 						A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 						A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 						A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-						A2($elm$html$Html$Attributes$style, 'color', 'white'),
+						A2($elm$html$Html$Attributes$style, 'color', 'black'),
 						A2($elm$html$Html$Attributes$style, 'border', 'none'),
 						A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8156,7 +8165,7 @@ var $author$project$Main$viewGameControls = function (model) {
 										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 										A2($elm$html$Html$Attributes$style, 'background-color', '#007bff'),
-										A2($elm$html$Html$Attributes$style, 'color', 'white'),
+										A2($elm$html$Html$Attributes$style, 'color', 'black'),
 										A2($elm$html$Html$Attributes$style, 'border', 'none'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8174,7 +8183,7 @@ var $author$project$Main$viewGameControls = function (model) {
 										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
 										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 										A2($elm$html$Html$Attributes$style, 'background-color', '#ffc107'),
-										A2($elm$html$Html$Attributes$style, 'color', '#212529'),
+										A2($elm$html$Html$Attributes$style, 'color', 'black'),
 										A2($elm$html$Html$Attributes$style, 'border', 'none'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
 										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
@@ -8245,6 +8254,38 @@ var $author$project$Main$viewGameMessage = function (model) {
 				]));
 	}
 };
+var $author$project$Main$modalBackdrop = F2(
+	function (closeMsg, content) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+					A2($elm$html$Html$Attributes$style, 'top', '0'),
+					A2($elm$html$Html$Attributes$style, 'left', '0'),
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '100%'),
+					A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.7)'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'z-index', '1001'),
+					$elm$html$Html$Events$onClick(closeMsg)
+				]),
+			content);
+	});
+var $author$project$Main$modalButtons = function (buttons) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+				A2($elm$html$Html$Attributes$style, 'gap', '15px'),
+				A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
+			]),
+		buttons);
+};
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 'MayStopPropagation', a: a};
@@ -8256,42 +8297,51 @@ var $elm$html$Html$Events$stopPropagationOn = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var $author$project$Main$viewGameOverModal = function (model) {
-	return model.isGameOverModalVisible ? A2(
+var $author$project$Main$modalContent = function (content) {
+	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-				A2($elm$html$Html$Attributes$style, 'top', '0'),
-				A2($elm$html$Html$Attributes$style, 'left', '0'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.8)'),
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-				A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
-				$elm$html$Html$Events$onClick($author$project$Main$StartNewGame)
+				A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
+				A2($elm$html$Html$Attributes$style, 'padding', '40px 50px'),
+				A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
+				A2($elm$html$Html$Attributes$style, 'box-shadow', '0 10px 25px rgba(0,0,0,0.4)'),
+				A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
+				A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
+				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+				A2(
+				$elm$html$Html$Events$stopPropagationOn,
+				'click',
+				$elm$json$Json$Decode$succeed(
+					_Utils_Tuple2($author$project$Main$NoOp, true)))
 			]),
+		content);
+};
+var $author$project$Main$newGameButton = A2(
+	$elm$html$Html$button,
+	_List_fromArray(
+		[
+			$elm$html$Html$Events$onClick($author$project$Main$RefreshPage),
+			A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
+			A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+			A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
+			A2($elm$html$Html$Attributes$style, 'color', 'black'),
+			A2($elm$html$Html$Attributes$style, 'border', 'none'),
+			A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+		]),
+	_List_fromArray(
+		[
+			$elm$html$Html$text('New Game')
+		]));
+var $author$project$Main$viewGameOverModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$RefreshPage,
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
-						A2($elm$html$Html$Attributes$style, 'padding', '30px'),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
-						A2($elm$html$Html$Attributes$style, 'box-shadow', '0 10px 25px rgba(0,0,0,0.4)'),
-						A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
-						A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-						A2(
-						$elm$html$Html$Events$stopPropagationOn,
-						'click',
-						$elm$json$Json$Decode$succeed(
-							_Utils_Tuple2($author$project$Main$NoOp, true)))
-					]),
+				$author$project$Main$modalContent(
 				_List_fromArray(
 					[
 						A2(
@@ -8326,76 +8376,48 @@ var $author$project$Main$viewGameOverModal = function (model) {
 								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
 								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 								A2($elm$html$Html$Attributes$style, 'color', '#2e7d32'),
-								A2($elm$html$Html$Attributes$style, 'margin-bottom', '25px'),
-								A2($elm$html$Html$Attributes$style, 'padding', '10px'),
-								A2($elm$html$Html$Attributes$style, 'background-color', '#f5f5f5'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-								A2($elm$html$Html$Attributes$style, 'text-transform', 'uppercase')
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '25px')
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
 								A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord))
 							])),
-						A2(
-						$elm$html$Html$button,
+						$author$project$Main$modalButtons(
 						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$StartNewGame),
-								A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-								A2($elm$html$Html$Attributes$style, 'color', 'white'),
-								A2($elm$html$Html$Attributes$style, 'border', 'none'),
-								A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-								A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('New Game')
-							]))
+							[$author$project$Main$newGameButton]))
 					]))
-			])) : $elm$html$Html$text('');
+			]));
 };
 var $author$project$Main$CloseHintModal = {$: 'CloseHintModal'};
-var $elm$core$String$toUpper = _String_toUpper;
-var $author$project$Main$viewHintModal = function (model) {
-	return model.isHintModalVisible ? A2(
-		$elm$html$Html$div,
+var $author$project$Main$closeButton = function (msg) {
+	return A2(
+		$elm$html$Html$button,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-				A2($elm$html$Html$Attributes$style, 'top', '0'),
-				A2($elm$html$Html$Attributes$style, 'left', '0'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.7)'),
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-				A2($elm$html$Html$Attributes$style, 'z-index', '1001'),
-				$elm$html$Html$Events$onClick($author$project$Main$CloseHintModal)
+				$elm$html$Html$Events$onClick(msg),
+				A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
+				A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+				A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
+				A2($elm$html$Html$Attributes$style, 'color', 'white'),
+				A2($elm$html$Html$Attributes$style, 'border', 'none'),
+				A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+				A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+				A2($elm$html$Html$Attributes$style, 'font-weight', '500')
 			]),
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
-						A2($elm$html$Html$Attributes$style, 'padding', '30px 40px'),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '12px'),
-						A2($elm$html$Html$Attributes$style, 'box-shadow', '0 8px 20px rgba(0,0,0,0.3)'),
-						A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
-						A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-						A2(
-						$elm$html$Html$Events$stopPropagationOn,
-						'click',
-						$elm$json$Json$Decode$succeed(
-							_Utils_Tuple2($author$project$Main$NoOp, true)))
-					]),
+				$elm$html$Html$text('Close')
+			]));
+};
+var $elm$core$String$toUpper = _String_toUpper;
+var $author$project$Main$viewHintModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$CloseHintModal,
+		_List_fromArray(
+			[
+				$author$project$Main$modalContent(
 				_List_fromArray(
 					[
 						A2(
@@ -8404,7 +8426,6 @@ var $author$project$Main$viewHintModal = function (model) {
 							[
 								A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
 								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-								A2($elm$html$Html$Attributes$style, 'color', '#333'),
 								A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
 							]),
 						_List_fromArray(
@@ -8418,9 +8439,7 @@ var $author$project$Main$viewHintModal = function (model) {
 								A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
 								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 								A2($elm$html$Html$Attributes$style, 'color', '#007bff'),
-								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px'),
-								A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-								A2($elm$html$Html$Attributes$style, 'letter-spacing', '2px')
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
 							]),
 						_List_fromArray(
 							[
@@ -8428,26 +8447,13 @@ var $author$project$Main$viewHintModal = function (model) {
 								'Target: ' + $elm$core$String$toUpper(
 									A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord)))
 							])),
-						A2(
-						$elm$html$Html$button,
+						$author$project$Main$modalButtons(
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$CloseHintModal),
-								A2($elm$html$Html$Attributes$style, 'padding', '10px 20px'),
-								A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-								A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
-								A2($elm$html$Html$Attributes$style, 'color', 'white'),
-								A2($elm$html$Html$Attributes$style, 'border', 'none'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '6px'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '14px'),
-								A2($elm$html$Html$Attributes$style, 'font-weight', '500')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Close')
+								$author$project$Main$closeButton($author$project$Main$CloseHintModal)
 							]))
 					]))
-			])) : $elm$html$Html$text('');
+			]));
 };
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $author$project$Main$FocusHex = function (a) {
@@ -8761,113 +8767,118 @@ var $author$project$Main$getLetterStates = function (grid) {
 			}),
 		letterGroups);
 };
-var $author$project$Main$viewLettersModal = function (model) {
-	if (model.isLettersModalVisible) {
-		var topRow = _List_fromArray(
-			[
-				_Utils_chr('q'),
-				_Utils_chr('w'),
-				_Utils_chr('e'),
-				_Utils_chr('r'),
-				_Utils_chr('t'),
-				_Utils_chr('y'),
-				_Utils_chr('u'),
-				_Utils_chr('i'),
-				_Utils_chr('o'),
-				_Utils_chr('p')
-			]);
-		var middleRow = _List_fromArray(
-			[
-				_Utils_chr('a'),
-				_Utils_chr('s'),
-				_Utils_chr('d'),
-				_Utils_chr('f'),
-				_Utils_chr('g'),
-				_Utils_chr('h'),
-				_Utils_chr('j'),
-				_Utils_chr('k'),
-				_Utils_chr('l')
-			]);
-		var letterStates = $author$project$Main$getLetterStates(model.grid);
-		var renderKey = function (_char) {
-			var state = A2(
-				$elm$core$Maybe$withDefault,
-				$author$project$Main$Empty,
-				A2($elm$core$Dict$get, _char, letterStates));
-			var _v0 = function () {
-				switch (state.$) {
-					case 'Correct':
-						return _Utils_Tuple2('#6aaa64', '#ffffff');
-					case 'Present':
-						return _Utils_Tuple2('#c9b458', '#ffffff');
-					case 'Absent':
-						return _Utils_Tuple2('#787c7e', '#ffffff');
-					default:
-						return _Utils_Tuple2('#d3d6da', '#1a1a1b');
-				}
-			}();
-			var bgColor = _v0.a;
-			var textColor = _v0.b;
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'display', 'inline-block'),
-						A2($elm$html$Html$Attributes$style, 'width', '40px'),
-						A2($elm$html$Html$Attributes$style, 'height', '40px'),
-						A2($elm$html$Html$Attributes$style, 'margin', '2px'),
-						A2($elm$html$Html$Attributes$style, 'background-color', bgColor),
-						A2($elm$html$Html$Attributes$style, 'color', textColor),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-						A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-						A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-						A2($elm$html$Html$Attributes$style, 'text-transform', 'uppercase')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						$elm$core$String$fromChar(_char))
-					]));
-		};
-		var renderRow = function (chars) {
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-						A2($elm$html$Html$Attributes$style, 'margin', '4px 0')
-					]),
-				A2($elm$core$List$map, renderKey, chars));
-		};
-		var bottomRow = _List_fromArray(
-			[
-				_Utils_chr('z'),
-				_Utils_chr('x'),
-				_Utils_chr('c'),
-				_Utils_chr('v'),
-				_Utils_chr('b'),
-				_Utils_chr('n'),
-				_Utils_chr('m')
-			]);
+var $author$project$Main$keyboardDisplayAlphabetical = function (letterStates) {
+	var topRow = _List_fromArray(
+		[
+			_Utils_chr('a'),
+			_Utils_chr('b'),
+			_Utils_chr('c'),
+			_Utils_chr('d'),
+			_Utils_chr('e'),
+			_Utils_chr('f'),
+			_Utils_chr('g'),
+			_Utils_chr('h'),
+			_Utils_chr('i')
+		]);
+	var renderKey = function (_char) {
+		var state = A2(
+			$elm$core$Maybe$withDefault,
+			$author$project$Main$Empty,
+			A2($elm$core$Dict$get, _char, letterStates));
+		var _v0 = function () {
+			switch (state.$) {
+				case 'Correct':
+					return _Utils_Tuple2('#6aaa64', '#ffffff');
+				case 'Present':
+					return _Utils_Tuple2('#c9b458', '#ffffff');
+				case 'Absent':
+					return _Utils_Tuple2('#787c7e', '#ffffff');
+				default:
+					return _Utils_Tuple2('#d3d6da', '#1a1a1b');
+			}
+		}();
+		var bgColor = _v0.a;
+		var textColor = _v0.b;
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-					A2($elm$html$Html$Attributes$style, 'top', '0'),
-					A2($elm$html$Html$Attributes$style, 'left', '0'),
-					A2($elm$html$Html$Attributes$style, 'width', '100%'),
-					A2($elm$html$Html$Attributes$style, 'height', '100%'),
-					A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.8)'),
+					A2($elm$html$Html$Attributes$style, 'display', 'inline-block'),
+					A2($elm$html$Html$Attributes$style, 'width', '40px'),
+					A2($elm$html$Html$Attributes$style, 'height', '40px'),
+					A2($elm$html$Html$Attributes$style, 'margin', '2px'),
+					A2($elm$html$Html$Attributes$style, 'background-color', bgColor),
+					A2($elm$html$Html$Attributes$style, 'color', textColor),
+					A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+					A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+					A2($elm$html$Html$Attributes$style, 'text-transform', 'uppercase')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(
+					$elm$core$String$fromChar(_char))
+				]));
+	};
+	var renderRow = function (chars) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
 					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
 					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'margin', '4px 0')
+				]),
+			A2($elm$core$List$map, renderKey, chars));
+	};
+	var middleRow = _List_fromArray(
+		[
+			_Utils_chr('j'),
+			_Utils_chr('k'),
+			_Utils_chr('l'),
+			_Utils_chr('m'),
+			_Utils_chr('n'),
+			_Utils_chr('o'),
+			_Utils_chr('p'),
+			_Utils_chr('q'),
+			_Utils_chr('r')
+		]);
+	var bottomRow = _List_fromArray(
+		[
+			_Utils_chr('s'),
+			_Utils_chr('t'),
+			_Utils_chr('u'),
+			_Utils_chr('v'),
+			_Utils_chr('w'),
+			_Utils_chr('x'),
+			_Utils_chr('y'),
+			_Utils_chr('z')
+		]);
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+			]),
+		_List_fromArray(
+			[
+				renderRow(topRow),
+				renderRow(middleRow),
+				renderRow(bottomRow)
+			]));
+};
+var $author$project$Main$legendItem = F2(
+	function (color, label) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
 					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-					A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
-					$elm$html$Html$Events$onClick($author$project$Main$CloseLettersModal)
+					A2($elm$html$Html$Attributes$style, 'gap', '5px')
 				]),
 			_List_fromArray(
 				[
@@ -8875,147 +8886,62 @@ var $author$project$Main$viewLettersModal = function (model) {
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
-							A2($elm$html$Html$Attributes$style, 'padding', '30px'),
-							A2($elm$html$Html$Attributes$style, 'border-radius', '12px'),
-							A2($elm$html$Html$Attributes$style, 'box-shadow', '0 8px 20px rgba(0,0,0,0.3)'),
-							A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
-							A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-							A2(
-							$elm$html$Html$Events$stopPropagationOn,
-							'click',
-							$elm$json$Json$Decode$succeed(
-								_Utils_Tuple2($author$project$Main$NoOp, true)))
+							A2($elm$html$Html$Attributes$style, 'width', '16px'),
+							A2($elm$html$Html$Attributes$style, 'height', '16px'),
+							A2($elm$html$Html$Attributes$style, 'background-color', color),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
 						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
-									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-									A2($elm$html$Html$Attributes$style, 'color', '#333'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('🔤 Letter Status')
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
-								]),
-							_List_fromArray(
-								[
-									renderRow(topRow),
-									renderRow(middleRow),
-									renderRow(bottomRow)
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-									A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-									A2($elm$html$Html$Attributes$style, 'gap', '20px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px'),
-									A2($elm$html$Html$Attributes$style, 'font-size', '12px')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-											A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-											A2($elm$html$Html$Attributes$style, 'gap', '5px')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													A2($elm$html$Html$Attributes$style, 'width', '16px'),
-													A2($elm$html$Html$Attributes$style, 'height', '16px'),
-													A2($elm$html$Html$Attributes$style, 'background-color', '#6aaa64'),
-													A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
-												]),
-											_List_Nil),
-											$elm$html$Html$text('Correct')
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-											A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-											A2($elm$html$Html$Attributes$style, 'gap', '5px')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													A2($elm$html$Html$Attributes$style, 'width', '16px'),
-													A2($elm$html$Html$Attributes$style, 'height', '16px'),
-													A2($elm$html$Html$Attributes$style, 'background-color', '#c9b458'),
-													A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
-												]),
-											_List_Nil),
-											$elm$html$Html$text('Wrong Position')
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-											A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-											A2($elm$html$Html$Attributes$style, 'gap', '5px')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													A2($elm$html$Html$Attributes$style, 'width', '16px'),
-													A2($elm$html$Html$Attributes$style, 'height', '16px'),
-													A2($elm$html$Html$Attributes$style, 'background-color', '#787c7e'),
-													A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
-												]),
-											_List_Nil),
-											$elm$html$Html$text('Not in Word')
-										]))
-								])),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick($author$project$Main$CloseLettersModal),
-									A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
-									A2($elm$html$Html$Attributes$style, 'color', 'white'),
-									A2($elm$html$Html$Attributes$style, 'border', 'none'),
-									A2($elm$html$Html$Attributes$style, 'padding', '8px 16px'),
-									A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-									A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-									A2($elm$html$Html$Attributes$style, 'font-size', '14px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Close')
-								]))
-						]))
+					_List_Nil),
+					$elm$html$Html$text(label)
 				]));
-	} else {
-		return $elm$html$Html$text('');
-	}
+	});
+var $author$project$Main$legendDisplay = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+			A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+			A2($elm$html$Html$Attributes$style, 'gap', '20px'),
+			A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '12px')
+		]),
+	_List_fromArray(
+		[
+			A2($author$project$Main$legendItem, '#6aaa64', 'Correct'),
+			A2($author$project$Main$legendItem, '#c9b458', 'Wrong Position'),
+			A2($author$project$Main$legendItem, '#787c7e', 'Not in Word')
+		]));
+var $author$project$Main$viewLettersModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$CloseLettersModal,
+		_List_fromArray(
+			[
+				$author$project$Main$modalContent(
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('🔤 Letter Status')
+							])),
+						$author$project$Main$keyboardDisplayAlphabetical(
+						$author$project$Main$getLetterStates(model.grid)),
+						$author$project$Main$legendDisplay,
+						$author$project$Main$modalButtons(
+						_List_fromArray(
+							[
+								$author$project$Main$closeButton($author$project$Main$CloseLettersModal)
+							]))
+					]))
+			]));
 };
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$li = _VirtualDom_node('li');
@@ -9114,136 +9040,60 @@ var $author$project$Main$viewRules = A2(
 				]))
 		]));
 var $author$project$Main$CloseModal = {$: 'CloseModal'};
-var $author$project$Main$viewSuccessModal = function (model) {
-	return model.isModalVisible ? A2(
-		$elm$html$Html$div,
+var $author$project$Main$viewSuccessModalSimple = function (model) {
+	return A2(
+		$author$project$Main$modalBackdrop,
+		$author$project$Main$CloseModal,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-				A2($elm$html$Html$Attributes$style, 'top', '0'),
-				A2($elm$html$Html$Attributes$style, 'left', '0'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.7)'),
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-				A2($elm$html$Html$Attributes$style, 'z-index', '1001')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$div,
+				$author$project$Main$modalContent(
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
-						A2($elm$html$Html$Attributes$style, 'padding', '40px 50px'),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
-						A2($elm$html$Html$Attributes$style, 'box-shadow', '0 10px 25px rgba(0,0,0,0.4)'),
-						A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
-						A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 						A2(
-						$elm$html$Html$Events$stopPropagationOn,
-						'click',
-						$elm$json$Json$Decode$succeed(
-							_Utils_Tuple2($author$project$Main$NoOp, true)))
-					]),
-				function () {
-					var targetWord = A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord);
-					var guessCount = model.currentActiveRow + 1;
-					var guessText = (guessCount === 1) ? 'guess' : 'guesses';
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('🎉 Congratulations! 🎉')
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
-									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-									A2($elm$html$Html$Attributes$style, 'color', '#28a745'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(
-									'You solved the puzzle in ' + ($elm$core$String$fromInt(guessCount) + (' ' + (guessText + '!'))))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
-									A2($elm$html$Html$Attributes$style, 'color', '#333'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(
-									'The word was: ' + $elm$core$String$toUpper(targetWord))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-									A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-									A2($elm$html$Html$Attributes$style, 'gap', '15px'),
-									A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick($author$project$Main$CloseModal),
-											A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
-											A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-											A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
-											A2($elm$html$Html$Attributes$style, 'color', 'white'),
-											A2($elm$html$Html$Attributes$style, 'border', 'none'),
-											A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-											A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-											A2($elm$html$Html$Attributes$style, 'font-weight', '500')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Close')
-										])),
-									A2(
-									$elm$html$Html$button,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick($author$project$Main$StartNewGame),
-											A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
-											A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-											A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-											A2($elm$html$Html$Attributes$style, 'color', 'white'),
-											A2($elm$html$Html$Attributes$style, 'border', 'none'),
-											A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-											A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-											A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('New Game')
-										]))
-								]))
-						]);
-				}())
-			])) : $elm$html$Html$text('');
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('🎉 Congratulations! 🎉')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+								A2($elm$html$Html$Attributes$style, 'color', '#28a745'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('You solved the puzzle!')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'color', '#2e7d32'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '25px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord))
+							])),
+						$author$project$Main$modalButtons(
+						_List_fromArray(
+							[
+								$author$project$Main$closeButton($author$project$Main$CloseModal),
+								$author$project$Main$newGameButton
+							]))
+					]))
+			]));
 };
 var $author$project$Main$viewWalletControls = function (model) {
 	return $elm$html$Html$text('');
@@ -9270,10 +9120,10 @@ var $author$project$Main$view = function (model) {
 				$author$project$Main$viewHoneycombGrid(model),
 				$author$project$Main$viewRules,
 				$author$project$Main$viewBetModal(model),
-				$author$project$Main$viewSuccessModal(model),
-				$author$project$Main$viewHintModal(model),
-				$author$project$Main$viewGameOverModal(model),
-				$author$project$Main$viewLettersModal(model)
+				model.isModalVisible ? $author$project$Main$viewSuccessModalSimple(model) : $elm$html$Html$text(''),
+				model.isHintModalVisible ? $author$project$Main$viewHintModalSimple(model) : $elm$html$Html$text(''),
+				model.isGameOverModalVisible ? $author$project$Main$viewGameOverModalSimple(model) : $elm$html$Html$text(''),
+				model.isLettersModalVisible ? $author$project$Main$viewLettersModalSimple(model) : $elm$html$Html$text('')
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$document(
