@@ -1664,7 +1664,7 @@ newGameButton =
         , style "padding" "12px 24px"
         , style "cursor" "pointer"
         , style "background-color" "#28a745"
-        , style "color" "black"
+        , style "color" "white"
         , style "border" "none"
         , style "border-radius" "8px"
         , style "font-size" "16px"

@@ -8323,7 +8323,7 @@ var $author$project$Main$newGameButton = A2(
 			A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
 			A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 			A2($elm$html$Html$Attributes$style, 'background-color', '#28a745'),
-			A2($elm$html$Html$Attributes$style, 'color', 'black'),
+			A2($elm$html$Html$Attributes$style, 'color', 'white'),
 			A2($elm$html$Html$Attributes$style, 'border', 'none'),
 			A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
 			A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
