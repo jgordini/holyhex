@@ -1,0 +1,47 @@
+// SolutionsDB.js - Solutions database loader and validator
+const fs = require('fs');
+const path = require('path');
+
+class SolutionsDB {
+    constructor() {
+        this.data = null;
+    }
+
+    async load() {
+        try {
+            const filePath = path.join(__dirname, '..', 'solutions.json');
+            const rawData = await fs.promises.readFile(filePath, 'utf8');
+            this.data = JSON.parse(rawData);
+            return true;
+        } catch (error) {
+            console.error('Error loading solutions database:', error);
+            return false;
+        }
+    }
+
+    getRandomWord(difficulty = 'medium') {
+        if (!this.data || !this.data.words[difficulty]) {
+            throw new Error('Database not loaded or invalid difficulty');
+        }
+        const words = this.data.words[difficulty];
+        return words[Math.floor(Math.random() * words.length)];
+    }
+
+    getDifficultyMultiplier(difficulty) {
+        return this.data?.difficulties[difficulty]?.multiplier || 1.0;
+    }
+
+    validateWord(word, difficulty) {
+        if (!this.data) return false;
+        return this.data.words[difficulty]?.includes(word.toLowerCase()) || false;
+    }
+
+    getWordCategories(word) {
+        if (!this.data) return [];
+        return Object.entries(this.data.categories)
+            .filter(([_, words]) => words.includes(word.toLowerCase()))
+            .map(([category]) => category);
+    }
+}
+
+module.exports = new SolutionsDB(); 

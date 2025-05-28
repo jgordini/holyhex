@@ -85,33 +85,10 @@ embeddedValidGuessesDB =
         , "which", "while", "white", "whole", "whose", "woman", "women", "world", "worry", "worse"
         , "worst", "worth", "would", "write", "wrong", "wrote", "young", "youth"
         ] -- Sample of common 5-letter words for validation
-    , targetWords =
-        { easy = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ]
-        , medium = 
-            [ "caulk", "gully", "foyer", "shard", "being", "colon", "wrung", "perky", "mount", "triad"
-            , "swing", "ferry", "idyll", "twixt", "shave", "whoop", "foist", "natal", "shore", "rhyme"
-            ]
-        , hard = 
-            [ "borax", "proxy", "epoch", "tryst", "dwelt", "staid", "allot", "omega", "squab", "lemon"
-            , "plunk", "foggy", "attic", "theta", "snack", "pleat", "rugby", "floss", "lunge", "glory"
-            ]
-        }
     , difficulties =
         { easy = { multiplier = 1.5, description = "Common words with frequent letter patterns" }
         , medium = { multiplier = 2.0, description = "Words with moderate complexity and mixed letter patterns" }
         , hard = { multiplier = 3.0, description = "Rare words with uncommon letter combinations" }
-        }
-    , categories =
-        { common = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ]
-        , nature = [ "shore", "mount", "lemon", "plume" ]
-        , actions = [ "swing", "shave", "lunge", "snout" ]
-        , technology = [ "proxy", "omega" ]
         }
     , features =
         { hasVowels = True
@@ -153,15 +130,6 @@ embeddedTargetWordsDB =
         , medium = { multiplier = 2.0, description = "Words with moderate complexity and mixed letter patterns", wordCount = 808 }
         , hard = { multiplier = 3.0, description = "Rare words with uncommon letter combinations", wordCount = 578 }
         }
-    , categories =
-        { common = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ]
-        , nature = [ "shore", "mount", "lemon", "plume" ]
-        , actions = [ "swing", "shave", "lunge", "snout" ]
-        , technology = [ "proxy", "omega" ]
-        }
     , features =
         { hasVowels = True
         , allowsRepeatedLetters = True
@@ -177,9 +145,7 @@ type alias ValidGuessesDB =
     { version : String
     , metadata : ValidGuessesMetadata
     , validGuesses : List String
-    , targetWords : WordsByDifficulty
     , difficulties : DifficultyConfig
-    , categories : WordCategories
     , features : SolutionsFeatures
     }
 
@@ -207,21 +173,6 @@ type alias DifficultyLevel =
     }
 
 
-type alias WordsByDifficulty =
-    { easy : List String
-    , medium : List String
-    , hard : List String
-    }
-
-
-type alias WordCategories =
-    { common : List String
-    , nature : List String
-    , actions : List String
-    , technology : List String
-    }
-
-
 type alias SolutionsFeatures =
     { hasVowels : Bool
     , allowsRepeatedLetters : Bool
@@ -237,7 +188,6 @@ type alias TargetWordsDB =
     , metadata : TargetWordsMetadata
     , targetWords : WordsByDifficulty
     , difficulties : ExtendedDifficultyConfig
-    , categories : WordCategories
     , features : SolutionsFeatures
     }
 
@@ -248,6 +198,13 @@ type alias TargetWordsMetadata =
     , source : String
     , format : String
     , description : String
+    }
+
+
+type alias WordsByDifficulty =
+    { easy : List String
+    , medium : List String
+    , hard : List String
     }
 
 
@@ -274,9 +231,7 @@ validGuessesDecoder =
         |> Pipeline.required "version" Decode.string
         |> Pipeline.required "metadata" metadataDecoder
         |> Pipeline.required "validGuesses" (Decode.list Decode.string)
-        |> Pipeline.required "targetWords" wordsByDifficultyDecoder
         |> Pipeline.required "difficulties" difficultiesDecoder
-        |> Pipeline.required "categories" categoriesDecoder
         |> Pipeline.required "features" featuresDecoder
 
 
@@ -306,23 +261,6 @@ difficultyLevelDecoder =
         |> Pipeline.required "description" Decode.string
 
 
-wordsByDifficultyDecoder : Decoder WordsByDifficulty
-wordsByDifficultyDecoder =
-    Decode.succeed WordsByDifficulty
-        |> Pipeline.required "easy" (Decode.list Decode.string)
-        |> Pipeline.required "medium" (Decode.list Decode.string)
-        |> Pipeline.required "hard" (Decode.list Decode.string)
-
-
-categoriesDecoder : Decoder WordCategories
-categoriesDecoder =
-    Decode.succeed WordCategories
-        |> Pipeline.required "common" (Decode.list Decode.string)
-        |> Pipeline.required "nature" (Decode.list Decode.string)
-        |> Pipeline.required "actions" (Decode.list Decode.string)
-        |> Pipeline.required "technology" (Decode.list Decode.string)
-
-
 featuresDecoder : Decoder SolutionsFeatures
 featuresDecoder =
     Decode.succeed SolutionsFeatures
@@ -341,7 +279,6 @@ targetWordsDecoder =
         |> Pipeline.required "metadata" targetWordsMetadataDecoder
         |> Pipeline.required "targetWords" wordsByDifficultyDecoder
         |> Pipeline.required "difficulties" extendedDifficultiesDecoder
-        |> Pipeline.required "categories" categoriesDecoder
         |> Pipeline.required "features" featuresDecoder
 
 
@@ -353,6 +290,14 @@ targetWordsMetadataDecoder =
         |> Pipeline.required "source" Decode.string
         |> Pipeline.required "format" Decode.string
         |> Pipeline.required "description" Decode.string
+
+
+wordsByDifficultyDecoder : Decoder WordsByDifficulty
+wordsByDifficultyDecoder =
+    Decode.succeed WordsByDifficulty
+        |> Pipeline.required "easy" (Decode.list Decode.string)
+        |> Pipeline.required "medium" (Decode.list Decode.string)
+        |> Pipeline.required "hard" (Decode.list Decode.string)
 
 
 extendedDifficultiesDecoder : Decoder ExtendedDifficultyConfig
@@ -741,7 +686,7 @@ findPreviousHexIdInRow model currentHexId =
                         if prevC >= 0 then
                             Just ("hex-" ++ String.fromInt r ++ "-" ++ String.fromInt prevC)
                         else
-            Nothing
+                            Nothing
 
 
 findNextHexIdInRow : Model -> String -> Maybe String
@@ -835,7 +780,7 @@ update msg model =
                         -- Only allow focusing on the current active row
                         ( model, Cmd.none )
                     else
-            ( { model | focusedHexId = Just hexId }, Cmd.none )
+                        ( { model | focusedHexId = Just hexId }, Cmd.none )
 
         KeyPressed code ->
             let
@@ -862,7 +807,7 @@ update msg model =
                                 if r /= model.currentActiveRow then
                                     -- Only allow editing on the current active row
                                     ( model, Cmd.none )
-                                else if code == backspaceCode then
+                                                                else if code == backspaceCode then
                                     -- Handle backspace for unlocked rows
                                     case List.drop r model.grid |> List.head of
                                         Nothing ->
@@ -876,11 +821,11 @@ update msg model =
                                                 Just currentHex ->
                                                     if currentHex.letter /= Nothing then
                                                         -- Current hex has content, clear it and stay here
-                            let
-                                newGrid =
-                                    updateHexInGrid focusedId (\hex -> { hex | letter = Nothing, state = Empty }) model.grid
-                            in
-                            ( { model | grid = newGrid }, Cmd.none )
+                                                        let
+                                                            newGrid =
+                                                                updateHexInGrid focusedId (\hex -> { hex | letter = Nothing, state = Empty }) model.grid
+                                                        in
+                                                        ( { model | grid = newGrid }, Cmd.none )
                                                     else
                                                         -- Current hex is empty, go to previous hex and clear it
                                                         case findPreviousHexIdInRow model focusedId of
