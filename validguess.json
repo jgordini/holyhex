@@ -14999,52 +14999,6 @@
             "description": "Rare words with uncommon letter combinations"
         }
     },
-    "categories": {
-        "common": [
-            "speed",
-            "sharp",
-            "shine",
-            "homes",
-            "judge",
-            "prize",
-            "array",
-            "fetch",
-            "beard",
-            "marry",
-            "squad",
-            "shrug",
-            "graze",
-            "salad",
-            "agony",
-            "shell",
-            "gamma",
-            "tardy",
-            "tease",
-            "swore"
-        ],
-        "nature": [
-            "maple",
-            "glade",
-            "beard",
-            "bayou",
-            "fossa",
-            "cohoe"
-        ],
-        "actions": [
-            "fetch",
-            "prize",
-            "judge",
-            "graze",
-            "tease",
-            "marry",
-            "shine"
-        ],
-        "technology": [
-            "pixel",
-            "array",
-            "gamma"
-        ]
-    },
     "features": {
         "hasVowels": true,
         "allowsRepeatedLetters": true,

@@ -1,4 +1,4 @@
-port module Main exposing (main, Model, Difficulty(..), PuzzleResult(..), Msg(..), initialModel, update, stringToDifficulty, difficultyToString, calculatePotentialPayout)
+port module Main exposing (main, Model, PuzzleResult(..), Msg(..), initialModel, update, calculatePotentialPayout)
 
 import Browser
 import Browser.Events
@@ -17,158 +17,10 @@ import Process
 import Http
 
 
--- EMBEDDED VALID GUESSES DATABASE
-
-
-embeddedValidGuessesDB : ValidGuessesDB
-embeddedValidGuessesDB =
-    { version = "2.0"
-    , metadata = 
-        { totalValidGuesses = 14854
-        , totalTargetWords = 2309
-        , lastUpdated = "2024-03-21"
-        , source = "words.txt"
-        , format = "5-letter-words"
-        , description = "Valid guess words database for Honeycomb Wordle"
-        }
-    , validGuesses = 
-        [ "about", "above", "abuse", "actor", "acute", "admit", "adopt", "adult", "after", "again"
-        , "agent", "agree", "ahead", "alarm", "album", "alert", "alien", "align", "alike", "alive"
-        , "allow", "alone", "along", "alter", "among", "anger", "angle", "angry", "apart", "apple"
-        , "apply", "arena", "argue", "arise", "array", "aside", "asset", "avoid", "awake", "award"
-        , "aware", "badly", "baker", "bases", "basic", "beach", "began", "begin", "being", "below"
-        , "bench", "billy", "birth", "black", "blame", "blank", "blast", "blind", "block", "blood"
-        , "board", "boost", "booth", "bound", "brain", "brand", "brass", "brave", "bread", "break"
-        , "breed", "brief", "bring", "broad", "broke", "brown", "build", "built", "buyer", "cable"
-        , "calif", "carry", "catch", "cause", "chain", "chair", "chaos", "charm", "chart", "chase"
-        , "cheap", "check", "chest", "chief", "child", "china", "chose", "civil", "claim", "class"
-        , "clean", "clear", "click", "climb", "clock", "close", "cloud", "coach", "coast", "could"
-        , "count", "court", "cover", "craft", "crash", "crazy", "cream", "crime", "cross", "crowd"
-        , "crown", "crude", "curve", "cycle", "daily", "dance", "dated", "dealt", "death", "debut"
-        , "delay", "depth", "doing", "doubt", "dozen", "draft", "drama", "drank", "dream", "dress"
-        , "drill", "drink", "drive", "drove", "dying", "eager", "early", "earth", "eight", "elite"
-        , "empty", "enemy", "enjoy", "enter", "entry", "equal", "error", "event", "every", "exact"
-        , "exist", "extra", "faith", "false", "fault", "fiber", "field", "fifth", "fifty", "fight"
-        , "final", "first", "fixed", "flash", "fleet", "floor", "fluid", "focus", "force", "forth"
-        , "forty", "forum", "found", "frame", "frank", "fraud", "fresh", "front", "fruit", "fully"
-        , "funny", "giant", "given", "glass", "globe", "going", "grace", "grade", "grand", "grant"
-        , "grass", "grave", "great", "green", "gross", "group", "grown", "guard", "guess", "guest"
-        , "guide", "happy", "harry", "heart", "heavy", "hello", "hence", "henry", "horse", "hotel", "house"
-        , "human", "ideal", "image", "index", "inner", "input", "issue", "japan", "jimmy", "joint"
-        , "jones", "judge", "known", "label", "large", "laser", "later", "laugh", "layer", "learn"
-        , "lease", "least", "leave", "legal", "level", "lewis", "light", "limit", "links", "lives"
-        , "local", "loose", "lower", "lucky", "lunch", "lying", "magic", "major", "maker", "march"
-        , "maria", "match", "maybe", "mayor", "meant", "media", "metal", "might", "minor", "minus"
-        , "mixed", "model", "money", "month", "moral", "motor", "mount", "mouse", "mouth", "moved"
-        , "movie", "music", "needs", "never", "newly", "night", "noise", "north", "noted", "novel"
-        , "nurse", "occur", "ocean", "offer", "often", "order", "other", "ought", "paint", "panel"
-        , "paper", "party", "peace", "peter", "phase", "phone", "photo", "piano", "piece", "pilot"
-        , "pitch", "place", "plain", "plane", "plant", "plate", "point", "pound", "power", "press"
-        , "price", "pride", "prime", "print", "prior", "prize", "proof", "proud", "prove", "queen"
-        , "quick", "quiet", "quite", "radio", "raise", "range", "rapid", "ratio", "reach", "ready"
-        , "realm", "rebel", "refer", "relax", "repay", "reply", "right", "rigid", "rival", "river"
-        , "robin", "roger", "roman", "rough", "round", "route", "royal", "rural", "scale", "scene"
-        , "scope", "score", "sense", "serve", "seven", "shall", "shape", "share", "sharp", "sheet"
-        , "shelf", "shell", "shift", "shine", "shirt", "shock", "shoot", "short", "shown", "sides"
-        , "sight", "silly", "since", "sixth", "sixty", "sized", "skill", "sleep", "slide", "small"
-        , "smart", "smile", "smith", "smoke", "snake", "snow", "solid", "solve", "sorry", "sound"
-        , "south", "space", "spare", "speak", "speed", "spend", "spent", "split", "spoke", "sport"
-        , "staff", "stage", "stake", "stand", "start", "state", "steam", "steel", "steep", "steer"
-        , "stick", "still", "stock", "stone", "stood", "store", "storm", "story", "strip", "stuck"
-        , "study", "stuff", "style", "sugar", "suite", "super", "sweet", "table", "taken", "taste"
-        , "taxes", "teach", "teeth", "terry", "texas", "thank", "theft", "their", "theme", "there"
-        , "these", "thick", "thing", "think", "third", "those", "three", "threw", "throw", "thumb"
-        , "tight", "timer", "tired", "title", "today", "topic", "total", "touch", "tough", "tower"
-        , "track", "trade", "train", "treat", "trend", "trial", "tribe", "trick", "tried", "tries"
-        , "truck", "truly", "trunk", "trust", "truth", "twice", "uncle", "under", "undue", "union"
-        , "unity", "until", "upper", "upset", "urban", "usage", "usual", "valid", "value", "video"
-        , "virus", "visit", "vital", "vocal", "voice", "waste", "watch", "water", "wheel", "where"
-        , "which", "while", "white", "whole", "whose", "woman", "women", "world", "worry", "worse"
-        , "worst", "worth", "would", "write", "wrong", "wrote", "young", "youth"
-        ] -- Sample of common 5-letter words for validation
-    , targetWords =
-        { easy = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ]
-        , medium = 
-            [ "caulk", "gully", "foyer", "shard", "being", "colon", "wrung", "perky", "mount", "triad"
-            , "swing", "ferry", "idyll", "twixt", "shave", "whoop", "foist", "natal", "shore", "rhyme"
-            ]
-        , hard = 
-            [ "borax", "proxy", "epoch", "tryst", "dwelt", "staid", "allot", "omega", "squab", "lemon"
-            , "plunk", "foggy", "attic", "theta", "snack", "pleat", "rugby", "floss", "lunge", "glory"
-            ]
-        }
-    , difficulties =
-        { easy = { multiplier = 1.5, description = "Common words with frequent letter patterns" }
-        , medium = { multiplier = 2.0, description = "Words with moderate complexity and mixed letter patterns" }
-        , hard = { multiplier = 3.0, description = "Rare words with uncommon letter combinations" }
-        }
-    , categories =
-        { common = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ]
-        , nature = [ "shore", "mount", "lemon", "plume" ]
-        , actions = [ "swing", "shave", "lunge", "snout" ]
-        , technology = [ "proxy", "omega" ]
-        }
-    , features =
-        { hasVowels = True
-        , allowsRepeatedLetters = True
-        , caseSensitive = False
-        }
-    }
-
-
--- EMBEDDED TARGET WORDS DATABASE
-
-
-embeddedTargetWordsDB : TargetWordsDB
-embeddedTargetWordsDB =
-    { version = "1.0"
-    , metadata = 
-        { totalTargetWords = 2309
-        , lastUpdated = "2024-03-21"
-        , source = "answerlist.txt"
-        , format = "5-letter-words"
-        , description = "Target words database for Honeycomb Wordle puzzles"
-        }
-    , targetWords =
-        { easy = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ] -- Sample words - full list loaded from answerlist.json
-        , medium = 
-            [ "caulk", "gully", "foyer", "shard", "being", "colon", "wrung", "perky", "mount", "triad"
-            , "swing", "ferry", "idyll", "twixt", "shave", "whoop", "foist", "natal", "shore", "rhyme"
-            ] -- Sample words - full list loaded from answerlist.json
-        , hard = 
-            [ "borax", "proxy", "epoch", "tryst", "dwelt", "staid", "allot", "omega", "squab", "lemon"
-            , "plunk", "foggy", "attic", "theta", "snack", "pleat", "rugby", "floss", "lunge", "glory"
-            ] -- Sample words - full list loaded from answerlist.json
-        }
-    , difficulties =
-        { easy = { multiplier = 1.5, description = "Common words with frequent letter patterns", wordCount = 923 }
-        , medium = { multiplier = 2.0, description = "Words with moderate complexity and mixed letter patterns", wordCount = 808 }
-        , hard = { multiplier = 3.0, description = "Rare words with uncommon letter combinations", wordCount = 578 }
-        }
-    , categories =
-        { common = 
-            [ "yield", "thong", "vivid", "bride", "angst", "audit", "amply", "catty", "snout", "wager"
-            , "press", "asset", "abhor", "vodka", "spied", "porch", "shout", "plume", "saute", "alley"
-            ]
-        , nature = [ "shore", "mount", "lemon", "plume" ]
-        , actions = [ "swing", "shave", "lunge", "snout" ]
-        , technology = [ "proxy", "omega" ]
-        }
-    , features =
-        { hasVowels = True
-        , allowsRepeatedLetters = True
-        , caseSensitive = False
-        }
-    }
+-- Simple fallback word list when external files fail to load
+fallbackTargetWords : List String
+fallbackTargetWords = 
+    [ "speed", "house", "world", "music", "ocean", "beach", "plant", "water", "light", "sound" ]
 
 
 -- VALID GUESSES DATABASE TYPES
@@ -178,9 +30,7 @@ type alias ValidGuessesDB =
     { version : String
     , metadata : ValidGuessesMetadata
     , validGuesses : List String
-    , targetWords : WordsByDifficulty
-    , difficulties : DifficultyConfig
-    , categories : WordCategories
+    , targetWords : List String
     , features : SolutionsFeatures
     }
 
@@ -192,34 +42,6 @@ type alias ValidGuessesMetadata =
     , source : String
     , format : String
     , description : String
-    }
-
-
-type alias DifficultyConfig =
-    { easy : DifficultyLevel
-    , medium : DifficultyLevel
-    , hard : DifficultyLevel
-    }
-
-
-type alias DifficultyLevel =
-    { multiplier : Float
-    , description : String
-    }
-
-
-type alias WordsByDifficulty =
-    { easy : List String
-    , medium : List String
-    , hard : List String
-    }
-
-
-type alias WordCategories =
-    { common : List String
-    , nature : List String
-    , actions : List String
-    , technology : List String
     }
 
 
@@ -236,9 +58,7 @@ type alias SolutionsFeatures =
 type alias TargetWordsDB =
     { version : String
     , metadata : TargetWordsMetadata
-    , targetWords : WordsByDifficulty
-    , difficulties : ExtendedDifficultyConfig
-    , categories : WordCategories
+    , targetWords : List String
     , features : SolutionsFeatures
     }
 
@@ -252,20 +72,6 @@ type alias TargetWordsMetadata =
     }
 
 
-type alias ExtendedDifficultyConfig =
-    { easy : ExtendedDifficultyLevel
-    , medium : ExtendedDifficultyLevel
-    , hard : ExtendedDifficultyLevel
-    }
-
-
-type alias ExtendedDifficultyLevel =
-    { multiplier : Float
-    , description : String
-    , wordCount : Int
-    }
-
-
 -- VALID GUESSES DATABASE DECODERS
 
 
@@ -275,9 +81,7 @@ validGuessesDecoder =
         |> Pipeline.required "version" Decode.string
         |> Pipeline.required "metadata" metadataDecoder
         |> Pipeline.required "validGuesses" (Decode.list Decode.string)
-        |> Pipeline.required "targetWords" wordsByDifficultyDecoder
-        |> Pipeline.required "difficulties" difficultiesDecoder
-        |> Pipeline.required "categories" categoriesDecoder
+        |> Pipeline.required "targetWords" (Decode.list Decode.string)
         |> Pipeline.required "features" featuresDecoder
 
 
@@ -290,38 +94,6 @@ metadataDecoder =
         |> Pipeline.required "source" Decode.string
         |> Pipeline.required "format" Decode.string
         |> Pipeline.required "description" Decode.string
-
-
-difficultiesDecoder : Decoder DifficultyConfig
-difficultiesDecoder =
-    Decode.succeed DifficultyConfig
-        |> Pipeline.required "easy" difficultyLevelDecoder
-        |> Pipeline.required "medium" difficultyLevelDecoder
-        |> Pipeline.required "hard" difficultyLevelDecoder
-
-
-difficultyLevelDecoder : Decoder DifficultyLevel
-difficultyLevelDecoder =
-    Decode.succeed DifficultyLevel
-        |> Pipeline.required "multiplier" Decode.float
-        |> Pipeline.required "description" Decode.string
-
-
-wordsByDifficultyDecoder : Decoder WordsByDifficulty
-wordsByDifficultyDecoder =
-    Decode.succeed WordsByDifficulty
-        |> Pipeline.required "easy" (Decode.list Decode.string)
-        |> Pipeline.required "medium" (Decode.list Decode.string)
-        |> Pipeline.required "hard" (Decode.list Decode.string)
-
-
-categoriesDecoder : Decoder WordCategories
-categoriesDecoder =
-    Decode.succeed WordCategories
-        |> Pipeline.required "common" (Decode.list Decode.string)
-        |> Pipeline.required "nature" (Decode.list Decode.string)
-        |> Pipeline.required "actions" (Decode.list Decode.string)
-        |> Pipeline.required "technology" (Decode.list Decode.string)
 
 
 featuresDecoder : Decoder SolutionsFeatures
@@ -346,9 +118,7 @@ targetWordsDecoder =
     Decode.succeed TargetWordsDB
         |> Pipeline.required "version" Decode.string
         |> Pipeline.required "metadata" targetWordsMetadataDecoder
-        |> Pipeline.required "targetWords" wordsByDifficultyDecoder
-        |> Pipeline.required "difficulties" extendedDifficultiesDecoder
-        |> Pipeline.required "categories" categoriesDecoder
+        |> Pipeline.required "targetWords" (Decode.list Decode.string)
         |> Pipeline.required "features" featuresDecoder
 
 
@@ -362,41 +132,14 @@ targetWordsMetadataDecoder =
         |> Pipeline.required "description" Decode.string
 
 
-extendedDifficultiesDecoder : Decoder ExtendedDifficultyConfig
-extendedDifficultiesDecoder =
-    Decode.succeed ExtendedDifficultyConfig
-        |> Pipeline.required "easy" extendedDifficultyLevelDecoder
-        |> Pipeline.required "medium" extendedDifficultyLevelDecoder
-        |> Pipeline.required "hard" extendedDifficultyLevelDecoder
-
-
-extendedDifficultyLevelDecoder : Decoder ExtendedDifficultyLevel
-extendedDifficultyLevelDecoder =
-    Decode.succeed ExtendedDifficultyLevel
-        |> Pipeline.required "multiplier" Decode.float
-        |> Pipeline.required "description" Decode.string
-        |> Pipeline.required "wordCount" Decode.int
-
-
 -- VALID GUESSES DATABASE FUNCTIONS
 
 
-getRandomWordGenerator : WordsByDifficulty -> Difficulty -> Random.Generator (Maybe String)
-getRandomWordGenerator targetWords difficulty =
+getRandomWordGenerator : List String -> Random.Generator (Maybe String)
+getRandomWordGenerator targetWords =
     let
-        wordList =
-            case difficulty of
-                Easy ->
-                    targetWords.easy
-
-                Medium ->
-                    targetWords.medium
-
-                Hard ->
-                    targetWords.hard
-
         wordArray =
-            Array.fromList wordList
+            Array.fromList targetWords
     in
     if Array.isEmpty wordArray then
         Random.constant Nothing
@@ -404,53 +147,15 @@ getRandomWordGenerator targetWords difficulty =
         Random.map (\index -> Array.get index wordArray) (Random.int 0 (Array.length wordArray - 1))
 
 
-getRandomWord : WordsByDifficulty -> Difficulty -> Maybe String
-getRandomWord targetWords difficulty =
-    let
-        wordList =
-            case difficulty of
-                Easy ->
-                    targetWords.easy
-
-                Medium ->
-                    targetWords.medium
-
-                Hard ->
-                    targetWords.hard
-    in
-    List.head wordList -- Fallback for when we can't use Random
-
-
-getDifficultyMultiplier : DifficultyConfig -> Difficulty -> Float
-getDifficultyMultiplier config difficulty =
-    case difficulty of
-        Easy ->
-            config.easy.multiplier
-
-        Medium ->
-            config.medium.multiplier
-
-        Hard ->
-            config.hard.multiplier
-
-
-getExtendedDifficultyMultiplier : ExtendedDifficultyConfig -> Difficulty -> Float
-getExtendedDifficultyMultiplier config difficulty =
-    case difficulty of
-        Easy ->
-            config.easy.multiplier
-
-        Medium ->
-            config.medium.multiplier
-
-        Hard ->
-            config.hard.multiplier
+getRandomWord : List String -> Maybe String
+getRandomWord targetWords =
+    List.head targetWords -- Fallback for when we can't use Random
 
 
 -- For validation, check if word exists in valid guesses list OR target words list
 -- If not found, fall back to basic English word validation
-validateWord : List String -> WordsByDifficulty -> String -> Difficulty -> Bool
-validateWord validGuesses targetWords word difficulty =
+validateWord : List String -> List String -> String -> Bool
+validateWord validGuesses targetWords word =
     let
         cleanWord = String.toLower (String.trim word)
         isValidLength = String.length cleanWord == 5
@@ -458,8 +163,7 @@ validateWord validGuesses targetWords word difficulty =
         isInValidGuessesList = List.member cleanWord validGuesses
         
         -- Check if word is in target words (answerlist.json)
-        allTargetWords = targetWords.easy ++ targetWords.medium ++ targetWords.hard
-        isInTargetWordsList = List.member cleanWord (List.map String.toLower allTargetWords)
+        isInTargetWordsList = List.member cleanWord (List.map String.toLower targetWords)
         
         -- Basic validation for reasonable English words
         passesBasicValidation = isValidLength && isAllLetters && not (isRepeatingPattern cleanWord) && not (isObviousNonsense cleanWord)
@@ -560,35 +264,6 @@ hasConsecutiveVowels word maxCount =
     checkConsecutive chars 0 maxCount
 
 
-getWordCategories : WordCategories -> String -> List String
-getWordCategories categories word =
-    let
-        lowerWord =
-            String.toLower word
-
-        isInCategory categoryWords =
-            List.member lowerWord (List.map String.toLower categoryWords)
-    in
-    List.concat
-        [ if isInCategory categories.common then
-            [ "common" ]
-          else
-            []
-        , if isInCategory categories.nature then
-            [ "nature" ]
-          else
-            []
-        , if isInCategory categories.actions then
-            [ "actions" ]
-          else
-            []
-        , if isInCategory categories.technology then
-            [ "technology" ]
-          else
-            []
-        ]
-
-
 -- MODEL
 
 
@@ -601,8 +276,6 @@ type alias Model =
     , modalMessage : String
     , betAmount : Float
     , betAmountString : String
-    , difficulty : Difficulty
-    , difficultyString : String
     , walletAddress : Maybe String
     , puzzleResult : Maybe PuzzleResult
     , isBetModalVisible : Bool
@@ -618,12 +291,6 @@ type alias Model =
     , isGameOverModalVisible : Bool -- Track if game over modal is visible
     , isLettersModalVisible : Bool -- Track if letters modal is visible
     }
-
-
-type Difficulty
-    = Easy
-    | Medium
-    | Hard
 
 
 type PuzzleResult
@@ -740,13 +407,11 @@ initialModel =
     , modalMessage = ""
     , betAmount = 0.01
     , betAmountString = "0.01"
-    , difficulty = Easy
-    , difficultyString = "Easy"
     , walletAddress = Nothing
     , puzzleResult = Nothing
     , isBetModalVisible = False
-    , validGuessesDB = Just embeddedValidGuessesDB -- Database is immediately available
-    , targetWordsDB = Just embeddedTargetWordsDB -- Target words database is immediately available
+    , validGuessesDB = Nothing -- Will be loaded from external file
+    , targetWordsDB = Nothing -- Will be loaded from external file
     , currentWord = Nothing -- Will be set by initial word selection
     , loadingError = Nothing
     , gameMessage = Nothing
@@ -775,7 +440,6 @@ type Msg
     | ShowBetModal
     | HideBetModal
     | UpdateBetAmountString String
-    | UpdateDifficultyString String
     | PlaceBet
     | BetResultReceived Bool Float
     | BetAgain
@@ -783,7 +447,6 @@ type Msg
     | StartNewGame
     | ClearGameMessage
     | LoadValidGuesses
-    | ValidGuessesLoaded (Result Http.Error ValidGuessesDB)
     | SimpleValidGuessesLoaded (Result Http.Error (List String))
     | ShowSuccessModal
     | ShowGameOverModal
@@ -866,33 +529,7 @@ isRowSubmitted model rowIndex =
     List.member rowIndex model.submittedRows
 
 
-difficultyToString : Difficulty -> String
-difficultyToString difficulty =
-    case difficulty of
-        Easy ->
-            "Easy"
-
-        Medium ->
-            "Medium"
-
-        Hard ->
-            "Hard"
-
-
-stringToDifficulty : String -> Difficulty
-stringToDifficulty str =
-    case String.toLower str of
-        "easy" ->
-            Easy
-
-        "medium" ->
-            Medium
-
-        "hard" ->
-            Hard
-
-        _ ->
-            Easy -- Default to Easy if parsing fails
+-- UPDATE
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -1075,11 +712,7 @@ update msg model =
                                                             targetWord = 
                                                                 case model.currentWord of
                                                                     Just word -> word
-                                                                    Nothing ->
-                                                                        case model.difficulty of
-                                                                            Easy -> "speed"
-                                                                            Medium -> "jetty"
-                                                                            Hard -> "wizzo"
+                                                                    Nothing -> "speed" -- Default fallback word
                                                             
                                                             -- Check the word and get hex states
                                                             hexStates = checkWordAgainstTarget submittedWord targetWord
@@ -1089,13 +722,13 @@ update msg model =
                                                             isValidWord = 
                                                                 case (model.validGuessesDB, model.targetWordsDB) of
                                                                     (Just validDB, Just targetDB) -> 
-                                                                        validateWord validDB.validGuesses targetDB.targetWords submittedWord model.difficulty
+                                                                        validateWord validDB.validGuesses targetDB.targetWords submittedWord
                                                                     (Just validDB, Nothing) -> 
-                                                                        validateWord validDB.validGuesses embeddedTargetWordsDB.targetWords submittedWord model.difficulty
+                                                                        validateWord validDB.validGuesses fallbackTargetWords submittedWord
                                                                     (Nothing, Just targetDB) -> 
-                                                                        validateWord [] targetDB.targetWords submittedWord model.difficulty
+                                                                        validateWord [] targetDB.targetWords submittedWord
                                                                     (Nothing, Nothing) -> 
-                                                                        validateWord [] embeddedTargetWordsDB.targetWords submittedWord model.difficulty
+                                                                        validateWord [] fallbackTargetWords submittedWord
                                                         in
                                                         if isCorrect then
                                                             { gameMessage = Just "🎉 Correct! You solved the puzzle!"
@@ -1194,9 +827,6 @@ update msg model =
             in
             ( { model | betAmountString = amountStr, betAmount = newAmount }, Cmd.none )
 
-        UpdateDifficultyString diffStr ->
-            ( { model | difficultyString = diffStr, difficulty = stringToDifficulty diffStr }, Cmd.none )
-
         PlaceBet ->
             let
                 ( newModel, wordCmd ) =
@@ -1204,7 +834,7 @@ update msg model =
             in
             ( { newModel | isBetModalVisible = False }
             , Cmd.batch
-                [ placeBet { amount = model.betAmount, difficulty = difficultyToString model.difficulty }
+                [ placeBet { amount = model.betAmount }
                 , wordCmd
                 ]
             )
@@ -1228,8 +858,22 @@ update msg model =
             ( { model | puzzleResult = Just result, isModalVisible = True, modalMessage = message }, Cmd.none )
 
         BetAgain ->
-            ( { initialModel | walletAddress = model.walletAddress, config = model.config }
-            , selectNewWordCmd model.difficulty -- Generate new word immediately
+            let
+                -- Generate a new word immediately to avoid race conditions  
+                wordGenerator = getRandomWordGenerator fallbackTargetWords
+                seedValue = 
+                    case model.currentWord of
+                        Just word -> String.length word * 11 + model.currentActiveRow * 17
+                        Nothing -> 67
+                newWordSeed = Random.initialSeed seedValue
+                (maybeNewWord, _) = Random.step wordGenerator newWordSeed
+            in
+            ( { initialModel 
+              | walletAddress = model.walletAddress
+              , config = model.config
+              , currentWord = maybeNewWord -- Set the word immediately
+              }
+            , Cmd.none
             )
 
         RandomWordGenerated word ->
@@ -1241,9 +885,32 @@ update msg model =
 
         StartNewGame ->
             let
-                modelWithClearedGrid = { initialModel | validGuessesDB = model.validGuessesDB, targetWordsDB = model.targetWordsDB, config = model.config, submittedRows = [], currentActiveRow = 0, isModalVisible = False, modalMessage = "", isHintModalVisible = False, isGameOverModalVisible = False, isLettersModalVisible = False }
+                -- Generate a new word immediately to avoid race conditions
+                wordGenerator = getRandomWordGenerator fallbackTargetWords
+                -- Use a semi-random seed based on current state to maintain some variety
+                seedValue = 
+                    case model.currentWord of
+                        Just word -> String.length word * 7 + model.currentActiveRow * 13
+                        Nothing -> 42
+                newWordSeed = Random.initialSeed seedValue
+                (maybeNewWord, _) = Random.step wordGenerator newWordSeed
+                
+                modelWithClearedGrid = 
+                    { initialModel 
+                    | validGuessesDB = model.validGuessesDB
+                    , targetWordsDB = model.targetWordsDB
+                    , config = model.config
+                    , submittedRows = []
+                    , currentActiveRow = 0
+                    , isModalVisible = False
+                    , modalMessage = ""
+                    , isHintModalVisible = False
+                    , isGameOverModalVisible = False
+                    , isLettersModalVisible = False
+                    , currentWord = maybeNewWord -- Set the word immediately
+                    }
             in
-            ( modelWithClearedGrid, selectNewWordCmd modelWithClearedGrid.difficulty )
+            ( modelWithClearedGrid, Cmd.none ) -- No need for async command since word is set immediately
 
         ClearGameMessage ->
             ( { model | gameMessage = Nothing, gameMessageType = "" }, Cmd.none )
@@ -1251,30 +918,29 @@ update msg model =
         LoadValidGuesses ->
             ( model, loadValidGuessesCmd )
 
-        ValidGuessesLoaded result ->
-            case result of
-                Ok validGuessesDB ->
-                    ( { model | validGuessesDB = Just validGuessesDB, loadingError = Nothing }, Cmd.none )
-                
-                Err error ->
-                    let
-                        errorMessage = 
-                            case error of
-                                Http.BadUrl url -> "Bad URL: " ++ url
-                                Http.Timeout -> "Request timeout"
-                                Http.NetworkError -> "Network error"
-                                Http.BadStatus status -> "Bad status: " ++ String.fromInt status
-                                Http.BadBody body -> "Bad response body: " ++ body
-                    in
-                    ( { model | loadingError = Just ("Failed to load valid guesses: " ++ errorMessage) }, Cmd.none )
-
         SimpleValidGuessesLoaded result ->
             case result of
                 Ok validGuessesList ->
-                    -- Create a new ValidGuessesDB using the loaded validGuesses list and embedded data for other fields
+                    -- Create a new ValidGuessesDB using the loaded validGuesses list and fallback data for other fields
                     let
                         updatedValidGuessesDB = 
-                            { embeddedValidGuessesDB | validGuesses = validGuessesList }
+                            { version = "2.0"
+                            , metadata = 
+                                { totalValidGuesses = List.length validGuessesList
+                                , totalTargetWords = List.length fallbackTargetWords
+                                , lastUpdated = "2024-03-21"
+                                , source = "validguess.json"
+                                , format = "5-letter-words"
+                                , description = "Valid guess words database for Honeycomb Wordle"
+                                }
+                            , validGuesses = validGuessesList
+                            , targetWords = fallbackTargetWords
+                            , features = 
+                                { hasVowels = True
+                                , allowsRepeatedLetters = True
+                                , caseSensitive = False
+                                }
+                            }
                     in
                     ( { model | validGuessesDB = Just updatedValidGuessesDB, loadingError = Nothing }, Cmd.none )
                 
@@ -1372,7 +1038,7 @@ parseTxPayout txData =
 
 
 port connectWallet : () -> Cmd msg
-port placeBet : { amount : Float, difficulty : String } -> Cmd msg
+port placeBet : { amount : Float } -> Cmd msg
 port transactionResult : (String -> msg) -> Sub msg
 
 
@@ -1392,21 +1058,7 @@ viewBetModal model =
 calculatePotentialPayout : Model -> String
 calculatePotentialPayout model =
     let
-        multiplier =
-            case model.targetWordsDB of
-                Just db ->
-                    getExtendedDifficultyMultiplier db.difficulties model.difficulty
-
-                Nothing ->
-                    case model.difficulty of
-                        Easy ->
-                            1.5
-
-                        Medium ->
-                            2.0
-
-                        Hard ->
-                            3.0
+        multiplier = 2.0 -- Fixed multiplier since we removed difficulty levels
 
         rawPayout =
             model.betAmount * multiplier
@@ -2107,7 +1759,7 @@ viewHexagon model hexData =
 main : Program () Model Msg
 main =
     Browser.document
-        { init = \_ -> ( initialModel, Cmd.batch [ selectNewWordCmd Easy, loadValidGuessesCmd ] ) -- Load word and valid guesses
+        { init = \_ -> ( initialModel, Cmd.batch [ selectNewWordCmd, loadValidGuessesCmd ] ) -- Load word and valid guesses
         , view = \model -> { title = "Interactive Honeycomb Wordle", body = [ view model ] }
         , update = update
         , subscriptions = subscriptions
@@ -2125,7 +1777,7 @@ selectNewWord model =
             ( { model | loadingError = Just "Target words database not available" }, Cmd.none )
 
         Just db ->
-            ( model, selectNewWordCmd model.difficulty )
+            ( model, selectNewWordCmd )
 
 
 -- Add this helper function
@@ -2142,17 +1794,9 @@ getWordFromRow row =
 
 
 -- Add a helper function to generate word selection command
-selectNewWordCmd : Difficulty -> Cmd Msg
-selectNewWordCmd difficulty =
-    Random.generate RandomWordGenerated (getRandomWordGenerator embeddedTargetWordsDB.targetWords difficulty)
-
-
--- Helper function to get the count of valid guesses for debugging
-getValidGuessesCount : Model -> Int
-getValidGuessesCount model =
-    case model.validGuessesDB of
-        Just db -> List.length db.validGuesses
-        Nothing -> 0
+selectNewWordCmd : Cmd Msg
+selectNewWordCmd =
+    Random.generate RandomWordGenerated (getRandomWordGenerator fallbackTargetWords)
 
 
 -- HTTP command to load valid guesses from JSON file
@@ -2161,15 +1805,6 @@ loadValidGuessesCmd =
     Http.get
         { url = "validguess.json"
         , expect = Http.expectJson SimpleValidGuessesLoaded simpleValidGuessesDecoder
-        }
-
-
--- Fallback command to load full ValidGuessesDB structure (if needed in the future)
-loadFullValidGuessesCmd : Cmd Msg
-loadFullValidGuessesCmd =
-    Http.get
-        { url = "validguess-full.json"  -- Different filename for full structure
-        , expect = Http.expectJson ValidGuessesLoaded validGuessesDecoder
         }
 
 

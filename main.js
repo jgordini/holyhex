@@ -4708,7 +4708,6 @@ var $elm$core$Set$toList = function (_v0) {
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
-var $author$project$Main$Easy = {$: 'Easy'};
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -5419,64 +5418,6 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$document = _Browser_document;
-var $author$project$Main$embeddedTargetWordsDB = {
-	categories: {
-		actions: _List_fromArray(
-			['swing', 'shave', 'lunge', 'snout']),
-		common: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		nature: _List_fromArray(
-			['shore', 'mount', 'lemon', 'plume']),
-		technology: _List_fromArray(
-			['proxy', 'omega'])
-	},
-	difficulties: {
-		easy: {description: 'Common words with frequent letter patterns', multiplier: 1.5, wordCount: 923},
-		hard: {description: 'Rare words with uncommon letter combinations', multiplier: 3.0, wordCount: 578},
-		medium: {description: 'Words with moderate complexity and mixed letter patterns', multiplier: 2.0, wordCount: 808}
-	},
-	features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
-	metadata: {description: 'Target words database for Honeycomb Wordle puzzles', format: '5-letter-words', lastUpdated: '2024-03-21', source: 'answerlist.txt', totalTargetWords: 2309},
-	targetWords: {
-		easy: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		hard: _List_fromArray(
-			['borax', 'proxy', 'epoch', 'tryst', 'dwelt', 'staid', 'allot', 'omega', 'squab', 'lemon', 'plunk', 'foggy', 'attic', 'theta', 'snack', 'pleat', 'rugby', 'floss', 'lunge', 'glory']),
-		medium: _List_fromArray(
-			['caulk', 'gully', 'foyer', 'shard', 'being', 'colon', 'wrung', 'perky', 'mount', 'triad', 'swing', 'ferry', 'idyll', 'twixt', 'shave', 'whoop', 'foist', 'natal', 'shore', 'rhyme'])
-	},
-	version: '1.0'
-};
-var $author$project$Main$embeddedValidGuessesDB = {
-	categories: {
-		actions: _List_fromArray(
-			['swing', 'shave', 'lunge', 'snout']),
-		common: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		nature: _List_fromArray(
-			['shore', 'mount', 'lemon', 'plume']),
-		technology: _List_fromArray(
-			['proxy', 'omega'])
-	},
-	difficulties: {
-		easy: {description: 'Common words with frequent letter patterns', multiplier: 1.5},
-		hard: {description: 'Rare words with uncommon letter combinations', multiplier: 3.0},
-		medium: {description: 'Words with moderate complexity and mixed letter patterns', multiplier: 2.0}
-	},
-	features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
-	metadata: {description: 'Valid guess words database for Honeycomb Wordle', format: '5-letter-words', lastUpdated: '2024-03-21', source: 'words.txt', totalTargetWords: 2309, totalValidGuesses: 14854},
-	targetWords: {
-		easy: _List_fromArray(
-			['yield', 'thong', 'vivid', 'bride', 'angst', 'audit', 'amply', 'catty', 'snout', 'wager', 'press', 'asset', 'abhor', 'vodka', 'spied', 'porch', 'shout', 'plume', 'saute', 'alley']),
-		hard: _List_fromArray(
-			['borax', 'proxy', 'epoch', 'tryst', 'dwelt', 'staid', 'allot', 'omega', 'squab', 'lemon', 'plunk', 'foggy', 'attic', 'theta', 'snack', 'pleat', 'rugby', 'floss', 'lunge', 'glory']),
-		medium: _List_fromArray(
-			['caulk', 'gully', 'foyer', 'shard', 'being', 'colon', 'wrung', 'perky', 'mount', 'triad', 'swing', 'ferry', 'idyll', 'twixt', 'shave', 'whoop', 'foist', 'natal', 'shore', 'rhyme'])
-	},
-	validGuesses: _List_fromArray(
-		['about', 'above', 'abuse', 'actor', 'acute', 'admit', 'adopt', 'adult', 'after', 'again', 'agent', 'agree', 'ahead', 'alarm', 'album', 'alert', 'alien', 'align', 'alike', 'alive', 'allow', 'alone', 'along', 'alter', 'among', 'anger', 'angle', 'angry', 'apart', 'apple', 'apply', 'arena', 'argue', 'arise', 'array', 'aside', 'asset', 'avoid', 'awake', 'award', 'aware', 'badly', 'baker', 'bases', 'basic', 'beach', 'began', 'begin', 'being', 'below', 'bench', 'billy', 'birth', 'black', 'blame', 'blank', 'blast', 'blind', 'block', 'blood', 'board', 'boost', 'booth', 'bound', 'brain', 'brand', 'brass', 'brave', 'bread', 'break', 'breed', 'brief', 'bring', 'broad', 'broke', 'brown', 'build', 'built', 'buyer', 'cable', 'calif', 'carry', 'catch', 'cause', 'chain', 'chair', 'chaos', 'charm', 'chart', 'chase', 'cheap', 'check', 'chest', 'chief', 'child', 'china', 'chose', 'civil', 'claim', 'class', 'clean', 'clear', 'click', 'climb', 'clock', 'close', 'cloud', 'coach', 'coast', 'could', 'count', 'court', 'cover', 'craft', 'crash', 'crazy', 'cream', 'crime', 'cross', 'crowd', 'crown', 'crude', 'curve', 'cycle', 'daily', 'dance', 'dated', 'dealt', 'death', 'debut', 'delay', 'depth', 'doing', 'doubt', 'dozen', 'draft', 'drama', 'drank', 'dream', 'dress', 'drill', 'drink', 'drive', 'drove', 'dying', 'eager', 'early', 'earth', 'eight', 'elite', 'empty', 'enemy', 'enjoy', 'enter', 'entry', 'equal', 'error', 'event', 'every', 'exact', 'exist', 'extra', 'faith', 'false', 'fault', 'fiber', 'field', 'fifth', 'fifty', 'fight', 'final', 'first', 'fixed', 'flash', 'fleet', 'floor', 'fluid', 'focus', 'force', 'forth', 'forty', 'forum', 'found', 'frame', 'frank', 'fraud', 'fresh', 'front', 'fruit', 'fully', 'funny', 'giant', 'given', 'glass', 'globe', 'going', 'grace', 'grade', 'grand', 'grant', 'grass', 'grave', 'great', 'green', 'gross', 'group', 'grown', 'guard', 'guess', 'guest', 'guide', 'happy', 'harry', 'heart', 'heavy', 'hello', 'hence', 'henry', 'horse', 'hotel', 'house', 'human', 'ideal', 'image', 'index', 'inner', 'input', 'issue', 'japan', 'jimmy', 'joint', 'jones', 'judge', 'known', 'label', 'large', 'laser', 'later', 'laugh', 'layer', 'learn', 'lease', 'least', 'leave', 'legal', 'level', 'lewis', 'light', 'limit', 'links', 'lives', 'local', 'loose', 'lower', 'lucky', 'lunch', 'lying', 'magic', 'major', 'maker', 'march', 'maria', 'match', 'maybe', 'mayor', 'meant', 'media', 'metal', 'might', 'minor', 'minus', 'mixed', 'model', 'money', 'month', 'moral', 'motor', 'mount', 'mouse', 'mouth', 'moved', 'movie', 'music', 'needs', 'never', 'newly', 'night', 'noise', 'north', 'noted', 'novel', 'nurse', 'occur', 'ocean', 'offer', 'often', 'order', 'other', 'ought', 'paint', 'panel', 'paper', 'party', 'peace', 'peter', 'phase', 'phone', 'photo', 'piano', 'piece', 'pilot', 'pitch', 'place', 'plain', 'plane', 'plant', 'plate', 'point', 'pound', 'power', 'press', 'price', 'pride', 'prime', 'print', 'prior', 'prize', 'proof', 'proud', 'prove', 'queen', 'quick', 'quiet', 'quite', 'radio', 'raise', 'range', 'rapid', 'ratio', 'reach', 'ready', 'realm', 'rebel', 'refer', 'relax', 'repay', 'reply', 'right', 'rigid', 'rival', 'river', 'robin', 'roger', 'roman', 'rough', 'round', 'route', 'royal', 'rural', 'scale', 'scene', 'scope', 'score', 'sense', 'serve', 'seven', 'shall', 'shape', 'share', 'sharp', 'sheet', 'shelf', 'shell', 'shift', 'shine', 'shirt', 'shock', 'shoot', 'short', 'shown', 'sides', 'sight', 'silly', 'since', 'sixth', 'sixty', 'sized', 'skill', 'sleep', 'slide', 'small', 'smart', 'smile', 'smith', 'smoke', 'snake', 'snow', 'solid', 'solve', 'sorry', 'sound', 'south', 'space', 'spare', 'speak', 'speed', 'spend', 'spent', 'split', 'spoke', 'sport', 'staff', 'stage', 'stake', 'stand', 'start', 'state', 'steam', 'steel', 'steep', 'steer', 'stick', 'still', 'stock', 'stone', 'stood', 'store', 'storm', 'story', 'strip', 'stuck', 'study', 'stuff', 'style', 'sugar', 'suite', 'super', 'sweet', 'table', 'taken', 'taste', 'taxes', 'teach', 'teeth', 'terry', 'texas', 'thank', 'theft', 'their', 'theme', 'there', 'these', 'thick', 'thing', 'think', 'third', 'those', 'three', 'threw', 'throw', 'thumb', 'tight', 'timer', 'tired', 'title', 'today', 'topic', 'total', 'touch', 'tough', 'tower', 'track', 'trade', 'train', 'treat', 'trend', 'trial', 'tribe', 'trick', 'tried', 'tries', 'truck', 'truly', 'trunk', 'trust', 'truth', 'twice', 'uncle', 'under', 'undue', 'union', 'unity', 'until', 'upper', 'upset', 'urban', 'usage', 'usual', 'valid', 'value', 'video', 'virus', 'visit', 'vital', 'vocal', 'voice', 'waste', 'watch', 'water', 'wheel', 'where', 'which', 'while', 'white', 'whole', 'whose', 'woman', 'women', 'world', 'worry', 'worse', 'worst', 'worth', 'would', 'write', 'wrong', 'wrote', 'young', 'youth']),
-	version: '2.0'
-};
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5559,8 +5500,6 @@ var $author$project$Main$initialModel = {
 	config: $author$project$Main$initialConfig,
 	currentActiveRow: 0,
 	currentWord: $elm$core$Maybe$Nothing,
-	difficulty: $author$project$Main$Easy,
-	difficultyString: 'Easy',
 	focusedHexId: $elm$core$Maybe$Just('hex-0-0'),
 	gameMessage: $elm$core$Maybe$Nothing,
 	gameMessageType: '',
@@ -5575,8 +5514,8 @@ var $author$project$Main$initialModel = {
 	modalMessage: '',
 	puzzleResult: $elm$core$Maybe$Nothing,
 	submittedRows: _List_Nil,
-	targetWordsDB: $elm$core$Maybe$Just($author$project$Main$embeddedTargetWordsDB),
-	validGuessesDB: $elm$core$Maybe$Just($author$project$Main$embeddedValidGuessesDB),
+	targetWordsDB: $elm$core$Maybe$Nothing,
+	validGuessesDB: $elm$core$Maybe$Nothing,
 	walletAddress: $elm$core$Maybe$Nothing
 };
 var $author$project$Main$SimpleValidGuessesLoaded = function (a) {
@@ -6384,6 +6323,8 @@ var $author$project$Main$loadValidGuessesCmd = $elm$http$Http$get(
 var $author$project$Main$RandomWordGenerated = function (a) {
 	return {$: 'RandomWordGenerated', a: a};
 };
+var $author$project$Main$fallbackTargetWords = _List_fromArray(
+	['speed', 'house', 'world', 'music', 'ocean', 'beach', 'plant', 'water', 'light', 'sound']);
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -6619,35 +6560,22 @@ var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
 	return len;
 };
-var $author$project$Main$getRandomWordGenerator = F2(
-	function (targetWords, difficulty) {
-		var wordList = function () {
-			switch (difficulty.$) {
-				case 'Easy':
-					return targetWords.easy;
-				case 'Medium':
-					return targetWords.medium;
-				default:
-					return targetWords.hard;
-			}
-		}();
-		var wordArray = $elm$core$Array$fromList(wordList);
-		return $elm$core$Array$isEmpty(wordArray) ? $elm$random$Random$constant($elm$core$Maybe$Nothing) : A2(
-			$elm$random$Random$map,
-			function (index) {
-				return A2($elm$core$Array$get, index, wordArray);
-			},
-			A2(
-				$elm$random$Random$int,
-				0,
-				$elm$core$Array$length(wordArray) - 1));
-	});
-var $author$project$Main$selectNewWordCmd = function (difficulty) {
-	return A2(
-		$elm$random$Random$generate,
-		$author$project$Main$RandomWordGenerated,
-		A2($author$project$Main$getRandomWordGenerator, $author$project$Main$embeddedTargetWordsDB.targetWords, difficulty));
+var $author$project$Main$getRandomWordGenerator = function (targetWords) {
+	var wordArray = $elm$core$Array$fromList(targetWords);
+	return $elm$core$Array$isEmpty(wordArray) ? $elm$random$Random$constant($elm$core$Maybe$Nothing) : A2(
+		$elm$random$Random$map,
+		function (index) {
+			return A2($elm$core$Array$get, index, wordArray);
+		},
+		A2(
+			$elm$random$Random$int,
+			0,
+			$elm$core$Array$length(wordArray) - 1));
 };
+var $author$project$Main$selectNewWordCmd = A2(
+	$elm$random$Random$generate,
+	$author$project$Main$RandomWordGenerated,
+	$author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords));
 var $author$project$Main$BetResultReceived = F2(
 	function (a, b) {
 		return {$: 'BetResultReceived', a: a, b: b};
@@ -7182,16 +7110,6 @@ var $author$project$Main$connectWallet = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
-var $author$project$Main$difficultyToString = function (difficulty) {
-	switch (difficulty.$) {
-		case 'Easy':
-			return 'Easy';
-		case 'Medium':
-			return 'Medium';
-		default:
-			return 'Hard';
-	}
-};
 var $author$project$Main$parseHexId = function (idStr) {
 	var _v0 = A2($elm$core$String$split, '-', idStr);
 	if ((((_v0.b && (_v0.a === 'hex')) && _v0.b.b) && _v0.b.b.b) && (!_v0.b.b.b.b)) {
@@ -7303,7 +7221,6 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Main$placeBet = _Platform_outgoingPort(
 	'placeBet',
 	function ($) {
@@ -7312,10 +7229,7 @@ var $author$project$Main$placeBet = _Platform_outgoingPort(
 				[
 					_Utils_Tuple2(
 					'amount',
-					$elm$json$Json$Encode$float($.amount)),
-					_Utils_Tuple2(
-					'difficulty',
-					$elm$json$Json$Encode$string($.difficulty))
+					$elm$json$Json$Encode$float($.amount))
 				]));
 	});
 var $author$project$Main$selectNewWord = function (model) {
@@ -7330,27 +7244,10 @@ var $author$project$Main$selectNewWord = function (model) {
 			$elm$core$Platform$Cmd$none);
 	} else {
 		var db = _v0.a;
-		return _Utils_Tuple2(
-			model,
-			$author$project$Main$selectNewWordCmd(model.difficulty));
+		return _Utils_Tuple2(model, $author$project$Main$selectNewWordCmd);
 	}
 };
 var $elm$core$Process$sleep = _Process_sleep;
-var $author$project$Main$Hard = {$: 'Hard'};
-var $author$project$Main$Medium = {$: 'Medium'};
-var $author$project$Main$stringToDifficulty = function (str) {
-	var _v0 = $elm$core$String$toLower(str);
-	switch (_v0) {
-		case 'easy':
-			return $author$project$Main$Easy;
-		case 'medium':
-			return $author$project$Main$Medium;
-		case 'hard':
-			return $author$project$Main$Hard;
-		default:
-			return $author$project$Main$Easy;
-	}
-};
 var $author$project$Main$updateHexInGrid = F3(
 	function (targetId, updateFn, grid) {
 		return A2(
@@ -7576,21 +7473,18 @@ var $author$project$Main$isRepeatingPattern = function (word) {
 			chars);
 	}
 };
-var $author$project$Main$validateWord = F4(
-	function (validGuesses, targetWords, word, difficulty) {
+var $author$project$Main$validateWord = F3(
+	function (validGuesses, targetWords, word) {
 		var cleanWord = $elm$core$String$toLower(
 			$elm$core$String$trim(word));
 		var isAllLetters = A2($elm$core$String$all, $elm$core$Char$isAlpha, cleanWord);
-		var isInValidGuessesList = A2($elm$core$List$member, cleanWord, validGuesses);
-		var isValidLength = $elm$core$String$length(cleanWord) === 5;
-		var passesBasicValidation = isValidLength && (isAllLetters && ((!$author$project$Main$isRepeatingPattern(cleanWord)) && (!$author$project$Main$isObviousNonsense(cleanWord))));
-		var allTargetWords = _Utils_ap(
-			targetWords.easy,
-			_Utils_ap(targetWords.medium, targetWords.hard));
 		var isInTargetWordsList = A2(
 			$elm$core$List$member,
 			cleanWord,
-			A2($elm$core$List$map, $elm$core$String$toLower, allTargetWords));
+			A2($elm$core$List$map, $elm$core$String$toLower, targetWords));
+		var isInValidGuessesList = A2($elm$core$List$member, cleanWord, validGuesses);
+		var isValidLength = $elm$core$String$length(cleanWord) === 5;
+		var passesBasicValidation = isValidLength && (isAllLetters && ((!$author$project$Main$isRepeatingPattern(cleanWord)) && (!$author$project$Main$isObviousNonsense(cleanWord))));
 		return (isInValidGuessesList || isInTargetWordsList) ? true : ($elm$core$List$isEmpty(validGuesses) ? passesBasicValidation : passesBasicValidation);
 	});
 var $author$project$Main$update = F2(
@@ -7842,15 +7736,7 @@ var $author$project$Main$update = F2(
 													var word = _v26.a;
 													return word;
 												} else {
-													var _v27 = model.difficulty;
-													switch (_v27.$) {
-														case 'Easy':
-															return 'speed';
-														case 'Medium':
-															return 'jetty';
-														default:
-															return 'wizzo';
-													}
+													return 'speed';
 												}
 											}();
 											var isValidWord = function () {
@@ -7859,21 +7745,21 @@ var $author$project$Main$update = F2(
 													if (_v21.b.$ === 'Just') {
 														var validDB = _v21.a.a;
 														var targetDB = _v21.b.a;
-														return A4($author$project$Main$validateWord, validDB.validGuesses, targetDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, validDB.validGuesses, targetDB.targetWords, submittedWord);
 													} else {
 														var validDB = _v21.a.a;
 														var _v22 = _v21.b;
-														return A4($author$project$Main$validateWord, validDB.validGuesses, $author$project$Main$embeddedTargetWordsDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, validDB.validGuesses, $author$project$Main$fallbackTargetWords, submittedWord);
 													}
 												} else {
 													if (_v21.b.$ === 'Just') {
 														var _v23 = _v21.a;
 														var targetDB = _v21.b.a;
-														return A4($author$project$Main$validateWord, _List_Nil, targetDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, _List_Nil, targetDB.targetWords, submittedWord);
 													} else {
 														var _v24 = _v21.a;
 														var _v25 = _v21.b;
-														return A4($author$project$Main$validateWord, _List_Nil, $author$project$Main$embeddedTargetWordsDB.targetWords, submittedWord, model.difficulty);
+														return A3($author$project$Main$validateWord, _List_Nil, $author$project$Main$fallbackTargetWords, submittedWord);
 													}
 												}
 											}();
@@ -8000,20 +7886,10 @@ var $author$project$Main$update = F2(
 						model,
 						{betAmount: newAmount, betAmountString: amountStr}),
 					$elm$core$Platform$Cmd$none);
-			case 'UpdateDifficultyString':
-				var diffStr = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							difficulty: $author$project$Main$stringToDifficulty(diffStr),
-							difficultyString: diffStr
-						}),
-					$elm$core$Platform$Cmd$none);
 			case 'PlaceBet':
-				var _v28 = $author$project$Main$selectNewWord(model);
-				var newModel = _v28.a;
-				var wordCmd = _v28.b;
+				var _v27 = $author$project$Main$selectNewWord(model);
+				var newModel = _v27.a;
+				var wordCmd = _v27.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						newModel,
@@ -8022,10 +7898,7 @@ var $author$project$Main$update = F2(
 						_List_fromArray(
 							[
 								$author$project$Main$placeBet(
-								{
-									amount: model.betAmount,
-									difficulty: $author$project$Main$difficultyToString(model.difficulty)
-								}),
+								{amount: model.betAmount}),
 								wordCmd
 							])));
 			case 'BetResultReceived':
@@ -8043,11 +7916,24 @@ var $author$project$Main$update = F2(
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'BetAgain':
+				var wordGenerator = $author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords);
+				var seedValue = function () {
+					var _v29 = model.currentWord;
+					if (_v29.$ === 'Just') {
+						var word = _v29.a;
+						return ($elm$core$String$length(word) * 11) + (model.currentActiveRow * 17);
+					} else {
+						return 67;
+					}
+				}();
+				var newWordSeed = $elm$random$Random$initialSeed(seedValue);
+				var _v28 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
+				var maybeNewWord = _v28.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						$author$project$Main$initialModel,
-						{config: model.config, walletAddress: model.walletAddress}),
-					$author$project$Main$selectNewWordCmd(model.difficulty));
+						{config: model.config, currentWord: maybeNewWord, walletAddress: model.walletAddress}),
+					$elm$core$Platform$Cmd$none);
 			case 'RandomWordGenerated':
 				var word = msg.a;
 				if (word.$ === 'Just') {
@@ -8070,12 +7956,23 @@ var $author$project$Main$update = F2(
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'StartNewGame':
+				var wordGenerator = $author$project$Main$getRandomWordGenerator($author$project$Main$fallbackTargetWords);
+				var seedValue = function () {
+					var _v32 = model.currentWord;
+					if (_v32.$ === 'Just') {
+						var word = _v32.a;
+						return ($elm$core$String$length(word) * 7) + (model.currentActiveRow * 13);
+					} else {
+						return 42;
+					}
+				}();
+				var newWordSeed = $elm$random$Random$initialSeed(seedValue);
+				var _v31 = A2($elm$random$Random$step, wordGenerator, newWordSeed);
+				var maybeNewWord = _v31.a;
 				var modelWithClearedGrid = _Utils_update(
 					$author$project$Main$initialModel,
-					{config: model.config, currentActiveRow: 0, isGameOverModalVisible: false, isHintModalVisible: false, isLettersModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
-				return _Utils_Tuple2(
-					modelWithClearedGrid,
-					$author$project$Main$selectNewWordCmd(modelWithClearedGrid.difficulty));
+					{config: model.config, currentActiveRow: 0, currentWord: maybeNewWord, isGameOverModalVisible: false, isHintModalVisible: false, isLettersModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
+				return _Utils_Tuple2(modelWithClearedGrid, $elm$core$Platform$Cmd$none);
 			case 'ClearGameMessage':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -8084,52 +7981,24 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'LoadValidGuesses':
 				return _Utils_Tuple2(model, $author$project$Main$loadValidGuessesCmd);
-			case 'ValidGuessesLoaded':
-				var result = msg.a;
-				if (result.$ === 'Ok') {
-					var validGuessesDB = result.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								loadingError: $elm$core$Maybe$Nothing,
-								validGuessesDB: $elm$core$Maybe$Just(validGuessesDB)
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					var error = result.a;
-					var errorMessage = function () {
-						switch (error.$) {
-							case 'BadUrl':
-								var url = error.a;
-								return 'Bad URL: ' + url;
-							case 'Timeout':
-								return 'Request timeout';
-							case 'NetworkError':
-								return 'Network error';
-							case 'BadStatus':
-								var status = error.a;
-								return 'Bad status: ' + $elm$core$String$fromInt(status);
-							default:
-								var body = error.a;
-								return 'Bad response body: ' + body;
-						}
-					}();
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								loadingError: $elm$core$Maybe$Just('Failed to load valid guesses: ' + errorMessage)
-							}),
-						$elm$core$Platform$Cmd$none);
-				}
 			case 'SimpleValidGuessesLoaded':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var validGuessesList = result.a;
-					var updatedValidGuessesDB = _Utils_update(
-						$author$project$Main$embeddedValidGuessesDB,
-						{validGuesses: validGuessesList});
+					var updatedValidGuessesDB = {
+						features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
+						metadata: {
+							description: 'Valid guess words database for Honeycomb Wordle',
+							format: '5-letter-words',
+							lastUpdated: '2024-03-21',
+							source: 'validguess.json',
+							totalTargetWords: $elm$core$List$length($author$project$Main$fallbackTargetWords),
+							totalValidGuesses: $elm$core$List$length(validGuessesList)
+						},
+						targetWords: $author$project$Main$fallbackTargetWords,
+						validGuesses: validGuessesList,
+						version: '2.0'
+					};
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -9414,10 +9283,7 @@ var $author$project$Main$main = $elm$browser$Browser$document(
 				$author$project$Main$initialModel,
 				$elm$core$Platform$Cmd$batch(
 					_List_fromArray(
-						[
-							$author$project$Main$selectNewWordCmd($author$project$Main$Easy),
-							$author$project$Main$loadValidGuessesCmd
-						])));
+						[$author$project$Main$selectNewWordCmd, $author$project$Main$loadValidGuessesCmd])));
 		},
 		subscriptions: $author$project$Main$subscriptions,
 		update: $author$project$Main$update,
