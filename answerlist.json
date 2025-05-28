@@ -2341,6 +2341,48 @@
             "wordCount": 578
         }
     },
+    "categories": {
+        "common": [
+            "yield",
+            "thong",
+            "vivid",
+            "bride",
+            "angst",
+            "audit",
+            "amply",
+            "catty",
+            "snout",
+            "wager",
+            "press",
+            "asset",
+            "abhor",
+            "vodka",
+            "spied",
+            "porch",
+            "shout",
+            "plume",
+            "saute",
+            "alley"
+        ],
+        "nature": [
+            "leafy",
+            "fishy",
+            "beard"
+        ],
+        "actions": [
+            "digit",
+            "wrung",
+            "flyer",
+            "drunk",
+            "grunt",
+            "trunk",
+            "rerun",
+            "prune",
+            "jumpy",
+            "brunt"
+        ],
+        "technology": []
+    },
     "features": {
         "hasVowels": true,
         "allowsRepeatedLetters": true,

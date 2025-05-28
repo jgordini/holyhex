@@ -52,7 +52,7 @@ embeddedValidGuessesDB =
         , "forty", "forum", "found", "frame", "frank", "fraud", "fresh", "front", "fruit", "fully"
         , "funny", "giant", "given", "glass", "globe", "going", "grace", "grade", "grand", "grant"
         , "grass", "grave", "great", "green", "gross", "group", "grown", "guard", "guess", "guest"
-        , "guide", "happy", "harry", "heart", "heavy", "hence", "henry", "horse", "hotel", "house"
+        , "guide", "happy", "harry", "heart", "heavy", "hello", "hence", "henry", "horse", "hotel", "house"
         , "human", "ideal", "image", "index", "inner", "input", "issue", "japan", "jimmy", "joint"
         , "jones", "judge", "known", "label", "large", "laser", "later", "laugh", "layer", "learn"
         , "lease", "least", "leave", "legal", "level", "lewis", "light", "limit", "links", "lives"
@@ -329,6 +329,12 @@ featuresDecoder =
         |> Pipeline.required "hasVowels" Decode.bool
         |> Pipeline.required "allowsRepeatedLetters" Decode.bool
         |> Pipeline.required "caseSensitive" Decode.bool
+
+
+-- Simple decoder for validguess.json file (only contains validGuesses list)
+simpleValidGuessesDecoder : Decoder (List String)
+simpleValidGuessesDecoder =
+    Decode.field "validGuesses" (Decode.list Decode.string)
 
 
 -- TARGET WORDS DATABASE DECODERS
@@ -699,6 +705,7 @@ type Msg
     | ClearGameMessage
     | LoadValidGuesses
     | ValidGuessesLoaded (Result Http.Error ValidGuessesDB)
+    | SimpleValidGuessesLoaded (Result Http.Error (List String))
     | ShowSuccessModal
     | ShowHintModal
     | CloseHintModal
@@ -741,7 +748,7 @@ findPreviousHexIdInRow model currentHexId =
                         if prevC >= 0 then
                             Just ("hex-" ++ String.fromInt r ++ "-" ++ String.fromInt prevC)
                         else
-            Nothing
+                            Nothing
 
 
 findNextHexIdInRow : Model -> String -> Maybe String
@@ -835,7 +842,7 @@ update msg model =
                         -- Only allow focusing on the current active row
                         ( model, Cmd.none )
                     else
-            ( { model | focusedHexId = Just hexId }, Cmd.none )
+                        ( { model | focusedHexId = Just hexId }, Cmd.none )
 
         KeyPressed code ->
             let
@@ -876,11 +883,11 @@ update msg model =
                                                 Just currentHex ->
                                                     if currentHex.letter /= Nothing then
                                                         -- Current hex has content, clear it and stay here
-                            let
-                                newGrid =
-                                    updateHexInGrid focusedId (\hex -> { hex | letter = Nothing, state = Empty }) model.grid
-                            in
-                            ( { model | grid = newGrid }, Cmd.none )
+                                                        let
+                                                            newGrid =
+                                                                updateHexInGrid focusedId (\hex -> { hex | letter = Nothing, state = Empty }) model.grid
+                                                        in
+                                                        ( { model | grid = newGrid }, Cmd.none )
                                                     else
                                                         -- Current hex is empty, go to previous hex and clear it
                                                         case findPreviousHexIdInRow model focusedId of
@@ -893,26 +900,24 @@ update msg model =
                                                                         updateHexInGrid prevHexId (\hex -> { hex | letter = Nothing, state = Empty }) model.grid
                                                                 in
                                                                 ( { model | grid = newGrid, focusedHexId = Just prevHexId }, Cmd.none )
-
-                        else if isAlphanumeric then
+                                else if isAlphanumeric then
                                     -- Handle letter input for unlocked rows
-                            let
-                                charValue =
-                                    Char.fromCode code
-                                updatedGrid =
-                                    updateHexInGrid focusedId (\hex -> { hex | letter = Just charValue, state = Empty }) model.grid
-                                newModelFocusedHexId : Maybe String
-                                newModelFocusedHexId =
-                                    case findNextHexIdInRow model focusedId of
-                                        Just nextActualHexId ->
-                                            Just nextActualHexId
-                                        Nothing ->
-                                            Just focusedId
-                            in
-                            ( { model | grid = updatedGrid, focusedHexId = newModelFocusedHexId }, Cmd.none )
-
-                        else
-                            ( model, Cmd.none )
+                                    let
+                                        charValue =
+                                            Char.fromCode code
+                                        updatedGrid =
+                                            updateHexInGrid focusedId (\hex -> { hex | letter = Just charValue, state = Empty }) model.grid
+                                        newModelFocusedHexId : Maybe String
+                                        newModelFocusedHexId =
+                                            case findNextHexIdInRow model focusedId of
+                                                Just nextActualHexId ->
+                                                    Just nextActualHexId
+                                                Nothing ->
+                                                    Just focusedId
+                                    in
+                                    ( { model | grid = updatedGrid, focusedHexId = newModelFocusedHexId }, Cmd.none )
+                                else
+                                    ( model, Cmd.none )
 
         SubmitAttempt ->
             let
@@ -1161,6 +1166,29 @@ update msg model =
                     in
                     ( { model | loadingError = Just ("Failed to load valid guesses: " ++ errorMessage) }, Cmd.none )
 
+        SimpleValidGuessesLoaded result ->
+            case result of
+                Ok validGuessesList ->
+                    -- Create a new ValidGuessesDB using the loaded validGuesses list and embedded data for other fields
+                    let
+                        updatedValidGuessesDB = 
+                            { embeddedValidGuessesDB | validGuesses = validGuessesList }
+                    in
+                    ( { model | validGuessesDB = Just updatedValidGuessesDB, loadingError = Nothing }, Cmd.none )
+                
+                Err error ->
+                    let
+                        errorMessage = 
+                            case error of
+                                Http.BadUrl url -> "Bad URL: " ++ url
+                                Http.Timeout -> "Request timeout"
+                                Http.NetworkError -> "Network error"
+                                Http.BadStatus status -> "Bad status: " ++ String.fromInt status
+                                Http.BadBody body -> "Bad response body: " ++ body
+                    in
+                    -- Keep the embedded database as fallback when external loading fails
+                    ( { model | loadingError = Just ("Failed to load external valid guesses, using embedded list: " ++ errorMessage) }, Cmd.none )
+
         ShowSuccessModal ->
             ( { model | isModalVisible = True, gameMessage = Nothing }, Cmd.none )
 
@@ -1248,7 +1276,7 @@ calculatePotentialPayout model =
                 Just db ->
                     getExtendedDifficultyMultiplier db.difficulties model.difficulty
 
-                    Nothing ->
+                Nothing ->
                     case model.difficulty of
                         Easy ->
                             1.5
@@ -1764,11 +1792,28 @@ selectNewWordCmd difficulty =
     Random.generate RandomWordGenerated (getRandomWordGenerator embeddedTargetWordsDB.targetWords difficulty)
 
 
+-- Helper function to get the count of valid guesses for debugging
+getValidGuessesCount : Model -> Int
+getValidGuessesCount model =
+    case model.validGuessesDB of
+        Just db -> List.length db.validGuesses
+        Nothing -> 0
+
+
 -- HTTP command to load valid guesses from JSON file
 loadValidGuessesCmd : Cmd Msg
 loadValidGuessesCmd =
     Http.get
         { url = "validguess.json"
+        , expect = Http.expectJson SimpleValidGuessesLoaded simpleValidGuessesDecoder
+        }
+
+
+-- Fallback command to load full ValidGuessesDB structure (if needed in the future)
+loadFullValidGuessesCmd : Cmd Msg
+loadFullValidGuessesCmd =
+    Http.get
+        { url = "validguess-full.json"  -- Different filename for full structure
         , expect = Http.expectJson ValidGuessesLoaded validGuessesDecoder
         }
 
