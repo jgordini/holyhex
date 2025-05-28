@@ -1367,7 +1367,7 @@ main : Program () Model Msg
 main =
     Browser.document
         { init = \_ -> ( initialModel, Cmd.batch [ selectNewWordCmd, loadValidGuessesCmd ] ) -- Load word and valid guesses
-        , view = \model -> { title = "Interactive Honeycomb Wordle", body = [ view model ] }
+        , view = \model -> { title = "Interactive Honeycomb Puzzle", body = [ view model ] }
         , update = update
         , subscriptions = subscriptions
         }
