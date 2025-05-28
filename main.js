@@ -5567,7 +5567,9 @@ var $author$project$Main$initialModel = {
 	grid: $author$project$Main$initialGrid,
 	hoveredHexId: $elm$core$Maybe$Nothing,
 	isBetModalVisible: false,
+	isGameOverModalVisible: false,
 	isHintModalVisible: false,
+	isLettersModalVisible: false,
 	isModalVisible: false,
 	loadingError: $elm$core$Maybe$Nothing,
 	modalMessage: '',
@@ -6987,6 +6989,7 @@ var $author$project$Main$subscriptions = function (model) {
 };
 var $author$project$Main$ClearGameMessage = {$: 'ClearGameMessage'};
 var $author$project$Main$Loss = {$: 'Loss'};
+var $author$project$Main$ShowGameOverModal = {$: 'ShowGameOverModal'};
 var $author$project$Main$ShowSuccessModal = {$: 'ShowSuccessModal'};
 var $author$project$Main$SubmitAttempt = {$: 'SubmitAttempt'};
 var $author$project$Main$Win = function (a) {
@@ -7155,6 +7158,23 @@ var $author$project$Main$checkWordAgainstTarget = F2(
 				guessChars));
 		var finalStates = _v0.a;
 		return $elm$core$List$reverse(finalStates);
+	});
+var $author$project$Main$clearRow = F2(
+	function (targetRowIndex, grid) {
+		return A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (rowIndex, row) {
+					return _Utils_eq(rowIndex, targetRowIndex) ? A2(
+						$elm$core$List$map,
+						function (hex) {
+							return _Utils_update(
+								hex,
+								{letter: $elm$core$Maybe$Nothing, state: $author$project$Main$Empty});
+						},
+						row) : row;
+				}),
+			grid);
 	});
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Main$connectWallet = _Platform_outgoingPort(
@@ -7377,6 +7397,157 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
+var $author$project$Main$hasConsecutiveConsonants = F2(
+	function (word, maxCount) {
+		var vowels = _List_fromArray(
+			[
+				_Utils_chr('a'),
+				_Utils_chr('e'),
+				_Utils_chr('i'),
+				_Utils_chr('o'),
+				_Utils_chr('u'),
+				_Utils_chr('y')
+			]);
+		var checkConsecutive = F3(
+			function (remainingChars, currentCount, maxAllowed) {
+				checkConsecutive:
+				while (true) {
+					if (!remainingChars.b) {
+						return _Utils_cmp(currentCount, maxAllowed) > -1;
+					} else {
+						var _char = remainingChars.a;
+						var rest = remainingChars.b;
+						if (A2($elm$core$List$member, _char, vowels)) {
+							var $temp$remainingChars = rest,
+								$temp$currentCount = 0,
+								$temp$maxAllowed = maxAllowed;
+							remainingChars = $temp$remainingChars;
+							currentCount = $temp$currentCount;
+							maxAllowed = $temp$maxAllowed;
+							continue checkConsecutive;
+						} else {
+							var newCount = currentCount + 1;
+							if (_Utils_cmp(newCount, maxAllowed) > -1) {
+								return true;
+							} else {
+								var $temp$remainingChars = rest,
+									$temp$currentCount = newCount,
+									$temp$maxAllowed = maxAllowed;
+								remainingChars = $temp$remainingChars;
+								currentCount = $temp$currentCount;
+								maxAllowed = $temp$maxAllowed;
+								continue checkConsecutive;
+							}
+						}
+					}
+				}
+			});
+		var chars = $elm$core$String$toList(word);
+		return A3(checkConsecutive, chars, 0, maxCount);
+	});
+var $author$project$Main$hasConsecutiveVowels = F2(
+	function (word, maxCount) {
+		var vowels = _List_fromArray(
+			[
+				_Utils_chr('a'),
+				_Utils_chr('e'),
+				_Utils_chr('i'),
+				_Utils_chr('o'),
+				_Utils_chr('u'),
+				_Utils_chr('y')
+			]);
+		var checkConsecutive = F3(
+			function (remainingChars, currentCount, maxAllowed) {
+				checkConsecutive:
+				while (true) {
+					if (!remainingChars.b) {
+						return _Utils_cmp(currentCount, maxAllowed) > -1;
+					} else {
+						var _char = remainingChars.a;
+						var rest = remainingChars.b;
+						if (A2($elm$core$List$member, _char, vowels)) {
+							var newCount = currentCount + 1;
+							if (_Utils_cmp(newCount, maxAllowed) > -1) {
+								return true;
+							} else {
+								var $temp$remainingChars = rest,
+									$temp$currentCount = newCount,
+									$temp$maxAllowed = maxAllowed;
+								remainingChars = $temp$remainingChars;
+								currentCount = $temp$currentCount;
+								maxAllowed = $temp$maxAllowed;
+								continue checkConsecutive;
+							}
+						} else {
+							var $temp$remainingChars = rest,
+								$temp$currentCount = 0,
+								$temp$maxAllowed = maxAllowed;
+							remainingChars = $temp$remainingChars;
+							currentCount = $temp$currentCount;
+							maxAllowed = $temp$maxAllowed;
+							continue checkConsecutive;
+						}
+					}
+				}
+			});
+		var chars = $elm$core$String$toList(word);
+		return A3(checkConsecutive, chars, 0, maxCount);
+	});
+var $author$project$Main$isObviousNonsense = function (word) {
+	var vowels = _List_fromArray(
+		[
+			_Utils_chr('a'),
+			_Utils_chr('e'),
+			_Utils_chr('i'),
+			_Utils_chr('o'),
+			_Utils_chr('u'),
+			_Utils_chr('y')
+		]);
+	var consonants = _List_fromArray(
+		[
+			_Utils_chr('b'),
+			_Utils_chr('c'),
+			_Utils_chr('d'),
+			_Utils_chr('f'),
+			_Utils_chr('g'),
+			_Utils_chr('h'),
+			_Utils_chr('j'),
+			_Utils_chr('k'),
+			_Utils_chr('l'),
+			_Utils_chr('m'),
+			_Utils_chr('n'),
+			_Utils_chr('p'),
+			_Utils_chr('q'),
+			_Utils_chr('r'),
+			_Utils_chr('s'),
+			_Utils_chr('t'),
+			_Utils_chr('v'),
+			_Utils_chr('w'),
+			_Utils_chr('x'),
+			_Utils_chr('z')
+		]);
+	var cleanWord = $elm$core$String$toLower(word);
+	var tooManyConsecutiveConsonants = A2($author$project$Main$hasConsecutiveConsonants, cleanWord, 4);
+	var tooManyConsecutiveVowels = A2($author$project$Main$hasConsecutiveVowels, cleanWord, 3);
+	var chars = $elm$core$String$toList(cleanWord);
+	var consonantCount = $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (c) {
+				return A2($elm$core$List$member, c, consonants);
+			},
+			chars));
+	var vowelCount = $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (c) {
+				return A2($elm$core$List$member, c, vowels);
+			},
+			chars));
+	var hasNoVowels = !vowelCount;
+	var allVowels = !consonantCount;
+	return hasNoVowels || (allVowels || (tooManyConsecutiveConsonants || tooManyConsecutiveVowels));
+};
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -7412,6 +7583,7 @@ var $author$project$Main$validateWord = F4(
 		var isAllLetters = A2($elm$core$String$all, $elm$core$Char$isAlpha, cleanWord);
 		var isInValidGuessesList = A2($elm$core$List$member, cleanWord, validGuesses);
 		var isValidLength = $elm$core$String$length(cleanWord) === 5;
+		var passesBasicValidation = isValidLength && (isAllLetters && ((!$author$project$Main$isRepeatingPattern(cleanWord)) && (!$author$project$Main$isObviousNonsense(cleanWord))));
 		var allTargetWords = _Utils_ap(
 			targetWords.easy,
 			_Utils_ap(targetWords.medium, targetWords.hard));
@@ -7419,7 +7591,7 @@ var $author$project$Main$validateWord = F4(
 			$elm$core$List$member,
 			cleanWord,
 			A2($elm$core$List$map, $elm$core$String$toLower, allTargetWords));
-		return $elm$core$List$isEmpty(validGuesses) ? (isValidLength && (isAllLetters && (!$author$project$Main$isRepeatingPattern(cleanWord)))) : ((isInValidGuessesList || isInTargetWordsList) ? true : false);
+		return (isInValidGuessesList || isInTargetWordsList) ? true : ($elm$core$List$isEmpty(validGuesses) ? passesBasicValidation : passesBasicValidation);
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -7587,8 +7759,8 @@ var $author$project$Main$update = F2(
 				}
 			case 'SubmitAttempt':
 				var result = function () {
-					var _v15 = model.focusedHexId;
-					if (_v15.$ === 'Nothing') {
+					var _v16 = model.focusedHexId;
+					if (_v16.$ === 'Nothing') {
 						return {
 							currentActiveRow: model.currentActiveRow,
 							gameMessage: $elm$core$Maybe$Just('No hex focused. Cannot determine row to submit.'),
@@ -7599,9 +7771,9 @@ var $author$project$Main$update = F2(
 							submittedRows: model.submittedRows
 						};
 					} else {
-						var focusedId = _v15.a;
-						var _v16 = $author$project$Main$parseHexId(focusedId);
-						if (_v16.$ === 'Nothing') {
+						var focusedId = _v16.a;
+						var _v17 = $author$project$Main$parseHexId(focusedId);
+						if (_v17.$ === 'Nothing') {
 							return {
 								currentActiveRow: model.currentActiveRow,
 								gameMessage: $elm$core$Maybe$Just('Error processing your submission. Invalid hex ID.'),
@@ -7612,8 +7784,8 @@ var $author$project$Main$update = F2(
 								submittedRows: model.submittedRows
 							};
 						} else {
-							var _v17 = _v16.a;
-							var rowIndex = _v17.a;
+							var _v18 = _v17.a;
+							var rowIndex = _v18.a;
 							if (!_Utils_eq(rowIndex, model.currentActiveRow)) {
 								return {
 									currentActiveRow: model.currentActiveRow,
@@ -7637,9 +7809,9 @@ var $author$project$Main$update = F2(
 										submittedRows: model.submittedRows
 									};
 								} else {
-									var _v18 = $elm$core$List$head(
+									var _v19 = $elm$core$List$head(
 										A2($elm$core$List$drop, rowIndex, model.grid));
-									if (_v18.$ === 'Nothing') {
+									if (_v19.$ === 'Nothing') {
 										return {
 											currentActiveRow: model.currentActiveRow,
 											gameMessage: $elm$core$Maybe$Just('Error processing your submission. Row not found.'),
@@ -7650,9 +7822,9 @@ var $author$project$Main$update = F2(
 											submittedRows: model.submittedRows
 										};
 									} else {
-										var rowData = _v18.a;
-										var _v19 = $author$project$Main$getWordFromRow(rowData);
-										if (_v19.$ === 'Nothing') {
+										var rowData = _v19.a;
+										var _v20 = $author$project$Main$getWordFromRow(rowData);
+										if (_v20.$ === 'Nothing') {
 											return {
 												currentActiveRow: model.currentActiveRow,
 												gameMessage: $elm$core$Maybe$Just('Please complete the word before submitting.'),
@@ -7663,15 +7835,15 @@ var $author$project$Main$update = F2(
 												submittedRows: model.submittedRows
 											};
 										} else {
-											var submittedWord = _v19.a;
+											var submittedWord = _v20.a;
 											var targetWord = function () {
-												var _v25 = model.currentWord;
-												if (_v25.$ === 'Just') {
-													var word = _v25.a;
+												var _v26 = model.currentWord;
+												if (_v26.$ === 'Just') {
+													var word = _v26.a;
 													return word;
 												} else {
-													var _v26 = model.difficulty;
-													switch (_v26.$) {
+													var _v27 = model.difficulty;
+													switch (_v27.$) {
 														case 'Easy':
 															return 'speed';
 														case 'Medium':
@@ -7682,25 +7854,25 @@ var $author$project$Main$update = F2(
 												}
 											}();
 											var isValidWord = function () {
-												var _v20 = _Utils_Tuple2(model.validGuessesDB, model.targetWordsDB);
-												if (_v20.a.$ === 'Just') {
-													if (_v20.b.$ === 'Just') {
-														var validDB = _v20.a.a;
-														var targetDB = _v20.b.a;
+												var _v21 = _Utils_Tuple2(model.validGuessesDB, model.targetWordsDB);
+												if (_v21.a.$ === 'Just') {
+													if (_v21.b.$ === 'Just') {
+														var validDB = _v21.a.a;
+														var targetDB = _v21.b.a;
 														return A4($author$project$Main$validateWord, validDB.validGuesses, targetDB.targetWords, submittedWord, model.difficulty);
 													} else {
-														var validDB = _v20.a.a;
-														var _v21 = _v20.b;
+														var validDB = _v21.a.a;
+														var _v22 = _v21.b;
 														return A4($author$project$Main$validateWord, validDB.validGuesses, $author$project$Main$embeddedTargetWordsDB.targetWords, submittedWord, model.difficulty);
 													}
 												} else {
-													if (_v20.b.$ === 'Just') {
-														var _v22 = _v20.a;
-														var targetDB = _v20.b.a;
+													if (_v21.b.$ === 'Just') {
+														var _v23 = _v21.a;
+														var targetDB = _v21.b.a;
 														return A4($author$project$Main$validateWord, _List_Nil, targetDB.targetWords, submittedWord, model.difficulty);
 													} else {
-														var _v23 = _v20.a;
-														var _v24 = _v20.b;
+														var _v24 = _v21.a;
+														var _v25 = _v21.b;
 														return A4($author$project$Main$validateWord, _List_Nil, $author$project$Main$embeddedTargetWordsDB.targetWords, submittedWord, model.difficulty);
 													}
 												}
@@ -7725,25 +7897,34 @@ var $author$project$Main$update = F2(
 													var nextRow = model.currentActiveRow + 1;
 													var maxRows = $elm$core$List$length(model.grid);
 													var hasNextRow = _Utils_cmp(nextRow, maxRows) < 0;
-													return {
-														currentActiveRow: hasNextRow ? nextRow : model.currentActiveRow,
-														gameMessage: $elm$core$Maybe$Just(
-															hasNextRow ? 'Valid word, but not correct. Try again!' : 'Valid word, but not correct. No more rows available!'),
+													return hasNextRow ? {
+														currentActiveRow: nextRow,
+														gameMessage: $elm$core$Maybe$Just('Valid word, but not correct. Try again!'),
 														gameMessageType: 'info',
 														grid: updatedGrid,
 														logMessage: 'SubmitAttempt: Valid but incorrect word submitted',
-														nextFocus: hasNextRow ? $elm$core$Maybe$Just(
-															'hex-' + ($elm$core$String$fromInt(nextRow) + '-0')) : $elm$core$Maybe$Nothing,
+														nextFocus: $elm$core$Maybe$Just(
+															'hex-' + ($elm$core$String$fromInt(nextRow) + '-0')),
+														submittedRows: A2($elm$core$List$cons, rowIndex, model.submittedRows)
+													} : {
+														currentActiveRow: model.currentActiveRow,
+														gameMessage: $elm$core$Maybe$Nothing,
+														gameMessageType: 'gameover',
+														grid: updatedGrid,
+														logMessage: 'SubmitAttempt: Game over - no more rows available',
+														nextFocus: $elm$core$Maybe$Nothing,
 														submittedRows: A2($elm$core$List$cons, rowIndex, model.submittedRows)
 													};
 												} else {
+													var firstHexId = 'hex-' + ($elm$core$String$fromInt(model.currentActiveRow) + '-0');
+													var clearedGrid = A2($author$project$Main$clearRow, rowIndex, model.grid);
 													return {
 														currentActiveRow: model.currentActiveRow,
 														gameMessage: $elm$core$Maybe$Just('Invalid word. Try again!'),
 														gameMessageType: 'error',
-														grid: model.grid,
-														logMessage: 'SubmitAttempt: Invalid word submitted',
-														nextFocus: $elm$core$Maybe$Nothing,
+														grid: clearedGrid,
+														logMessage: 'SubmitAttempt: Invalid word submitted - row cleared',
+														nextFocus: $elm$core$Maybe$Just(firstHexId),
 														submittedRows: model.submittedRows
 													};
 												}
@@ -7756,9 +7937,9 @@ var $author$project$Main$update = F2(
 					}
 				}();
 				var newFocusedHexId = function () {
-					var _v14 = result.nextFocus;
-					if (_v14.$ === 'Just') {
-						var nextHexId = _v14.a;
+					var _v15 = result.nextFocus;
+					if (_v15.$ === 'Just') {
+						var nextHexId = _v15.a;
 						return $elm$core$Maybe$Just(nextHexId);
 					} else {
 						return model.focusedHexId;
@@ -7774,7 +7955,12 @@ var $author$project$Main$update = F2(
 					function (_v13) {
 						return $author$project$Main$ClearGameMessage;
 					},
-					$elm$core$Process$sleep(3000))) : $elm$core$Platform$Cmd$none;
+					$elm$core$Process$sleep(3000))) : ((result.gameMessageType === 'gameover') ? A2(
+					$elm$core$Task$perform,
+					function (_v14) {
+						return $author$project$Main$ShowGameOverModal;
+					},
+					$elm$core$Process$sleep(1000)) : $elm$core$Platform$Cmd$none);
 				var _v11 = $elm$core$Debug$log(result.logMessage);
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -7825,9 +8011,9 @@ var $author$project$Main$update = F2(
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'PlaceBet':
-				var _v27 = $author$project$Main$selectNewWord(model);
-				var newModel = _v27.a;
-				var wordCmd = _v27.b;
+				var _v28 = $author$project$Main$selectNewWord(model);
+				var newModel = _v28.a;
+				var wordCmd = _v28.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						newModel,
@@ -7886,7 +8072,7 @@ var $author$project$Main$update = F2(
 			case 'StartNewGame':
 				var modelWithClearedGrid = _Utils_update(
 					$author$project$Main$initialModel,
-					{config: model.config, currentActiveRow: 0, isHintModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
+					{config: model.config, currentActiveRow: 0, isGameOverModalVisible: false, isHintModalVisible: false, isLettersModalVisible: false, isModalVisible: false, modalMessage: '', submittedRows: _List_Nil, targetWordsDB: model.targetWordsDB, validGuessesDB: model.validGuessesDB});
 				return _Utils_Tuple2(
 					modelWithClearedGrid,
 					$author$project$Main$selectNewWordCmd(modelWithClearedGrid.difficulty));
@@ -7985,17 +8171,35 @@ var $author$project$Main$update = F2(
 						model,
 						{gameMessage: $elm$core$Maybe$Nothing, isModalVisible: true}),
 					$elm$core$Platform$Cmd$none);
+			case 'ShowGameOverModal':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gameMessage: $elm$core$Maybe$Nothing, isGameOverModalVisible: true}),
+					$elm$core$Platform$Cmd$none);
 			case 'ShowHintModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{isHintModalVisible: true}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'CloseHintModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{isHintModalVisible: false}),
+					$elm$core$Platform$Cmd$none);
+			case 'ShowLettersModal':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{isLettersModalVisible: true}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{isLettersModalVisible: false}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -8008,6 +8212,7 @@ var $author$project$Main$viewBetModal = function (model) {
 	return $elm$html$Html$text('');
 };
 var $author$project$Main$ShowHintModal = {$: 'ShowHintModal'};
+var $author$project$Main$ShowLettersModal = {$: 'ShowLettersModal'};
 var $author$project$Main$StartNewGame = {$: 'StartNewGame'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -8066,22 +8271,50 @@ var $author$project$Main$viewGameControls = function (model) {
 				if (_v0.$ === 'Just') {
 					var word = _v0.a;
 					return A2(
-						$elm$html$Html$button,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$ShowHintModal),
-								A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
-								A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-								A2($elm$html$Html$Attributes$style, 'background-color', '#007bff'),
-								A2($elm$html$Html$Attributes$style, 'color', 'white'),
-								A2($elm$html$Html$Attributes$style, 'border', 'none'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
-								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2($elm$html$Html$Attributes$style, 'gap', '10px')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Hint')
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$ShowHintModal),
+										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
+										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+										A2($elm$html$Html$Attributes$style, 'background-color', '#007bff'),
+										A2($elm$html$Html$Attributes$style, 'color', 'white'),
+										A2($elm$html$Html$Attributes$style, 'border', 'none'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
+										A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Hint')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$ShowLettersModal),
+										A2($elm$html$Html$Attributes$style, 'padding', '10px 18px'),
+										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+										A2($elm$html$Html$Attributes$style, 'background-color', '#ffc107'),
+										A2($elm$html$Html$Attributes$style, 'color', '#212529'),
+										A2($elm$html$Html$Attributes$style, 'border', 'none'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+										A2($elm$html$Html$Attributes$style, 'font-size', '15px'),
+										A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Letters')
+									]))
 							]));
 				} else {
 					return A2(
@@ -8143,7 +8376,6 @@ var $author$project$Main$viewGameMessage = function (model) {
 				]));
 	}
 };
-var $author$project$Main$CloseHintModal = {$: 'CloseHintModal'};
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 'MayStopPropagation', a: a};
@@ -8155,6 +8387,109 @@ var $elm$html$Html$Events$stopPropagationOn = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
+var $author$project$Main$viewGameOverModal = function (model) {
+	return model.isGameOverModalVisible ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+				A2($elm$html$Html$Attributes$style, 'top', '0'),
+				A2($elm$html$Html$Attributes$style, 'left', '0'),
+				A2($elm$html$Html$Attributes$style, 'width', '100%'),
+				A2($elm$html$Html$Attributes$style, 'height', '100%'),
+				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.8)'),
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+				A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
+				$elm$html$Html$Events$onClick($author$project$Main$StartNewGame)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
+						A2($elm$html$Html$Attributes$style, 'padding', '30px'),
+						A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
+						A2($elm$html$Html$Attributes$style, 'box-shadow', '0 10px 25px rgba(0,0,0,0.4)'),
+						A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
+						A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
+						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+						A2(
+						$elm$html$Html$Events$stopPropagationOn,
+						'click',
+						$elm$json$Json$Decode$succeed(
+							_Utils_Tuple2($author$project$Main$NoOp, true)))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'color', '#d32f2f'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('😞 Game Over')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+								A2($elm$html$Html$Attributes$style, 'color', '#666'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Sorry, the word was:')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+								A2($elm$html$Html$Attributes$style, 'color', '#2e7d32'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '25px'),
+								A2($elm$html$Html$Attributes$style, 'padding', '10px'),
+								A2($elm$html$Html$Attributes$style, 'background-color', '#f5f5f5'),
+								A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+								A2($elm$html$Html$Attributes$style, 'text-transform', 'uppercase')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								A2($elm$core$Maybe$withDefault, 'UNKNOWN', model.currentWord))
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Main$StartNewGame),
+								A2($elm$html$Html$Attributes$style, 'background-color', '#2196F3'),
+								A2($elm$html$Html$Attributes$style, 'color', 'white'),
+								A2($elm$html$Html$Attributes$style, 'border', 'none'),
+								A2($elm$html$Html$Attributes$style, 'padding', '12px 24px'),
+								A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+								A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+								A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('New Game')
+							]))
+					]))
+			])) : $elm$html$Html$text('');
+};
+var $author$project$Main$CloseHintModal = {$: 'CloseHintModal'};
 var $elm$core$String$toUpper = _String_toUpper;
 var $author$project$Main$viewHintModal = function (model) {
 	return model.isHintModalVisible ? A2(
@@ -8472,6 +8807,347 @@ var $author$project$Main$viewHoneycombGrid = function (model) {
 			$author$project$Main$viewHoneycombRow(model),
 			model.grid));
 };
+var $author$project$Main$CloseLettersModal = {$: 'CloseLettersModal'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$Dict$map = F2(
+	function (func, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		} else {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				A2(func, key, value),
+				A2($elm$core$Dict$map, func, left),
+				A2($elm$core$Dict$map, func, right));
+		}
+	});
+var $elm$core$Char$toLower = _Char_toLower;
+var $author$project$Main$getLetterStates = function (grid) {
+	var getBestState = function (states) {
+		return A2($elm$core$List$member, $author$project$Main$Correct, states) ? $author$project$Main$Correct : (A2($elm$core$List$member, $author$project$Main$Present, states) ? $author$project$Main$Present : (A2($elm$core$List$member, $author$project$Main$Absent, states) ? $author$project$Main$Absent : $author$project$Main$Empty));
+	};
+	var allHexes = $elm$core$List$concat(grid);
+	var hexesWithLetters = A2(
+		$elm$core$List$filterMap,
+		function (hex) {
+			var _v3 = hex.letter;
+			if (_v3.$ === 'Just') {
+				var _char = _v3.a;
+				return $elm$core$Maybe$Just(
+					_Utils_Tuple2(
+						$elm$core$Char$toLower(_char),
+						hex.state));
+			} else {
+				return $elm$core$Maybe$Nothing;
+			}
+		},
+		allHexes);
+	var letterGroups = A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v1, dict) {
+				var _char = _v1.a;
+				var state = _v1.b;
+				var _v2 = A2($elm$core$Dict$get, _char, dict);
+				if (_v2.$ === 'Nothing') {
+					return A3(
+						$elm$core$Dict$insert,
+						_char,
+						_List_fromArray(
+							[state]),
+						dict);
+				} else {
+					var states = _v2.a;
+					return A3(
+						$elm$core$Dict$insert,
+						_char,
+						A2($elm$core$List$cons, state, states),
+						dict);
+				}
+			}),
+		$elm$core$Dict$empty,
+		hexesWithLetters);
+	return A2(
+		$elm$core$Dict$map,
+		F2(
+			function (_v0, states) {
+				return getBestState(states);
+			}),
+		letterGroups);
+};
+var $author$project$Main$viewLettersModal = function (model) {
+	if (model.isLettersModalVisible) {
+		var topRow = _List_fromArray(
+			[
+				_Utils_chr('q'),
+				_Utils_chr('w'),
+				_Utils_chr('e'),
+				_Utils_chr('r'),
+				_Utils_chr('t'),
+				_Utils_chr('y'),
+				_Utils_chr('u'),
+				_Utils_chr('i'),
+				_Utils_chr('o'),
+				_Utils_chr('p')
+			]);
+		var middleRow = _List_fromArray(
+			[
+				_Utils_chr('a'),
+				_Utils_chr('s'),
+				_Utils_chr('d'),
+				_Utils_chr('f'),
+				_Utils_chr('g'),
+				_Utils_chr('h'),
+				_Utils_chr('j'),
+				_Utils_chr('k'),
+				_Utils_chr('l')
+			]);
+		var letterStates = $author$project$Main$getLetterStates(model.grid);
+		var renderKey = function (_char) {
+			var state = A2(
+				$elm$core$Maybe$withDefault,
+				$author$project$Main$Empty,
+				A2($elm$core$Dict$get, _char, letterStates));
+			var _v0 = function () {
+				switch (state.$) {
+					case 'Correct':
+						return _Utils_Tuple2('#6aaa64', '#ffffff');
+					case 'Present':
+						return _Utils_Tuple2('#c9b458', '#ffffff');
+					case 'Absent':
+						return _Utils_Tuple2('#787c7e', '#ffffff');
+					default:
+						return _Utils_Tuple2('#d3d6da', '#1a1a1b');
+				}
+			}();
+			var bgColor = _v0.a;
+			var textColor = _v0.b;
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'display', 'inline-block'),
+						A2($elm$html$Html$Attributes$style, 'width', '40px'),
+						A2($elm$html$Html$Attributes$style, 'height', '40px'),
+						A2($elm$html$Html$Attributes$style, 'margin', '2px'),
+						A2($elm$html$Html$Attributes$style, 'background-color', bgColor),
+						A2($elm$html$Html$Attributes$style, 'color', textColor),
+						A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+						A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+						A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+						A2($elm$html$Html$Attributes$style, 'text-transform', 'uppercase')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						$elm$core$String$fromChar(_char))
+					]));
+		};
+		var renderRow = function (chars) {
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+						A2($elm$html$Html$Attributes$style, 'margin', '4px 0')
+					]),
+				A2($elm$core$List$map, renderKey, chars));
+		};
+		var bottomRow = _List_fromArray(
+			[
+				_Utils_chr('z'),
+				_Utils_chr('x'),
+				_Utils_chr('c'),
+				_Utils_chr('v'),
+				_Utils_chr('b'),
+				_Utils_chr('n'),
+				_Utils_chr('m')
+			]);
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+					A2($elm$html$Html$Attributes$style, 'top', '0'),
+					A2($elm$html$Html$Attributes$style, 'left', '0'),
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '100%'),
+					A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(0, 0, 0, 0.8)'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
+					$elm$html$Html$Events$onClick($author$project$Main$CloseLettersModal)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'background-color', '#fff'),
+							A2($elm$html$Html$Attributes$style, 'padding', '30px'),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '12px'),
+							A2($elm$html$Html$Attributes$style, 'box-shadow', '0 8px 20px rgba(0,0,0,0.3)'),
+							A2($elm$html$Html$Attributes$style, 'min-width', '400px'),
+							A2($elm$html$Html$Attributes$style, 'max-width', '90%'),
+							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+							A2(
+							$elm$html$Html$Events$stopPropagationOn,
+							'click',
+							$elm$json$Json$Decode$succeed(
+								_Utils_Tuple2($author$project$Main$NoOp, true)))
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
+									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+									A2($elm$html$Html$Attributes$style, 'color', '#333'),
+									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('🔤 Letter Status')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+								]),
+							_List_fromArray(
+								[
+									renderRow(topRow),
+									renderRow(middleRow),
+									renderRow(bottomRow)
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+									A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+									A2($elm$html$Html$Attributes$style, 'gap', '20px'),
+									A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px'),
+									A2($elm$html$Html$Attributes$style, 'font-size', '12px')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+											A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+											A2($elm$html$Html$Attributes$style, 'gap', '5px')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													A2($elm$html$Html$Attributes$style, 'width', '16px'),
+													A2($elm$html$Html$Attributes$style, 'height', '16px'),
+													A2($elm$html$Html$Attributes$style, 'background-color', '#6aaa64'),
+													A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
+												]),
+											_List_Nil),
+											$elm$html$Html$text('Correct')
+										])),
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+											A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+											A2($elm$html$Html$Attributes$style, 'gap', '5px')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													A2($elm$html$Html$Attributes$style, 'width', '16px'),
+													A2($elm$html$Html$Attributes$style, 'height', '16px'),
+													A2($elm$html$Html$Attributes$style, 'background-color', '#c9b458'),
+													A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
+												]),
+											_List_Nil),
+											$elm$html$Html$text('Wrong Position')
+										])),
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+											A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+											A2($elm$html$Html$Attributes$style, 'gap', '5px')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													A2($elm$html$Html$Attributes$style, 'width', '16px'),
+													A2($elm$html$Html$Attributes$style, 'height', '16px'),
+													A2($elm$html$Html$Attributes$style, 'background-color', '#787c7e'),
+													A2($elm$html$Html$Attributes$style, 'border-radius', '2px')
+												]),
+											_List_Nil),
+											$elm$html$Html$text('Not in Word')
+										]))
+								])),
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick($author$project$Main$CloseLettersModal),
+									A2($elm$html$Html$Attributes$style, 'background-color', '#6c757d'),
+									A2($elm$html$Html$Attributes$style, 'color', 'white'),
+									A2($elm$html$Html$Attributes$style, 'border', 'none'),
+									A2($elm$html$Html$Attributes$style, 'padding', '8px 16px'),
+									A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+									A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+									A2($elm$html$Html$Attributes$style, 'font-size', '14px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Close')
+								]))
+						]))
+				]));
+	} else {
+		return $elm$html$Html$text('');
+	}
+};
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$p = _VirtualDom_node('p');
@@ -8726,7 +9402,9 @@ var $author$project$Main$view = function (model) {
 				$author$project$Main$viewRules,
 				$author$project$Main$viewBetModal(model),
 				$author$project$Main$viewSuccessModal(model),
-				$author$project$Main$viewHintModal(model)
+				$author$project$Main$viewHintModal(model),
+				$author$project$Main$viewGameOverModal(model),
+				$author$project$Main$viewLettersModal(model)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$document(

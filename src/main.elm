@@ -3,6 +3,7 @@ port module Main exposing (main, Model, Difficulty(..), PuzzleResult(..), Msg(..
 import Browser
 import Browser.Events
 import Debug
+import Dict
 import Html exposing (Html, Attribute, div, h3, p, button, span, text) -- text is already imported
 import Html.Attributes exposing (class, style, id)
 import Html.Events exposing (keyCode, onClick, on, onMouseEnter, onMouseLeave, stopPropagationOn, onInput)
@@ -447,7 +448,7 @@ getExtendedDifficultyMultiplier config difficulty =
 
 
 -- For validation, check if word exists in valid guesses list OR target words list
--- This follows proper Wordle rules: any valid English word OR any potential answer word
+-- If not found, fall back to basic English word validation
 validateWord : List String -> WordsByDifficulty -> String -> Difficulty -> Bool
 validateWord validGuesses targetWords word difficulty =
     let
@@ -459,18 +460,20 @@ validateWord validGuesses targetWords word difficulty =
         -- Check if word is in target words (answerlist.json)
         allTargetWords = targetWords.easy ++ targetWords.medium ++ targetWords.hard
         isInTargetWordsList = List.member cleanWord (List.map String.toLower allTargetWords)
+        
+        -- Basic validation for reasonable English words
+        passesBasicValidation = isValidLength && isAllLetters && not (isRepeatingPattern cleanWord) && not (isObviousNonsense cleanWord)
     in
-    if List.isEmpty validGuesses then
-        -- Fallback to basic validation if valid guesses not loaded
-        -- Only allow if it's a valid length and all letters, but reject obvious non-words
-        isValidLength && isAllLetters && not (isRepeatingPattern cleanWord)
-    else if isInValidGuessesList || isInTargetWordsList then
-        -- Word is in our known valid list OR target words list
+    if isInValidGuessesList || isInTargetWordsList then
+        -- Word is in our curated databases - definitely valid
         True
+    else if List.isEmpty validGuesses then
+        -- Fallback to basic validation if valid guesses not loaded
+        passesBasicValidation
     else
-        -- For words not in either list, reject them
-        -- We should only accept words that are in our curated databases
-        False
+        -- Word not in curated list, but check if it passes basic validation
+        -- This allows reasonable English words that might not be in our database
+        passesBasicValidation
 
 
 -- Helper function to detect obvious non-words like "AAAAA", "BBBBB", etc.
@@ -483,6 +486,78 @@ isRepeatingPattern word =
     case firstChar of
         Nothing -> False
         Just char -> List.all (\c -> c == char) chars
+
+
+-- Helper function to detect obvious nonsense words
+isObviousNonsense : String -> Bool
+isObviousNonsense word =
+    let
+        cleanWord = String.toLower word
+        chars = String.toList cleanWord
+        vowels = ['a', 'e', 'i', 'o', 'u', 'y']  -- Include 'y' as it can act as a vowel
+        consonants = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z']
+        
+        -- Count vowels and consonants
+        vowelCount = List.length (List.filter (\c -> List.member c vowels) chars)
+        consonantCount = List.length (List.filter (\c -> List.member c consonants) chars)
+        
+        -- Patterns that suggest nonsense
+        hasNoVowels = vowelCount == 0
+        allVowels = consonantCount == 0
+        tooManyConsecutiveConsonants = hasConsecutiveConsonants cleanWord 4
+        tooManyConsecutiveVowels = hasConsecutiveVowels cleanWord 3
+    in
+    hasNoVowels || allVowels || tooManyConsecutiveConsonants || tooManyConsecutiveVowels
+
+
+-- Helper to check for too many consecutive consonants
+hasConsecutiveConsonants : String -> Int -> Bool
+hasConsecutiveConsonants word maxCount =
+    let
+        chars = String.toList word
+        vowels = ['a', 'e', 'i', 'o', 'u', 'y']  -- Include 'y' as it can act as a vowel
+        
+        checkConsecutive : List Char -> Int -> Int -> Bool
+        checkConsecutive remainingChars currentCount maxAllowed =
+            case remainingChars of
+                [] -> currentCount >= maxAllowed
+                char :: rest ->
+                    if List.member char vowels then
+                        checkConsecutive rest 0 maxAllowed
+                    else
+                        let newCount = currentCount + 1
+                        in
+                        if newCount >= maxAllowed then
+                            True
+                        else
+                            checkConsecutive rest newCount maxAllowed
+    in
+    checkConsecutive chars 0 maxCount
+
+
+-- Helper to check for too many consecutive vowels
+hasConsecutiveVowels : String -> Int -> Bool
+hasConsecutiveVowels word maxCount =
+    let
+        chars = String.toList word
+        vowels = ['a', 'e', 'i', 'o', 'u', 'y']  -- Include 'y' as it can act as a vowel
+        
+        checkConsecutive : List Char -> Int -> Int -> Bool
+        checkConsecutive remainingChars currentCount maxAllowed =
+            case remainingChars of
+                [] -> currentCount >= maxAllowed
+                char :: rest ->
+                    if List.member char vowels then
+                        let newCount = currentCount + 1
+                        in
+                        if newCount >= maxAllowed then
+                            True
+                        else
+                            checkConsecutive rest newCount maxAllowed
+                    else
+                        checkConsecutive rest 0 maxAllowed
+    in
+    checkConsecutive chars 0 maxCount
 
 
 getWordCategories : WordCategories -> String -> List String
@@ -540,6 +615,8 @@ type alias Model =
     , submittedRows : List Int -- Track which rows have been submitted and are locked
     , currentActiveRow : Int -- Track which row is currently active for submissions
     , isHintModalVisible : Bool -- Track if hint modal is visible
+    , isGameOverModalVisible : Bool -- Track if game over modal is visible
+    , isLettersModalVisible : Bool -- Track if letters modal is visible
     }
 
 
@@ -677,6 +754,8 @@ initialModel =
     , submittedRows = []
     , currentActiveRow = 0
     , isHintModalVisible = False
+    , isGameOverModalVisible = False
+    , isLettersModalVisible = False
     }
 
 
@@ -707,8 +786,11 @@ type Msg
     | ValidGuessesLoaded (Result Http.Error ValidGuessesDB)
     | SimpleValidGuessesLoaded (Result Http.Error (List String))
     | ShowSuccessModal
+    | ShowGameOverModal
     | ShowHintModal
     | CloseHintModal
+    | ShowLettersModal
+    | CloseLettersModal
 
 
 parseHexId : String -> Maybe ( Int, Int )
@@ -1030,21 +1112,38 @@ update msg model =
                                                                 maxRows = List.length model.grid
                                                                 hasNextRow = nextRow < maxRows
                                                             in
-                                                            { gameMessage = Just (if hasNextRow then "Valid word, but not correct. Try again!" else "Valid word, but not correct. No more rows available!")
-                                                            , gameMessageType = "info"
-                                                            , logMessage = "SubmitAttempt: Valid but incorrect word submitted"
-                                                            , grid = updatedGrid
-                                                            , submittedRows = rowIndex :: model.submittedRows
-                                                            , nextFocus = if hasNextRow then Just ("hex-" ++ String.fromInt nextRow ++ "-0") else Nothing
-                                                            , currentActiveRow = if hasNextRow then nextRow else model.currentActiveRow -- Only advance if there's a next row
-                                                            }
+                                                            if hasNextRow then
+                                                                { gameMessage = Just "Valid word, but not correct. Try again!"
+                                                                , gameMessageType = "info"
+                                                                , logMessage = "SubmitAttempt: Valid but incorrect word submitted"
+                                                                , grid = updatedGrid
+                                                                , submittedRows = rowIndex :: model.submittedRows
+                                                                , nextFocus = Just ("hex-" ++ String.fromInt nextRow ++ "-0")
+                                                                , currentActiveRow = nextRow
+                                                                }
+                                                            else
+                                                                -- No more rows - show game over modal
+                                                                { gameMessage = Nothing -- No message needed, modal will show
+                                                                , gameMessageType = "gameover"
+                                                                , logMessage = "SubmitAttempt: Game over - no more rows available"
+                                                                , grid = updatedGrid
+                                                                , submittedRows = rowIndex :: model.submittedRows
+                                                                , nextFocus = Nothing
+                                                                , currentActiveRow = model.currentActiveRow
+                                                                }
                                                         else
+                                                            let
+                                                                -- Clear the invalid word from the current row
+                                                                clearedGrid = clearRow rowIndex model.grid
+                                                                -- Set focus to first hex of current active row
+                                                                firstHexId = "hex-" ++ String.fromInt model.currentActiveRow ++ "-0"
+                                                            in
                                                             { gameMessage = Just "Invalid word. Try again!"
                                                             , gameMessageType = "error"
-                                                            , logMessage = "SubmitAttempt: Invalid word submitted"
-                                                            , grid = model.grid -- Don't update colors for invalid words
+                                                            , logMessage = "SubmitAttempt: Invalid word submitted - row cleared"
+                                                            , grid = clearedGrid -- Clear the invalid word
                                                             , submittedRows = model.submittedRows -- Don't lock row for invalid words
-                                                            , nextFocus = Nothing -- Stay on current row for invalid words
+                                                            , nextFocus = Just firstHexId -- Reset focus to first hex of current row
                                                             , currentActiveRow = model.currentActiveRow -- Don't advance for invalid words
                                                             }
 
@@ -1057,6 +1156,9 @@ update msg model =
                             Task.perform (\_ -> ShowSuccessModal) (Process.sleep 1000)
                         else
                             Task.perform (\_ -> ClearGameMessage) (Process.sleep 3000)
+                    else if result.gameMessageType == "gameover" then
+                        -- Show game over modal for final row incorrect word
+                        Task.perform (\_ -> ShowGameOverModal) (Process.sleep 1000)
                     else
                         Cmd.none
                 newFocusedHexId = 
@@ -1139,7 +1241,7 @@ update msg model =
 
         StartNewGame ->
             let
-                modelWithClearedGrid = { initialModel | validGuessesDB = model.validGuessesDB, targetWordsDB = model.targetWordsDB, config = model.config, submittedRows = [], currentActiveRow = 0, isModalVisible = False, modalMessage = "", isHintModalVisible = False }
+                modelWithClearedGrid = { initialModel | validGuessesDB = model.validGuessesDB, targetWordsDB = model.targetWordsDB, config = model.config, submittedRows = [], currentActiveRow = 0, isModalVisible = False, modalMessage = "", isHintModalVisible = False, isGameOverModalVisible = False, isLettersModalVisible = False }
             in
             ( modelWithClearedGrid, selectNewWordCmd modelWithClearedGrid.difficulty )
 
@@ -1192,11 +1294,20 @@ update msg model =
         ShowSuccessModal ->
             ( { model | isModalVisible = True, gameMessage = Nothing }, Cmd.none )
 
+        ShowGameOverModal ->
+            ( { model | isGameOverModalVisible = True, gameMessage = Nothing }, Cmd.none )
+
         ShowHintModal ->
             ( { model | isHintModalVisible = True }, Cmd.none )
 
         CloseHintModal ->
             ( { model | isHintModalVisible = False }, Cmd.none )
+
+        ShowLettersModal ->
+            ( { model | isLettersModalVisible = True }, Cmd.none )
+
+        CloseLettersModal ->
+            ( { model | isLettersModalVisible = False }, Cmd.none )
 
 
 updateHexInGrid : String -> (HexagonData -> HexagonData) -> List (List HexagonData) -> List (List HexagonData)
@@ -1214,6 +1325,16 @@ updateHexInGrid targetId updateFn grid =
         )
         grid
 
+
+-- Clear all letters from a specific row and reset their states to Empty
+clearRow : Int -> List (List HexagonData) -> List (List HexagonData)
+clearRow targetRowIndex grid =
+    List.indexedMap (\rowIndex row ->
+        if rowIndex == targetRowIndex then
+            List.map (\hex -> { hex | letter = Nothing, state = Empty }) row
+        else
+            row
+    ) grid
 
 
 -- SUBSCRIPTIONS
@@ -1446,6 +1567,224 @@ viewHintModal model =
         Html.text ""
 
 
+-- Game Over modal for when user fails to guess the word
+viewGameOverModal : Model -> Html Msg
+viewGameOverModal model =
+    if model.isGameOverModalVisible then
+        div -- Backdrop for game over modal
+            [ style "position" "fixed"
+            , style "top" "0"
+            , style "left" "0"
+            , style "width" "100%"
+            , style "height" "100%"
+            , style "background-color" "rgba(0, 0, 0, 0.8)"
+            , style "display" "flex"
+            , style "justify-content" "center"
+            , style "align-items" "center"
+            , style "z-index" "1000"
+            , onClick StartNewGame
+            ]
+            [ div
+                [ style "background-color" "#fff"
+                , style "padding" "30px"
+                , style "border-radius" "15px"
+                , style "box-shadow" "0 10px 25px rgba(0,0,0,0.4)"
+                , style "min-width" "400px"
+                , style "max-width" "90%"
+                , style "text-align" "center"
+                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
+                ]
+                [ div
+                    [ style "font-size" "24px"
+                    , style "font-weight" "bold"
+                    , style "color" "#d32f2f"
+                    , style "margin-bottom" "15px"
+                    ]
+                    [ text "😞 Game Over" ]
+                , div
+                    [ style "font-size" "16px"
+                    , style "color" "#666"
+                    , style "margin-bottom" "20px"
+                    ]
+                    [ text "Sorry, the word was:" ]
+                , div
+                    [ style "font-size" "32px"
+                    , style "font-weight" "bold"
+                    , style "color" "#2e7d32"
+                    , style "margin-bottom" "25px"
+                    , style "padding" "10px"
+                    , style "background-color" "#f5f5f5"
+                    , style "border-radius" "8px"
+                    , style "text-transform" "uppercase"
+                    ]
+                    [ text (Maybe.withDefault "UNKNOWN" model.currentWord) ]
+                , button
+                    [ onClick StartNewGame
+                    , style "background-color" "#2196F3"
+                    , style "color" "white"
+                    , style "border" "none"
+                    , style "padding" "12px 24px"
+                    , style "border-radius" "8px"
+                    , style "cursor" "pointer"
+                    , style "font-size" "16px"
+                    , style "font-weight" "bold"
+                    ]
+                    [ text "New Game" ]
+                ]
+            ]
+    else
+        Html.text ""
+
+
+-- Function to get the best state for each letter from the grid
+getLetterStates : List (List HexagonData) -> Dict.Dict Char HexState
+getLetterStates grid =
+    let
+        allHexes = List.concat grid
+        hexesWithLetters = List.filterMap (\hex -> 
+            case hex.letter of
+                Just char -> Just (Char.toLower char, hex.state)
+                Nothing -> Nothing
+            ) allHexes
+        
+        -- Group by letter and find the best state for each
+        letterGroups = List.foldl (\(char, state) dict ->
+            case Dict.get char dict of
+                Nothing -> Dict.insert char [state] dict
+                Just states -> Dict.insert char (state :: states) dict
+            ) Dict.empty hexesWithLetters
+        
+        -- Determine best state (Correct > Present > Absent > Empty)
+        getBestState states =
+            if List.member Correct states then Correct
+            else if List.member Present states then Present  
+            else if List.member Absent states then Absent
+            else Empty
+    in
+    Dict.map (\_ states -> getBestState states) letterGroups
+
+
+-- Letters modal showing QWERTY keyboard with letter states
+viewLettersModal : Model -> Html Msg
+viewLettersModal model =
+    if model.isLettersModalVisible then
+        let
+            letterStates = getLetterStates model.grid
+            
+            -- QWERTY keyboard layout
+            topRow = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']
+            middleRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l']
+            bottomRow = ['z', 'x', 'c', 'v', 'b', 'n', 'm']
+            
+            renderKey char =
+                let
+                    state = Maybe.withDefault Empty (Dict.get char letterStates)
+                    (bgColor, textColor) = 
+                        case state of
+                            Correct -> ("#6aaa64", "#ffffff")
+                            Present -> ("#c9b458", "#ffffff") 
+                            Absent -> ("#787c7e", "#ffffff")
+                            Empty -> ("#d3d6da", "#1a1a1b")
+                in
+                div
+                    [ style "display" "inline-block"
+                    , style "width" "40px"
+                    , style "height" "40px"
+                    , style "margin" "2px"
+                    , style "background-color" bgColor
+                    , style "color" textColor
+                    , style "border-radius" "4px"
+                    , style "display" "flex"
+                    , style "align-items" "center"
+                    , style "justify-content" "center"
+                    , style "font-weight" "bold"
+                    , style "font-size" "16px"
+                    , style "text-transform" "uppercase"
+                    ]
+                    [ text (String.fromChar char) ]
+                    
+            renderRow chars =
+                div 
+                    [ style "display" "flex"
+                    , style "justify-content" "center"
+                    , style "margin" "4px 0"
+                    ]
+                    (List.map renderKey chars)
+        in
+        div -- Backdrop for letters modal
+            [ style "position" "fixed"
+            , style "top" "0"
+            , style "left" "0"
+            , style "width" "100%"
+            , style "height" "100%"
+            , style "background-color" "rgba(0, 0, 0, 0.8)"
+            , style "display" "flex"
+            , style "justify-content" "center"
+            , style "align-items" "center"
+            , style "z-index" "1000"
+            , onClick CloseLettersModal
+            ]
+            [ div
+                [ style "background-color" "#fff"
+                , style "padding" "30px"
+                , style "border-radius" "12px"
+                , style "box-shadow" "0 8px 20px rgba(0,0,0,0.3)"
+                , style "min-width" "400px"
+                , style "max-width" "90%"
+                , style "text-align" "center"
+                , stopPropagationOn "click" (Decode.succeed (NoOp, True))
+                ]
+                [ div
+                    [ style "font-size" "18px"
+                    , style "font-weight" "bold"
+                    , style "color" "#333"
+                    , style "margin-bottom" "20px"
+                    ]
+                    [ text "🔤 Letter Status" ]
+                , div
+                    [ style "margin-bottom" "20px"
+                    ]
+                    [ renderRow topRow
+                    , renderRow middleRow  
+                    , renderRow bottomRow
+                    ]
+                , div
+                    [ style "display" "flex"
+                    , style "justify-content" "center"
+                    , style "gap" "20px"
+                    , style "margin-bottom" "15px"
+                    , style "font-size" "12px"
+                    ]
+                    [ div [ style "display" "flex", style "align-items" "center", style "gap" "5px" ]
+                        [ div [ style "width" "16px", style "height" "16px", style "background-color" "#6aaa64", style "border-radius" "2px" ] []
+                        , text "Correct"
+                        ]
+                    , div [ style "display" "flex", style "align-items" "center", style "gap" "5px" ]
+                        [ div [ style "width" "16px", style "height" "16px", style "background-color" "#c9b458", style "border-radius" "2px" ] []
+                        , text "Wrong Position"
+                        ]
+                    , div [ style "display" "flex", style "align-items" "center", style "gap" "5px" ]
+                        [ div [ style "width" "16px", style "height" "16px", style "background-color" "#787c7e", style "border-radius" "2px" ] []
+                        , text "Not in Word"
+                        ]
+                    ]
+                , button
+                    [ onClick CloseLettersModal
+                    , style "background-color" "#6c757d"
+                    , style "color" "white"
+                    , style "border" "none"
+                    , style "padding" "8px 16px"
+                    , style "border-radius" "4px"
+                    , style "cursor" "pointer"
+                    , style "font-size" "14px"
+                    ]
+                    [ text "Close" ]
+                ]
+            ]
+    else
+        Html.text ""
+
+
 -- Add this function before the view function
 viewGameMessage : Model -> Html Msg
 viewGameMessage model =
@@ -1502,6 +1841,8 @@ view model =
         , viewBetModal model
         , viewSuccessModal model
         , viewHintModal model
+        , viewGameOverModal model
+        , viewLettersModal model
         ]
 
 
@@ -1531,18 +1872,32 @@ viewGameControls model =
             [ text "New Game" ]
         , case model.currentWord of
             Just word ->
-                button
-                    [ onClick ShowHintModal
+                div [ style "display" "flex", style "gap" "10px" ]
+                    [ button
+                        [ onClick ShowHintModal
                         , style "padding" "10px 18px"
                         , style "cursor" "pointer"
-                    , style "background-color" "#007bff"
-                    , style "color" "white"
+                        , style "background-color" "#007bff"
+                        , style "color" "white"
                         , style "border" "none"
                         , style "border-radius" "5px"
                         , style "font-size" "15px"
                         , style "font-weight" "bold"
                         ]
-                    [ text "Hint" ]
+                        [ text "Hint" ]
+                    , button
+                        [ onClick ShowLettersModal
+                        , style "padding" "10px 18px"
+                        , style "cursor" "pointer"
+                        , style "background-color" "#ffc107"
+                        , style "color" "#212529"
+                        , style "border" "none"
+                        , style "border-radius" "5px"
+                        , style "font-size" "15px"
+                        , style "font-weight" "bold"
+                        ]
+                        [ text "Letters" ]
+                    ]
             Nothing ->
                 div
                     [ style "font-size" "14px"
