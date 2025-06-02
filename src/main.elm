@@ -882,7 +882,7 @@ update msg model =
                                 , lastUpdated = "2024-03-21"
                                 , source = "validguess.json"
                                 , format = "5-letter-words"
-                                , description = "Valid guess words database for Honeycomb Wordle"
+                                , description = "Valid guess words database for Honeycomb puzzle"
                                 }
                             , validGuesses = validGuessesList
                             , targetWords = fallbackTargetWords
@@ -1415,7 +1415,7 @@ loadValidGuessesCmd =
         }
 
 
--- Proper Wordle-style word checking that handles duplicates correctly
+-- Proper puzzle-style word checking that handles duplicates correctly
 checkWordAgainstTarget : String -> String -> List HexState
 checkWordAgainstTarget guess target =
     let
