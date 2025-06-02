@@ -1,5 +1,7 @@
 # HolyHex
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/09eee0e5-0c2e-4b34-a6e7-a6a56bfa8419/deploy-status)](https://app.netlify.com/projects/enchanting-zabaione-b3d7ad/deploys)
+
 A web-based, interactive word puzzle game built with a unique hexagonal grid interface using Elm. Players guess 5-letter words to solve a hidden word within 6 attempts, with feedback provided through colored hexagons. The game includes a hint system, making it engaging and challenging.
 
 ## Table of Contents
