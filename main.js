@@ -7995,7 +7995,7 @@ var $author$project$Main$update = F2(
 					var updatedValidGuessesDB = {
 						features: {allowsRepeatedLetters: true, caseSensitive: false, hasVowels: true},
 						metadata: {
-							description: 'Valid guess words database for Honeycomb Wordle',
+							description: 'Valid guess words database for Honeycomb puzzle',
 							format: '5-letter-words',
 							lastUpdated: '2024-03-21',
 							source: 'validguess.json',
